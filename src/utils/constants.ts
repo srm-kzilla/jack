@@ -6,3 +6,5 @@ export const certificateMessage =
 export const certificateUserDirectMessage = {
   text: "Hello, thanks for attending the workshop! Here is your certificate",
 };
+
+export const startCommand = "-srmkzilla";
