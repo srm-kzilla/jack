@@ -10,9 +10,9 @@ export async function getUserCertificate(incomingMessage: Message, email: any) {
       .db()
       .collection("tech-troduction")
       .countDocuments({ email: email });
-    if (found) incomingMessage.channel.send(certificateMessage);
+    if (found) incomingMessage.channel.send(certificateMessage());
     else incomingMessage.channel.send(ERRORS.CERTIFICATE_NOT_FOUND);
   } catch (err) {
-    incomingMessage.channel.send(internalError);
+    incomingMessage.channel.send(internalError());
   }
 }

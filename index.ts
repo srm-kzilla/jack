@@ -3,7 +3,7 @@ import { config } from "dotenv";
 import {
   handleIncomingChannelCommand,
   handleIncomingDMCommand,
-} from "./src/controllers/inputHandler";
+} from "./src/controllers/incomingMessageHandler";
 import { startCommand } from "./src/utils/constants";
 import { getDiscordBot, initDiscordBot } from "./src/utils/discord";
 
