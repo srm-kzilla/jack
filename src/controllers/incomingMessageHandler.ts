@@ -7,14 +7,10 @@ import {
   getHelpMessage,
   invalidCommand,
   internalError,
-  unauthorizedUser,
   thumbsUpEmoji,
   certificateUserDirectMessage,
 } from "../utils/constants";
-import {
-  sendDirectMessageToUser,
-  sendReactableMessage,
-} from "./sendMessageHandler";
+import { sendDirectMessageToUser } from "./sendMessageHandler";
 /**
  * Handles all incoming commands in channel
  *

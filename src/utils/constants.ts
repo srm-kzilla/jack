@@ -1,4 +1,5 @@
 import { MessageEmbed } from "discord.js";
+import { generateCertificate } from "../helper/certificate";
 
 export const thumbsUpEmoji = "👍";
 
@@ -7,7 +8,7 @@ export const startCommand = "-srmkzilla";
 export const certificateUserDirectMessage =
   "Hello,Please drop your email here in the format `-srmkzilla certificate <your_email>`";
 
-export const getYourCertificateChannelMessage = (eventName: String) => {
+export const getYourCertificateChannelMessage = (eventName: string) => {
   return new MessageEmbed()
     .setTitle("Get Your Certificates")
     .setColor("#DAF7A6")
@@ -26,7 +27,7 @@ export const getYourCertificateChannelMessage = (eventName: String) => {
     );
 };
 
-export const certificateMessage = () => {
+export const certificateMessage = async () => {
   return new MessageEmbed()
     .setTitle("Certificate")
     .setColor("#DAF7A6")
@@ -37,8 +38,8 @@ export const certificateMessage = () => {
     .setFooter(
       "With ❤️ , your friends at SRMKZILLA",
       "https://srmkzilla.net/assets/img/kzilla.png"
-    )
-    .attachFiles(["http://www.africau.edu/images/default/sample.pdf"]); // Need to make dynamic to attach certificate
+    );
+  // .attachFiles([img]); // Need to make dynamic to attach certificate
 };
 
 export const getHelpMessage = () => {

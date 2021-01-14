@@ -42,3 +42,7 @@ export async function getCertificateChannelMessage(incomingMessage: Message) {
     incomingMessage.channel.send(unauthorizedUser());
   }
 }
+
+export async function generateCertificate(name: string) {
+  //TODO add certificateGenerate here
+}
