@@ -3,14 +3,22 @@ import Discord from "discord.js";
 let bot: any;
 
 export async function getDiscordBot() {
-  if (!bot) {
-    await initDiscordBot();
+  try {
+    if (!bot) {
+      await initDiscordBot();
+    }
+    return bot;
+  } catch (err) {
+    console.log("Error connecting to Bot", err);
   }
-  return bot;
 }
 
 export async function initDiscordBot() {
-  bot = new Discord.Client();
-  bot.login(process.env.DISCORD_TOKEN);
-  return bot;
+  try {
+    bot = new Discord.Client();
+    bot.login(process.env.DISCORD_TOKEN);
+    return bot;
+  } catch (err) {
+    console.log("Error connecting to Bot", err);
+  }
 }
