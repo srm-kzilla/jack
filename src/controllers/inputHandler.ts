@@ -6,7 +6,7 @@ import {
 
 import { ERRORS } from "../utils/errors";
 
-export function handleIncomingChannelCommand(incomingMessage: Message) {
+export async function handleIncomingChannelCommand(incomingMessage: Message) {
   const messageCommand = incomingMessage.content.split(" ")[1];
 
   switch (messageCommand) {
@@ -17,7 +17,7 @@ export function handleIncomingChannelCommand(incomingMessage: Message) {
     }
     default:
       // Need to add helper message
-      incomingMessage.channel.send(ERRORS.INVALID_COMMAND);
+      await incomingMessage.channel.send(ERRORS.INVALID_COMMAND);
   }
 }
 
@@ -26,9 +26,12 @@ export async function sendDirectMessageToUser(
   message: Message,
   userMessage: any
 ) {
-  user
-    .send(userMessage.text)
-    .catch(() => message.channel.send(ERRORS.DM_BLOCKED));
+  try {
+    await user.send(userMessage);
+  } catch (err) {
+    console.log(err);
+    message.channel.send(ERRORS.DM_BLOCKED);
+  }
 }
 
 export function handleIncomingDMCommand(incomingMessage: Message) {
