@@ -3,21 +3,33 @@ import {
   certificateDMHandler,
   certificateHandler,
 } from "../helper/certificate";
+import {
+  getHelpMessage,
+  invalidCommand,
+  internalError,
+} from "../utils/constants";
 
 import { ERRORS } from "../utils/errors";
 
 export async function handleIncomingChannelCommand(incomingMessage: Message) {
-  const messageCommand = incomingMessage.content.split(" ")[1];
+  try {
+    const messageCommand = incomingMessage.content.split(" ")[1];
 
-  switch (messageCommand) {
-    case "certificate": {
-      certificateHandler(incomingMessage);
-
-      break;
+    switch (messageCommand) {
+      case "certificate": {
+        certificateHandler(incomingMessage);
+        break;
+      }
+      case "help": {
+        incomingMessage.channel.send(getHelpMessage);
+      }
+      default:
+        console.log("I'm here 1");
+        // Need to add helper message
+        incomingMessage.channel.send(invalidCommand);
     }
-    default:
-      // Need to add helper message
-      await incomingMessage.channel.send(ERRORS.INVALID_COMMAND);
+  } catch (err) {
+    incomingMessage.channel.send(invalidCommand);
   }
 }
 
@@ -35,14 +47,19 @@ export async function sendDirectMessageToUser(
 }
 
 export function handleIncomingDMCommand(incomingMessage: Message) {
-  const messageCommand = incomingMessage.content.split(" ")[1];
+  try {
+    const messageCommand = incomingMessage.content.split(" ")[1];
 
-  switch (messageCommand) {
-    case "certificate": {
-      certificateDMHandler(incomingMessage);
-      break;
+    switch (messageCommand) {
+      case "certificate": {
+        certificateDMHandler(incomingMessage);
+        break;
+      }
+      default:
+        incomingMessage.channel.send(invalidCommand);
     }
-    default:
-      incomingMessage.channel.send(ERRORS.INVALID_COMMAND);
+  } catch (err) {
+    console.log(err);
+    incomingMessage.channel.send(internalError);
   }
 }

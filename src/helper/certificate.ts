@@ -5,10 +5,26 @@ import {
   certificateEmoji,
   getYourCertificateChannelMessage,
   certificateUserDirectMessage,
+  internalError,
 } from "../utils/constants";
 import { ERRORS } from "../utils/errors";
 import { certificateEmojifilter } from "../utils/filters";
 import { getUserCertificate } from "../service/certificate-service";
+
+async function collectReactions(user: any, reaction: any, message: any) {
+  if (!user.bot) {
+    if (reaction.emoji.name === certificateEmoji[0]) {
+      //TODO transfer the log to another channel
+      message.channel.send(
+        `${
+          message.guild?.member(user.id)?.displayName || user.username
+        } just collected their certificate!`
+      );
+      sendDirectMessageToUser(user, message, certificateUserDirectMessage);
+    }
+  }
+}
+
 // Reaction handler
 export function certificateHandler(incomingMessage: Message) {
   try {
@@ -22,33 +38,11 @@ export function certificateHandler(incomingMessage: Message) {
         );
 
         collector.on("collect", (reaction: MessageReaction, user: User) => {
-          async function collect() {
-            if (!user.bot) {
-              if (reaction.emoji.name === certificateEmoji[0]) {
-                // add check for database
-                message.channel.send(
-                  `${
-                    message.guild?.member(user.id)?.displayName || user.username
-                  } just collected their certificate!`
-                );
-
-                // message.channel.send(certificateUserDirectMessage);
-                sendDirectMessageToUser(
-                  user,
-                  message,
-                  certificateUserDirectMessage
-                );
-              }
-            }
-          }
-          collect();
+          collectReactions(user, reaction, message);
         });
-      })
-      .catch((err) => {
-        console.log("Oops! Some unknown error,", err);
       });
   } catch (err) {
-    console.log("Oops! Some unknown error,", err);
+    incomingMessage.channel.send(internalError);
   }
 }
 export async function certificateDMHandler(incomingMessage: Message) {
@@ -61,6 +55,9 @@ export async function certificateDMHandler(incomingMessage: Message) {
     // Send Certificate Here
     getUserCertificate(incomingMessage, email);
   } catch (err) {
-    incomingMessage.channel.send(ERRORS.INVALID_EMAIL);
+    console.log(err);
+    if (err.name == "ValidationError")
+      incomingMessage.channel.send(ERRORS.INVALID_EMAIL);
+    else incomingMessage.channel.send(internalError);
   }
 }
