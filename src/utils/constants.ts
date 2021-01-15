@@ -6,7 +6,7 @@ export const thumbsUpEmoji = "👍";
 export const startCommand = "-srmkzilla";
 
 export const certificateUserDirectMessage =
-  "Hello,Please drop your email here in the format `-srmkzilla certificate <your_email>`";
+  "Hello,Please drop your email here in the format `-srmkzilla get-certificate <your_email>`";
 
 export const getYourCertificateChannelMessage = (eventName: string) => {
   return new MessageEmbed()
