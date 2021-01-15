@@ -43,16 +43,19 @@ export const getHelpMessage = () => {
     .addFields(
       {
         name: "Help",
-        value: "Type `-srmkzilla help` for a list of commands",
+        value: "Type `#kzjack help` for a list of commands",
       },
       {
         name: "Certificates",
-        value:
-          "Type `-srmkzilla get-certificate <your-email>` for certificates",
+        value: "Type `#kzjack get-certificate <your-email>` for certificates",
+      },
+      {
+        name: "Shrink URLs",
+        value: "Type `#kzjack shrink <URL>` for shrinking the URL",
       },
       {
         name: "Start Certificates Thread [Only Mods]",
-        value: "Type `-srmkzilla certificate` for certificate",
+        value: "Type `#kzjack certificate` for certificate",
       }
     )
     .setTimestamp()
@@ -68,7 +71,7 @@ export const invalidCommand = () => {
     .setDescription(`Oops! It seems you have entered an invalid command.`)
     .addFields({
       name: "Help",
-      value: "Type `-srmkzilla help` for a list of commands",
+      value: "Type `#kzjack help` for a list of commands",
     })
     .setTimestamp()
     .setFooter(
@@ -84,7 +87,7 @@ export const unauthorizedUser = () => {
     .setDescription(`Oops! You are not authorized to use this command`)
     .addFields({
       name: "Help",
-      value: "Type `-srmkzilla help` for a list of commands",
+      value: "Type `#kzjack help` for a list of commands",
     })
     .setTimestamp()
     .setFooter(
@@ -101,7 +104,7 @@ export const internalError = () => {
     )
     .addFields({
       name: "Help",
-      value: "Type `-srmkzilla help` for a list of commands",
+      value: "Type `#kzjack help` for a list of commands",
     })
     .setTimestamp()
     .setFooter(
@@ -129,11 +132,11 @@ export const shrinkedURLMessage = (data: any) => {
     .addFields(
       {
         name: "Shrunk URL",
-        value: `kzilla.xyz/${data.shortCode}`,
+        value: `[kzilla.xyz/${data.shortCode}](https://kzilla.xyz/${data.shortCode})`,
       },
       {
         name: "Analytics URL",
-        value: `kzilla.xyz/analytics/${data.analyticsCode}`,
+        value: `[kzilla.xyz/analytics/${data.analyticsCode}](https://kzilla.xyz/analytics/${data.analyticsCode})`,
       }
     )
     .setTimestamp()

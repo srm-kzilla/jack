@@ -4,7 +4,7 @@ import {
   getCertificateChannelMessage,
 } from "../helper/certificate";
 import { handleShrinkURLMessage } from "../helper/kzillaXYZ";
-import { CONSTANTS } from "../utils/constants";
+import { COMMANDS, CONSTANTS } from "../utils/constants";
 import {
   getHelpMessage,
   invalidCommand,
@@ -21,16 +21,16 @@ export async function handleIncomingChannelCommand(incomingMessage: Message) {
     const messageCommand = incomingMessage.content.split(" ")[1];
 
     switch (messageCommand) {
-      case "certificate": {
+      case COMMANDS.certificate: {
         // certificatehandler
         getCertificateChannelMessage(incomingMessage);
         break;
       }
-      case "shrink": {
+      case COMMANDS.shrinkURL: {
         handleShrinkURLMessage(incomingMessage);
         break;
       }
-      case "help": {
+      case COMMANDS.help: {
         incomingMessage.channel.send(getHelpMessage());
         break;
       }
@@ -52,8 +52,16 @@ export function handleIncomingDMCommand(incomingMessage: Message) {
     const messageCommand = incomingMessage.content.split(" ")[1];
 
     switch (messageCommand) {
-      case "get-certificate": {
+      case COMMANDS.dmcertificate: {
         certificateDMHandler(incomingMessage);
+        break;
+      }
+      case COMMANDS.shrinkURL: {
+        handleShrinkURLMessage(incomingMessage);
+        break;
+      }
+      case COMMANDS.help: {
+        incomingMessage.channel.send(getHelpMessage());
         break;
       }
       default:

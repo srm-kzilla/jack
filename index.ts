@@ -5,7 +5,7 @@ import {
   handleIncomingDMCommand,
 } from "./src/controllers/incomingMessageHandler";
 import { getDiscordBot, initDiscordBot } from "./src/utils/discord";
-import { CONSTANTS } from "./src/utils/constants";
+import { COMMANDS, CONSTANTS } from "./src/utils/constants";
 
 /******************************************
           Initialize Server
@@ -24,7 +24,7 @@ async function createServer() {
           Check if input is by Human
     *******************************************/
     if (!message.author.bot) {
-      if (message.content.split(" ")[0] == CONSTANTS.startCommand) {
+      if (message.content.split(" ")[0] == COMMANDS.prefix) {
         switch (message.channel.type) {
           /******************************************
                         Text channel
