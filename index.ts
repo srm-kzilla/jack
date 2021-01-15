@@ -18,10 +18,10 @@ async function createServer() {
   await initDbClient();
   const client = await getDiscordBot();
 
-  client.on("ready", () => {
-    console.log(`Logged in as ${client.user.tag}!`);
+  client!.on("ready", () => {
+    if (client) console.log(`Logged in as ${client.user!.tag}!`);
   });
-  client.on("message", async (message: Message) => {
+  client!.on("message", async (message: Message) => {
     /******************************************
           Check if input is by Human
     *******************************************/
