@@ -27,7 +27,7 @@ export const getYourCertificateChannelMessage = (eventName: string) => {
     );
 };
 
-export const certificateMessage = async () => {
+export const certificateMessage = async (cert: Buffer) => {
   return new MessageEmbed()
     .setTitle("Certificate")
     .setColor("#DAF7A6")
@@ -38,8 +38,8 @@ export const certificateMessage = async () => {
     .setFooter(
       "With ❤️ , your friends at SRMKZILLA",
       "https://srmkzilla.net/assets/img/kzilla.png"
-    );
-  // .attachFiles([img]); // Need to make dynamic to attach certificate
+    )
+    .attachFiles([{ attachment: cert, name: "certificate.jpeg" }]);
 };
 
 export const getHelpMessage = () => {
@@ -115,4 +115,13 @@ export const internalError = () => {
       "Made with ❤️ by your friends at SRMKZILLA",
       "https://srmkzilla.net/assets/img/kzilla.png"
     );
+};
+
+export const certParamsGenerator = () => {
+  return {
+    x: +process.env.CERTIFICATE_X!,
+    y: +process.env.CERTIFICATE_Y!,
+    maxWidth: +process.env.CERTIFICATE_MAXWIDTH!,
+    maxHeight: +process.env.CERTIFICATE_MAXHEIGHT!,
+  };
 };
