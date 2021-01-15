@@ -4,6 +4,7 @@ import {
   getCertificateChannelMessage,
 } from "../helper/certificate";
 import { handleShrinkURLMessage } from "../helper/kzillaXYZ";
+import { handleGetMemberCount } from "../helper/memberCount";
 import { COMMANDS, CONSTANTS } from "../utils/constants";
 import {
   getHelpMessage,
@@ -30,6 +31,10 @@ export async function handleIncomingChannelCommand(incomingMessage: Message) {
         handleShrinkURLMessage(incomingMessage);
         break;
       }
+      case COMMANDS.membercount: {
+        handleGetMemberCount(incomingMessage);
+        break;
+      }
       case COMMANDS.help: {
         incomingMessage.channel.send(getHelpMessage());
         break;
@@ -38,6 +43,7 @@ export async function handleIncomingChannelCommand(incomingMessage: Message) {
         incomingMessage.channel.send(invalidCommand());
     }
   } catch (err) {
+    console.log(err);
     incomingMessage.channel.send(invalidCommand());
   }
 }
@@ -64,6 +70,7 @@ export function handleIncomingDMCommand(incomingMessage: Message) {
         incomingMessage.channel.send(getHelpMessage());
         break;
       }
+
       default:
         incomingMessage.channel.send(invalidCommand());
     }

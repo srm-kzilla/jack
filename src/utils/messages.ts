@@ -66,6 +66,11 @@ export const getHelpMessage = () => {
         value: "Type `#kzjack shrink <URL>` for shrinking the URL",
       },
       {
+        name: "Members Count",
+        value:
+          "Type `#kzjack membercount` for getting count of the awesome people on this server",
+      },
+      {
         name: "Start Certificates Thread [Only Mods]",
         value: "Type `#kzjack certificate` for certificate",
       }
@@ -149,6 +154,36 @@ export const shrinkedURLMessage = (data: any) => {
       {
         name: "Analytics URL",
         value: `[kzilla.xyz/analytics/${data.analyticsCode}](https://kzilla.xyz/analytics/${data.analyticsCode})`,
+      }
+    )
+    .setTimestamp()
+    .setFooter(
+      "Powered by SRMKZILLA and hamster-charged batteries",
+      "https://srmkzilla.net/assets/img/kzilla.png"
+    );
+};
+
+export const membersCountMessage = (memberCount: number, botCount: number) => {
+  return new MessageEmbed()
+    .setTitle(memberCount)
+    .setColor("#DAF7A6")
+    .setDescription(
+      `I shovelled coal into the server and counted the members for you! 🚂`
+    )
+    .addFields(
+      {
+        name: "Current Members",
+        value: memberCount - botCount,
+        inline: true,
+      },
+      {
+        name: "Bots",
+        value: botCount,
+        inline: true,
+      },
+      {
+        name: "Next Milstone",
+        value: `${Math.ceil(memberCount / 100) * 100}`,
       }
     )
     .setTimestamp()
