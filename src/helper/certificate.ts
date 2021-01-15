@@ -3,13 +3,12 @@ import * as Jimp from "jimp";
 import { join } from "path";
 import { emailSchema } from "../models/email";
 import {
-  thumbsUpEmoji,
   getYourCertificateChannelMessage,
   internalError,
   unauthorizedUser,
   certParamsGenerator,
-} from "../utils/constants";
-import { ERRORS } from "../utils/errors";
+} from "../utils/messages";
+import { CONSTANTS, ERRORS } from "../utils/constants";
 import { getUserCertificate } from "../service/certificate-service";
 import { sendReactableMessage } from "../controllers/sendMessageHandler";
 import { checkForAccessByRoles } from "./roleAuth";
@@ -39,7 +38,7 @@ export async function getCertificateChannelMessage(incomingMessage: Message) {
     sendReactableMessage(
       incomingMessage,
       getYourCertificateChannelMessage("Tech-Troduction"),
-      thumbsUpEmoji
+      CONSTANTS.thumbsUpEmoji
     );
   } else {
     incomingMessage.channel.send(unauthorizedUser());

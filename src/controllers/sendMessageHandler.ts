@@ -1,10 +1,6 @@
 import { Message, MessageReaction, User } from "discord.js";
-import {
-  thumbsUpEmoji,
-  getYourCertificateChannelMessage,
-  internalError,
-} from "../utils/constants";
-import { ERRORS } from "../utils/errors";
+import { internalError } from "../utils/messages";
+import { ERRORS } from "../utils/constants";
 import { certificateEmojifilter } from "../utils/filters";
 import { handleIncomingReaction } from "./incomingMessageHandler";
 /**

@@ -3,13 +3,13 @@ import {
   certificateDMHandler,
   getCertificateChannelMessage,
 } from "../helper/certificate";
+import { handleShrinkURLMessage } from "../helper/kzillaXYZ";
+import { CONSTANTS } from "../utils/constants";
 import {
   getHelpMessage,
   invalidCommand,
   internalError,
-  thumbsUpEmoji,
-  certificateUserDirectMessage,
-} from "../utils/constants";
+} from "../utils/messages";
 import { sendDirectMessageToUser } from "./sendMessageHandler";
 /**
  * Handles all incoming commands in channel
@@ -24,6 +24,10 @@ export async function handleIncomingChannelCommand(incomingMessage: Message) {
       case "certificate": {
         // certificatehandler
         getCertificateChannelMessage(incomingMessage);
+        break;
+      }
+      case "shrink": {
+        handleShrinkURLMessage(incomingMessage);
         break;
       }
       case "help": {
@@ -74,14 +78,18 @@ export async function handleIncomingReaction(
   message: Message
 ) {
   if (!user.bot) {
-    if (reaction.emoji.name === thumbsUpEmoji) {
+    if (reaction.emoji.name === CONSTANTS.thumbsUpEmoji) {
       //TODO transfer the log to another channel
       message.channel.send(
         `${
           message.guild?.member(user.id)?.displayName || user.username
         } just collected their certificate!`
       );
-      sendDirectMessageToUser(user, message, certificateUserDirectMessage);
+      sendDirectMessageToUser(
+        user,
+        message,
+        CONSTANTS.certificateUserDirectMessage
+      );
     }
   }
 }

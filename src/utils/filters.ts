@@ -1,5 +1,5 @@
-import { thumbsUpEmoji } from "./constants";
+import { CONSTANTS } from "./constants";
 
 export const certificateEmojifilter = (reaction: any) => {
-  return thumbsUpEmoji.includes(reaction.emoji.name);
+  return CONSTANTS.thumbsUpEmoji.includes(reaction.emoji.name);
 };

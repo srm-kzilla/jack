@@ -1,127 +1,18 @@
-import { MessageEmbed } from "discord.js";
-import { generateCertificate } from "../helper/certificate";
-
-export const thumbsUpEmoji = "👍";
-
-export const startCommand = "-srmkzilla";
-
-export const certificateUserDirectMessage =
-  "Hello,Please drop your email here in the format `-srmkzilla get-certificate <your_email>`";
-
-export const getYourCertificateChannelMessage = (eventName: string) => {
-  return new MessageEmbed()
-    .setTitle("Get Your Certificates")
-    .setColor("#DAF7A6")
-    .setDescription(
-      `Looks like it’s Christmas again! It’s raining certificates. Grab yours for ${eventName} by reacting to this message with a ${thumbsUpEmoji}`
-    )
-    .addFields({
-      name: "Event Name",
-      value: eventName,
-    })
-    .setImage("https://srmkzilla.net/assets/img/kzilla.png")
-    .setTimestamp()
-    .setFooter(
-      "With ❤️ , your friends at SRMKZILLA",
-      "https://srmkzilla.net/assets/img/kzilla.png"
-    );
+export const ERRORS = {
+  DM_BLOCKED:
+    "Oopsie! It seems your dm is blocked. Please change the settings and request again!",
+  CERTIFICATE_NOT_FOUND:
+    "Oops! A wide search across our records, but we couldn't trace your data. Our insights say you weren't able to register for the event. Hope to see you soon next time!",
+  EMAIL_MISSING:
+    "Invalid Command! I guess you missed attaching your email at last",
+  INVALID_EMAIL: "Oops! The email is malformed or invalid. Please try again!",
+  URL_MISSING: "Invalid Command! I guess you missed attaching the URL at last",
 };
 
-export const certificateMessage = async (cert: Buffer) => {
-  return new MessageEmbed()
-    .setTitle("Certificate")
-    .setColor("#DAF7A6")
-    .setDescription(
-      `Thank you for attending the workshop! We hope you learnt a lot!`
-    )
-    .setTimestamp()
-    .setFooter(
-      "With ❤️ , your friends at SRMKZILLA",
-      "https://srmkzilla.net/assets/img/kzilla.png"
-    )
-    .attachFiles([{ attachment: cert, name: "certificate.jpeg" }]);
-};
-
-export const getHelpMessage = () => {
-  return new MessageEmbed()
-    .setTitle("SRMKZILLA Discord Bot")
-    .setColor("#DAF7A6")
-    .setDescription(`Ask me about your certificates`)
-    .addFields(
-      {
-        name: "Help",
-        value: "Type `-srmkzilla help` for a list of commands",
-      },
-      {
-        name: "Certificates",
-        value:
-          "Type `-srmkzilla get-certificate <your-email>` for certificates",
-      },
-      {
-        name: "Start Certificates Thread [Only Mods]",
-        value: "Type `-srmkzilla certificate` for certificate",
-      }
-    )
-    .setTimestamp()
-    .setFooter(
-      "Made with ❤️ by your friends at SRMKZILLA",
-      "https://srmkzilla.net/assets/img/kzilla.png"
-    );
-};
-export const invalidCommand = () => {
-  return new MessageEmbed()
-    .setTitle("SRMKZILLA Discord Bot")
-    .setColor("#DAF7A6")
-    .setDescription(`Oops! It seems you have entered an invalid command.`)
-    .addFields({
-      name: "Help",
-      value: "Type `-srmkzilla help` for a list of commands",
-    })
-    .setTimestamp()
-    .setFooter(
-      "Made with ❤️ by your friends at SRMKZILLA",
-      "https://srmkzilla.net/assets/img/kzilla.png"
-    );
-};
-
-export const unauthorizedUser = () => {
-  return new MessageEmbed()
-    .setTitle("SRMKZILLA Discord Bot")
-    .setColor("#DAF7A6")
-    .setDescription(`Oops! You are not authorized to use this command`)
-    .addFields({
-      name: "Help",
-      value: "Type `-srmkzilla help` for a list of commands",
-    })
-    .setTimestamp()
-    .setFooter(
-      "Made with ❤️ by your friends at SRMKZILLA",
-      "https://srmkzilla.net/assets/img/kzilla.png"
-    );
-};
-export const internalError = () => {
-  return new MessageEmbed()
-    .setTitle("SRMKZILLA Discord Bot")
-    .setColor("#DAF7A6")
-    .setDescription(
-      `Error 500. It's not you! It's us and we are on it! Meanwhile, try Help`
-    )
-    .addFields({
-      name: "Help",
-      value: "Type `-srmkzilla help` for a list of commands",
-    })
-    .setTimestamp()
-    .setFooter(
-      "Made with ❤️ by your friends at SRMKZILLA",
-      "https://srmkzilla.net/assets/img/kzilla.png"
-    );
-};
-
-export const certParamsGenerator = () => {
-  return {
-    x: +process.env.CERTIFICATE_X!,
-    y: +process.env.CERTIFICATE_Y!,
-    maxWidth: +process.env.CERTIFICATE_MAXWIDTH!,
-    maxHeight: +process.env.CERTIFICATE_MAXHEIGHT!,
-  };
+export const CONSTANTS = {
+  startCommand: "-srmkzilla",
+  thumbsUpEmoji: "👍",
+  certificateUserDirectMessage:
+    "Hello,Please drop your email here in the format `-srmkzilla get-certificate <your_email>`",
+  KZILLA_XYZ_SHRINK_URL_ENDPOINT: "https://kzilla.xyz/api/v1/webhook/link",
 };

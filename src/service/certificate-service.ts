@@ -1,9 +1,9 @@
 import { Message } from "discord.js";
 import { generateCertificate } from "../helper/certificate";
 import { Email } from "../models/email";
-import { certificateMessage, internalError } from "../utils/constants";
+import { certificateMessage, internalError } from "../utils/messages";
 import { getDbClient } from "../utils/database";
-import { ERRORS } from "../utils/errors";
+import { ERRORS } from "../utils/constants";
 
 export async function getUserCertificate(
   incomingMessage: Message,
@@ -26,6 +26,7 @@ export async function getUserCertificate(
       incomingMessage.channel.send(message);
     } else incomingMessage.channel.send(ERRORS.CERTIFICATE_NOT_FOUND);
   } catch (err) {
+    console.log(err);
     incomingMessage.channel.send(internalError());
   }
 }
