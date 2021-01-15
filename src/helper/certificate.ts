@@ -1,4 +1,4 @@
-import { Message, Role, User } from "discord.js";
+import { Message } from "discord.js";
 import { emailSchema } from "../models/email";
 import {
   thumbsUpEmoji,

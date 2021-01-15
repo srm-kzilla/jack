@@ -1,10 +1,13 @@
 import { Message } from "discord.js";
-import { generateCertificate } from "../helper/certificate";
+import { Email } from "../models/email";
 import { certificateMessage, internalError } from "../utils/constants";
 import { getDbClient } from "../utils/database";
 import { ERRORS } from "../utils/errors";
 
-export async function getUserCertificate(incomingMessage: Message, email: any) {
+export async function getUserCertificate(
+  incomingMessage: Message,
+  email: Email
+) {
   try {
     const dbClient = await getDbClient();
     const found = await dbClient
