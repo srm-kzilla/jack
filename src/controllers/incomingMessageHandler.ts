@@ -1,10 +1,11 @@
-import { Message, MessageReaction, User } from "discord.js";
+import { Client, Message, MessageReaction, User } from "discord.js";
 import {
   certificateDMHandler,
   getCertificateChannelMessage,
 } from "../helper/certificate";
 import { handleShrinkURLMessage } from "../helper/kzillaXYZ";
 import { COMMANDS, CONSTANTS } from "../utils/constants";
+import { getDiscordBot } from "../utils/discord";
 import {
   getHelpMessage,
   invalidCommand,
@@ -85,19 +86,17 @@ export async function handleIncomingReaction(
   reaction: MessageReaction,
   message: Message
 ) {
-  if (!user.bot) {
-    if (reaction.emoji.name === CONSTANTS.thumbsUpEmoji) {
-      //TODO transfer the log to another channel
-      message.channel.send(
-        `${
-          message.guild?.member(user.id)?.displayName || user.username
-        } just collected their certificate!`
-      );
-      sendDirectMessageToUser(
-        user,
-        message,
-        CONSTANTS.certificateUserDirectMessage
-      );
+  try {
+    if (!user.bot) {
+      if (reaction.emoji.name === CONSTANTS.thumbsUpEmoji) {
+        sendDirectMessageToUser(
+          user,
+          message,
+          CONSTANTS.certificateUserDirectMessage
+        );
+      }
     }
+  } catch (err) {
+    console.log(err);
   }
 }

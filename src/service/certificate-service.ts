@@ -4,6 +4,7 @@ import { Email } from "../models/email";
 import { certificateMessage, internalError } from "../utils/messages";
 import { getDbClient } from "../utils/database";
 import { ERRORS } from "../utils/constants";
+import { logger } from "../utils/logger";
 
 export async function getUserCertificate(
   incomingMessage: Message,
@@ -24,6 +25,7 @@ export async function getUserCertificate(
         await generateCertificate(registrant!.name)
       );
       incomingMessage.channel.send(message);
+      logger(`${registrant!.name} just collected their certificate!`);
     } else incomingMessage.channel.send(ERRORS.CERTIFICATE_NOT_FOUND);
   } catch (err) {
     console.log(err);

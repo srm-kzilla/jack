@@ -18,9 +18,8 @@ export const COMMANDS = {
 export const CONSTANTS = {
   thumbsUpEmoji: "👍",
   certificateUserDirectMessage:
-    "Hello,Please drop your email here in the format" +
-    "`#kzjack`" +
-    "` get-certificate <your_email>`", //FIXME remove hardcoded prefix
+    "Hello,Please drop your email here in the format " +
+    "`#kzjack get-certificate <your_email>`", //FIXME remove hardcoded prefix
 
   KZILLA_XYZ_SHRINK_URL_ENDPOINT: "https://kzilla.xyz/api/v1/webhook/link",
 };
