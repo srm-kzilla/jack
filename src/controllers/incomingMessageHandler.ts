@@ -28,6 +28,7 @@ export async function handleIncomingChannelCommand(incomingMessage: Message) {
       }
       case "help": {
         incomingMessage.channel.send(getHelpMessage());
+        break;
       }
       default:
         incomingMessage.channel.send(invalidCommand());
