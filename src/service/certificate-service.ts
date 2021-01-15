@@ -1,7 +1,11 @@
 import { Message } from "discord.js";
 import { generateCertificate } from "../helper/certificate";
 import { Email } from "../models/email";
-import { certificateMessage, internalError } from "../utils/messages";
+import {
+  certificateMessage,
+  internalError,
+  waitCertificateMessage,
+} from "../utils/messages";
 import { getDbClient } from "../utils/database";
 import { ERRORS } from "../utils/constants";
 import { logger } from "../utils/logger";
@@ -11,6 +15,7 @@ export async function getUserCertificate(
   email: Email
 ) {
   try {
+    incomingMessage.channel.send(await waitCertificateMessage());
     const dbClient = await getDbClient();
     const found = await dbClient
       .db()

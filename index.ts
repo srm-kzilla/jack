@@ -6,6 +6,7 @@ import {
 } from "./src/controllers/incomingMessageHandler";
 import { getDiscordBot, initDiscordBot } from "./src/utils/discord";
 import { COMMANDS, CONSTANTS } from "./src/utils/constants";
+import { initDbClient } from "./src/utils/database";
 
 /******************************************
           Initialize Server
@@ -14,6 +15,7 @@ async function createServer() {
   // Mount Initializers
   config();
   await initDiscordBot();
+  await initDbClient();
   const client = await getDiscordBot();
 
   client.on("ready", () => {

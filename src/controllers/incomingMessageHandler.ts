@@ -1,11 +1,10 @@
-import { Client, Message, MessageReaction, User } from "discord.js";
+import { Message, MessageReaction, User } from "discord.js";
 import {
   certificateDMHandler,
   getCertificateChannelMessage,
 } from "../helper/certificate";
 import { handleShrinkURLMessage } from "../helper/kzillaXYZ";
 import { COMMANDS, CONSTANTS } from "../utils/constants";
-import { getDiscordBot } from "../utils/discord";
 import {
   getHelpMessage,
   invalidCommand,

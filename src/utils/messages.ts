@@ -15,24 +15,36 @@ export const getYourCertificateChannelMessage = (eventName: string) => {
     .setImage("https://srmkzilla.net/assets/img/kzilla.png")
     .setTimestamp()
     .setFooter(
-      "With ❤️ , your friends at SRMKZILLA",
+      "Powered by SRMKZILLA and hamster-charged batteries",
       "https://srmkzilla.net/assets/img/kzilla.png"
     );
 };
 
 export const certificateMessage = async (cert: Buffer) => {
   return new MessageEmbed()
-    .setTitle("Certificate")
+    .setTitle("Here's your Certificate")
     .setColor("#DAF7A6")
     .setDescription(
-      `Thank you for attending the workshop! We hope you learnt a lot!`
+      `Thank you for being the star of the webinar. Grab your participation certificate here. We hope you had a great time learning and discovering !`
     )
     .setTimestamp()
     .setFooter(
-      "With ❤️ , your friends at SRMKZILLA",
+      "Powered by SRMKZILLA and hamster-charged batteries",
       "https://srmkzilla.net/assets/img/kzilla.png"
     )
     .attachFiles([{ attachment: cert, name: "certificate.jpeg" }]);
+};
+
+export const waitCertificateMessage = async () => {
+  return new MessageEmbed()
+    .setTitle("Things worth having are worth waiting for")
+    .setColor("#DAF7A6")
+    .setDescription(`Please wait while we fetch a certificate for you!`)
+    .setTimestamp()
+    .setFooter(
+      "Powered by SRMKZILLA and hamster-charged batteries",
+      "https://srmkzilla.net/assets/img/kzilla.png"
+    );
 };
 
 export const getHelpMessage = () => {
@@ -60,7 +72,7 @@ export const getHelpMessage = () => {
     )
     .setTimestamp()
     .setFooter(
-      "Made with ❤️ by your friends at SRMKZILLA",
+      "Powered by SRMKZILLA and hamster-charged batteries",
       "https://srmkzilla.net/assets/img/kzilla.png"
     );
 };
@@ -75,7 +87,7 @@ export const invalidCommand = () => {
     })
     .setTimestamp()
     .setFooter(
-      "Made with ❤️ by your friends at SRMKZILLA",
+      "Powered by SRMKZILLA and hamster-charged batteries",
       "https://srmkzilla.net/assets/img/kzilla.png"
     );
 };
@@ -91,7 +103,7 @@ export const unauthorizedUser = () => {
     })
     .setTimestamp()
     .setFooter(
-      "Made with ❤️ by your friends at SRMKZILLA",
+      "Powered by SRMKZILLA and hamster-charged batteries",
       "https://srmkzilla.net/assets/img/kzilla.png"
     );
 };
@@ -108,7 +120,7 @@ export const internalError = () => {
     })
     .setTimestamp()
     .setFooter(
-      "Made with ❤️ by your friends at SRMKZILLA",
+      "Powered by SRMKZILLA and hamster-charged batteries",
       "https://srmkzilla.net/assets/img/kzilla.png"
     );
 };
@@ -124,7 +136,7 @@ export const certParamsGenerator = () => {
 
 export const shrinkedURLMessage = (data: any) => {
   return new MessageEmbed()
-    .setTitle("Here's your short URL")
+    .setTitle("Here's your dwindled URL")
     .setColor("#DAF7A6")
     .setDescription(
       `I shovelled coal into the server and shrunk that like for you! 🚂`
@@ -141,7 +153,7 @@ export const shrinkedURLMessage = (data: any) => {
     )
     .setTimestamp()
     .setFooter(
-      "With ❤️ , your friends at SRMKZILLA",
+      "Powered by SRMKZILLA and hamster-charged batteries",
       "https://srmkzilla.net/assets/img/kzilla.png"
     );
 };
