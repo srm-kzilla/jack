@@ -1,6 +1,6 @@
 import axios from "axios";
 import { Message } from "discord.js";
-import { shrinkedURLMessage } from "../utils/messages";
+import { internalError, shrinkedURLMessage } from "../utils/messages";
 import { CONSTANTS, ERRORS } from "../utils/constants";
 
 export async function shrinkURL(longUrl: string) {
@@ -24,5 +24,6 @@ export async function handleShrinkURLMessage(incomingMessage: Message) {
     }
   } catch (err) {
     console.log(err);
+    incomingMessage.channel.send(internalError());
   }
 }
