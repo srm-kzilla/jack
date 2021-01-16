@@ -35,11 +35,22 @@ export const certificateMessage = async (cert: Buffer) => {
     .attachFiles([{ attachment: cert, name: "certificate.jpeg" }]);
 };
 
-export const waitCertificateMessage = async () => {
+export const waitCertificateMessage = () => {
   return new MessageEmbed()
     .setTitle("Things worth having are worth waiting for")
-    .setColor("#DAF7A6")
+    .setColor(COLORS.INFO)
     .setDescription(`Please wait while we fetch a certificate for you!`)
+    .setTimestamp()
+    .setFooter(
+      "Powered by SRMKZILLA and hamster-charged batteries",
+      "https://srmkzilla.net/assets/img/kzilla.png"
+    );
+};
+export const certificateNotAccessible = () => {
+  return new MessageEmbed()
+    .setTitle("Ooops! Service Unavailable as the event hasn't ended yet!")
+    .setColor(COLORS.ERROR)
+    .setDescription(`Please do join us at the event to explore awesomeness!`)
     .setTimestamp()
     .setFooter(
       "Powered by SRMKZILLA and hamster-charged batteries",
