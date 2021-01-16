@@ -6,6 +6,7 @@ import {
 import { handleShrinkURLMessage } from "../helper/kzillaXYZ";
 import { handleGetMemberCount } from "../helper/memberCount";
 import { COMMANDS, CONSTANTS } from "../utils/constants";
+import { serverLogger } from "../utils/logger";
 import {
   getHelpMessage,
   invalidCommand,
@@ -23,7 +24,6 @@ export async function handleIncomingChannelCommand(incomingMessage: Message) {
 
     switch (messageCommand) {
       case COMMANDS.certificate: {
-        // certificatehandler
         getCertificateChannelMessage(incomingMessage);
         break;
       }
@@ -41,9 +41,11 @@ export async function handleIncomingChannelCommand(incomingMessage: Message) {
       }
       default:
         incomingMessage.channel.send(invalidCommand());
+        serverLogger("user-error", incomingMessage.content, "Invalid Command");
+        break;
     }
   } catch (err) {
-    console.log(err);
+    serverLogger("error", incomingMessage.content, err);
     incomingMessage.channel.send(invalidCommand());
   }
 }
@@ -56,7 +58,6 @@ export async function handleIncomingChannelCommand(incomingMessage: Message) {
 export function handleIncomingDMCommand(incomingMessage: Message) {
   try {
     const messageCommand = incomingMessage.content.split(" ")[1];
-
     switch (messageCommand) {
       case COMMANDS.dmcertificate: {
         certificateDMHandler(incomingMessage);
@@ -67,15 +68,17 @@ export function handleIncomingDMCommand(incomingMessage: Message) {
         break;
       }
       case COMMANDS.help: {
+        serverLogger("success", incomingMessage.content, "Help Message");
         incomingMessage.channel.send(getHelpMessage());
         break;
       }
-
       default:
         incomingMessage.channel.send(invalidCommand());
+        serverLogger("user-error", incomingMessage.content, "Invalid Command");
+        break;
     }
   } catch (err) {
-    console.log(err);
+    serverLogger("error", incomingMessage.content, err);
     incomingMessage.channel.send(internalError());
   }
 }

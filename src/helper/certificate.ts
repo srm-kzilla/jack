@@ -12,21 +12,25 @@ import { CONSTANTS, ERRORS } from "../utils/constants";
 import { getUserCertificate } from "../service/certificate-service";
 import { sendReactableMessage } from "../controllers/sendMessageHandler";
 import { checkForAccessByRoles } from "./roleAuth";
+import { serverLogger } from "../utils/logger";
 
 export async function certificateDMHandler(incomingMessage: Message) {
   const email = incomingMessage.content.split(" ")[2];
   try {
     if (!email) {
+      serverLogger("user-error", incomingMessage.content, "No Email Found");
       incomingMessage.channel.send(ERRORS.EMAIL_MISSING);
     }
     await emailSchema.validate(email);
-    // Send Certificate Here
     getUserCertificate(incomingMessage, email);
   } catch (err) {
-    console.log(err);
-    if (err.name == "ValidationError")
+    if (err.name == "ValidationError") {
+      serverLogger("user-error", incomingMessage.content, "Malformed Email");
       incomingMessage.channel.send(ERRORS.INVALID_EMAIL);
-    else incomingMessage.channel.send(internalError());
+    } else {
+      serverLogger("error", incomingMessage.content, err);
+      incomingMessage.channel.send(internalError());
+    }
   }
 }
 
@@ -41,6 +45,7 @@ export async function getCertificateChannelMessage(incomingMessage: Message) {
       CONSTANTS.thumbsUpEmoji
     );
   } else {
+    serverLogger("user-error", incomingMessage.content, "Unauthorized User");
     incomingMessage.channel.send(unauthorizedUser());
   }
 }

@@ -7,7 +7,7 @@ export async function initDbClient() {
       useUnifiedTopology: true,
       ignoreUndefined: true,
     });
-    console.log("Connected to Database");
+    console.log("✔️   Connected to Database");
     return dbClient;
   } catch (error) {
     throw error;

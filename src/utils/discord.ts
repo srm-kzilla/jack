@@ -9,7 +9,7 @@ export async function getDiscordBot() {
     }
     return bot;
   } catch (err) {
-    console.log("Error connecting to Bot", err);
+    console.log("❌   Error connecting to Bot", err);
   }
 }
 
@@ -17,6 +17,7 @@ export async function initDiscordBot() {
   try {
     bot = new Discord.Client();
     await bot.login(process.env.DISCORD_TOKEN || "");
+    console.log("✔️   Discord Bot Login");
     bot.user!.setActivity("#kzjack help", {
       name: "#kzjack help",
       type: "LISTENING",
@@ -24,6 +25,6 @@ export async function initDiscordBot() {
     });
     return bot;
   } catch (err) {
-    console.log("Error connecting to Bot", err);
+    console.log("❌ Error connecting to Bot", err);
   }
 }

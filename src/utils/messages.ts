@@ -1,10 +1,10 @@
 import { MessageEmbed } from "discord.js";
-import { CONSTANTS } from "./constants";
+import { COLORS, CONSTANTS } from "./constants";
 
 export const getYourCertificateChannelMessage = (eventName: string) => {
   return new MessageEmbed()
     .setTitle("Get Your Certificates")
-    .setColor("#DAF7A6")
+    .setColor(COLORS.INFO)
     .setDescription(
       `Looks like it’s Christmas again! It’s raining certificates. Grab yours for ${eventName} by reacting to this message with a ${CONSTANTS.thumbsUpEmoji}`
     )
@@ -23,7 +23,7 @@ export const getYourCertificateChannelMessage = (eventName: string) => {
 export const certificateMessage = async (cert: Buffer) => {
   return new MessageEmbed()
     .setTitle("Here's your Certificate")
-    .setColor("#DAF7A6")
+    .setColor(COLORS.SUCCESS)
     .setDescription(
       `Thank you for being the star of the webinar. Grab your participation certificate here. We hope you had a great time learning and discovering !`
     )
@@ -50,7 +50,7 @@ export const waitCertificateMessage = async () => {
 export const getHelpMessage = () => {
   return new MessageEmbed()
     .setTitle("SRMKZILLA Discord Bot")
-    .setColor("#DAF7A6")
+    .setColor(COLORS.INFO)
     .setDescription(`Ask me about your certificates`)
     .addFields(
       {
@@ -84,7 +84,7 @@ export const getHelpMessage = () => {
 export const invalidCommand = () => {
   return new MessageEmbed()
     .setTitle("SRMKZILLA Discord Bot")
-    .setColor("#DAF7A6")
+    .setColor(COLORS.ERROR)
     .setDescription(`Oops! It seems you have entered an invalid command.`)
     .addFields({
       name: "Help",
@@ -100,7 +100,7 @@ export const invalidCommand = () => {
 export const unauthorizedUser = () => {
   return new MessageEmbed()
     .setTitle("SRMKZILLA Discord Bot")
-    .setColor("#DAF7A6")
+    .setColor(COLORS.ERROR)
     .setDescription(`Oops! You are not authorized to use this command`)
     .addFields({
       name: "Help",
@@ -112,10 +112,23 @@ export const unauthorizedUser = () => {
       "https://srmkzilla.net/assets/img/kzilla.png"
     );
 };
+
+export const invalidURL = () => {
+  return new MessageEmbed()
+    .setTitle("Malformed URL")
+    .setColor(COLORS.ERROR)
+    .setDescription(`Whoooop! It seems you entered an invalid or malformed URL`)
+    .setTimestamp()
+    .setFooter(
+      "Powered by SRMKZILLA and hamster-charged batteries",
+      "https://srmkzilla.net/assets/img/kzilla.png"
+    );
+};
+
 export const internalError = () => {
   return new MessageEmbed()
     .setTitle("SRMKZILLA Discord Bot")
-    .setColor("#DAF7A6")
+    .setColor(COLORS.ERROR)
     .setDescription(
       `Error 500. It's not you! It's us and we are on it! Meanwhile, try Help`
     )
@@ -142,7 +155,7 @@ export const certParamsGenerator = () => {
 export const shrinkedURLMessage = (data: any) => {
   return new MessageEmbed()
     .setTitle("Here's your dwindled URL")
-    .setColor("#DAF7A6")
+    .setColor(COLORS.SUCCESS)
     .setDescription(
       `I shovelled coal into the server and shrunk that like for you! 🚂`
     )
@@ -150,10 +163,12 @@ export const shrinkedURLMessage = (data: any) => {
       {
         name: "Shrunk URL",
         value: `[kzilla.xyz/${data.shortCode}](https://kzilla.xyz/${data.shortCode})`,
+        inline: true,
       },
       {
         name: "Analytics URL",
         value: `[kzilla.xyz/analytics/${data.analyticsCode}](https://kzilla.xyz/analytics/${data.analyticsCode})`,
+        inline: true,
       }
     )
     .setTimestamp()
@@ -166,7 +181,7 @@ export const shrinkedURLMessage = (data: any) => {
 export const membersCountMessage = (memberCount: number, botCount: number) => {
   return new MessageEmbed()
     .setTitle(memberCount)
-    .setColor("#DAF7A6")
+    .setColor(COLORS.SUCCESS)
     .setDescription(
       `I shovelled coal into the server and counted the members for you! 🚂`
     )

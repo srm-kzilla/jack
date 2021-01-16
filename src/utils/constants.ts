@@ -24,3 +24,9 @@ export const CONSTANTS = {
 
   KZILLA_XYZ_SHRINK_URL_ENDPOINT: "https://kzilla.xyz/api/v1/webhook/link",
 };
+
+export const COLORS = {
+  SUCCESS: "#15AE37",
+  INFO: "#DAF7A6",
+  ERROR: "#F42929",
+};

@@ -1,4 +1,5 @@
 import { Message } from "discord.js";
+import { serverLogger } from "../utils/logger";
 import { internalError } from "../utils/messages";
 import { membersCountMessage } from "../utils/messages";
 export async function handleGetMemberCount(incomingMessage: Message) {
@@ -10,8 +11,13 @@ export async function handleGetMemberCount(incomingMessage: Message) {
     incomingMessage.channel.send(
       await membersCountMessage(memberCount || 0, bots || 0)
     );
+    serverLogger(
+      "success",
+      incomingMessage.content,
+      `Members count ${memberCount}`
+    );
   } catch (err) {
-    console.log(err);
+    serverLogger("error", incomingMessage.content, err);
     incomingMessage.channel.send(internalError());
   }
 }

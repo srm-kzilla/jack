@@ -3,6 +3,7 @@ import { internalError } from "../utils/messages";
 import { ERRORS } from "../utils/constants";
 import { certificateEmojifilter } from "../utils/filters";
 import { handleIncomingReaction } from "./incomingMessageHandler";
+import { serverLogger } from "../utils/logger";
 /**
  * Sends message to user in his DMs
  *
@@ -19,7 +20,7 @@ export async function sendDirectMessageToUser(
   try {
     await user.send(userMessage);
   } catch (err) {
-    console.log(err);
+    serverLogger("error", message, "DM Blocked");
     message.channel.send(ERRORS.DM_BLOCKED);
   }
 }
@@ -45,6 +46,7 @@ export function sendReactableMessage(
       });
     });
   } catch (err) {
+    serverLogger("error", incomingMessage.content, err);
     incomingMessage.channel.send(internalError());
   }
 }
