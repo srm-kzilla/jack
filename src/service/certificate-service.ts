@@ -16,14 +16,14 @@ export async function getUserCertificate(
   email: Email
 ) {
   try {
-    incomingMessage.channel.send(waitCertificateMessage());
-    const dbClient = await getDbClient();
-    const found = await dbClient
-      .db()
-      .collection("tech-troduction")
-      .countDocuments({ email: email });
-    if (found) {
-      if (process.env.CERTIFICATED_ACCESS_ENABLED) {
+    if (process.env.CERTIFICATE_ACCESS_ENABLED) {
+      incomingMessage.channel.send(waitCertificateMessage());
+      const dbClient = await getDbClient();
+      const found = await dbClient
+        .db()
+        .collection("tech-troduction")
+        .countDocuments({ email: email });
+      if (found) {
         const registrant = await dbClient
           .db()
           .collection("tech-troduction")
@@ -42,20 +42,16 @@ export async function getUserCertificate(
           `Certificate Collected by ${registrant!.name}`
         );
       } else {
-        incomingMessage.channel.send(certificateNotAccessible());
         serverLogger(
           "user-error",
           incomingMessage.content,
-          `Unauth access to certificate`
+          "Certificate Not Found"
         );
+        incomingMessage.channel.send(ERRORS.CERTIFICATE_NOT_FOUND);
       }
     } else {
-      serverLogger(
-        "user-error",
-        incomingMessage.content,
-        "Certificate Not Found"
-      );
-      incomingMessage.channel.send(ERRORS.CERTIFICATE_NOT_FOUND);
+      incomingMessage.channel.send(certificateNotAccessible());
+      serverLogger("user-error", incomingMessage.content, `Certificate N/A`);
     }
   } catch (err) {
     serverLogger("error", incomingMessage.content, err);
