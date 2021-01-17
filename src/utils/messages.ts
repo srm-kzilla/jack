@@ -189,9 +189,9 @@ export const shrinkedURLMessage = (data: any) => {
     );
 };
 
-export const membersCountMessage = (memberCount: number, botCount: number) => {
+export const membersCountMessage = (membersCount: number, botCount: number) => {
   return new MessageEmbed()
-    .setTitle(memberCount)
+    .setTitle(membersCount + botCount)
     .setColor(COLORS.SUCCESS)
     .setDescription(
       `I shovelled coal into the server and counted the members for you! 🚂`
@@ -199,7 +199,7 @@ export const membersCountMessage = (memberCount: number, botCount: number) => {
     .addFields(
       {
         name: "Current Members",
-        value: memberCount - botCount,
+        value: membersCount,
         inline: true,
       },
       {
@@ -209,7 +209,11 @@ export const membersCountMessage = (memberCount: number, botCount: number) => {
       },
       {
         name: "Next Milstone",
-        value: `${Math.ceil(memberCount / 100) * 100}`,
+        value: `${
+          (Math.ceil(membersCount / 100) * 100) % 10 == 0
+            ? Math.ceil(membersCount / 100) * 100 + 100
+            : Math.ceil(membersCount / 100) * 100
+        }`,
       }
     )
     .setTimestamp()

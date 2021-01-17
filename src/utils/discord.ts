@@ -1,4 +1,4 @@
-import Discord from "discord.js";
+import Discord, { Intents } from "discord.js";
 
 let bot: Discord.Client;
 
@@ -15,7 +15,9 @@ export async function getDiscordBot() {
 
 export async function initDiscordBot() {
   try {
-    bot = new Discord.Client();
+    let intents = new Intents(Intents.NON_PRIVILEGED);
+    intents.add("GUILD_MEMBERS");
+    bot = new Discord.Client({ ws: { intents: intents } });
     await bot.login(process.env.DISCORD_TOKEN || "");
     console.log("✔️   Discord Bot Login");
     bot.user!.setActivity("#kzjack help", {
