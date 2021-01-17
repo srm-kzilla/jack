@@ -14,10 +14,12 @@ export const COMMANDS = {
   certificate: "certificate",
   dmcertificate: "get-certificate",
   membercount: "membercount",
+  announce: "announce",
 };
 
 export const CONSTANTS = {
   thumbsUpEmoji: "👍",
+  jackLogo: "https://srmkzilla.net/static/jack_logo.png",
   certificateUserDirectMessage:
     "Hello, Please drop your registered email here in the format " +
     "`#kzjack get-certificate <your_email>`", //FIXME remove hardcoded prefix
@@ -29,4 +31,5 @@ export const COLORS = {
   SUCCESS: "#15AE37",
   INFO: "#DAF7A6",
   ERROR: "#F42929",
+  ANNOUNCEMENT: "#26BAFF",
 };

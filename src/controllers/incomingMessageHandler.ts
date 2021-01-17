@@ -1,4 +1,5 @@
 import { Message, MessageReaction, User } from "discord.js";
+import { handleAnnouncements } from "../helper/announcement";
 import {
   certificateDMHandler,
   getCertificateChannelMessage,
@@ -35,8 +36,18 @@ export async function handleIncomingChannelCommand(incomingMessage: Message) {
         handleGetMemberCount(incomingMessage);
         break;
       }
+      case COMMANDS.announce: {
+        handleAnnouncements(incomingMessage);
+        serverLogger(
+          "success",
+          incomingMessage.content.split(" ").splice(0, 5),
+          "Announcements"
+        );
+        break;
+      }
       case COMMANDS.help: {
         incomingMessage.channel.send(getHelpMessage());
+        serverLogger("success", incomingMessage.content, "Help Message");
         break;
       }
       default:
@@ -46,7 +57,7 @@ export async function handleIncomingChannelCommand(incomingMessage: Message) {
     }
   } catch (err) {
     serverLogger("error", incomingMessage.content, err);
-    incomingMessage.channel.send(invalidCommand());
+    incomingMessage.channel.send(internalError());
   }
 }
 
@@ -68,8 +79,8 @@ export function handleIncomingDMCommand(incomingMessage: Message) {
         break;
       }
       case COMMANDS.help: {
-        serverLogger("success", incomingMessage.content, "Help Message");
         incomingMessage.channel.send(getHelpMessage());
+        serverLogger("success", incomingMessage.content, "Help Message");
         break;
       }
       default:

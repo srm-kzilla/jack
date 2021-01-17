@@ -60,30 +60,30 @@ export const certificateNotAccessible = () => {
 
 export const getHelpMessage = () => {
   return new MessageEmbed()
-    .setTitle("SRMKZILLA Discord Bot")
+    .setTitle("Hi, This is Jack")
+    .setThumbnail(CONSTANTS.jackLogo)
     .setColor(COLORS.INFO)
-    .setDescription(`Ask me about your certificates`)
+    .setDescription(`A cool Beep Bot. Talk with me with the following commands`)
     .addFields(
       {
-        name: "Help",
-        value: "Type `#kzjack help` for a list of commands",
+        name: "Get List of Commands",
+        value: "`#kzjack help`",
       },
       {
-        name: "Certificates",
-        value: "Type `#kzjack get-certificate <your-email>` for certificates",
-      },
-      {
-        name: "Shrink URLs",
-        value: "Type `#kzjack shrink <URL>` for shrinking the URL",
+        name: "Shrink URLs using KZILLA.XYZ",
+        value: "`#kzjack shrink <URL>`",
       },
       {
         name: "Members Count",
-        value:
-          "Type `#kzjack membercount` for getting count of the awesome people on this server",
+        value: "`#kzjack membercount`",
+      },
+      {
+        name: "Announcements [Only Mods]",
+        value: "`#kzjack announce <channel-name> <?title> <description>`",
       },
       {
         name: "Start Certificates Thread [Only Mods]",
-        value: "Type `#kzjack certificate` for certificate",
+        value: "`#kzjack certificate`",
       }
     )
     .setTimestamp()
@@ -94,7 +94,7 @@ export const getHelpMessage = () => {
 };
 export const invalidCommand = () => {
   return new MessageEmbed()
-    .setTitle("SRMKZILLA Discord Bot")
+    .setTitle("Oopsie! I didn't get that")
     .setColor(COLORS.ERROR)
     .setDescription(`Oops! It seems you have entered an invalid command.`)
     .addFields({
@@ -110,9 +110,11 @@ export const invalidCommand = () => {
 
 export const unauthorizedUser = () => {
   return new MessageEmbed()
-    .setTitle("SRMKZILLA Discord Bot")
+    .setTitle("Wait! This area is not accessible.")
     .setColor(COLORS.ERROR)
-    .setDescription(`Oops! You are not authorized to use this command`)
+    .setDescription(
+      `Oops! You are not authorized to use this command. Please contact any moderator for the same.`
+    )
     .addFields({
       name: "Help",
       value: "Type `#kzjack help` for a list of commands",
@@ -221,4 +223,41 @@ export const membersCountMessage = (membersCount: number, botCount: number) => {
       "Powered by SRMKZILLA and hamster-charged batteries",
       "https://srmkzilla.net/assets/img/kzilla.png"
     );
+};
+
+export const invalidChannel = () => {
+  return new MessageEmbed()
+    .setTitle("Invalid Channel Name")
+    .setColor(COLORS.ERROR)
+    .setDescription(
+      `Oops! It seems you have entered an invalid channel name. Please enter a valid one and try again!`
+    )
+    .setTimestamp()
+    .setFooter(
+      "Powered by SRMKZILLA and hamster-charged batteries",
+      "https://srmkzilla.net/assets/img/kzilla.png"
+    );
+};
+
+export const announcementMessage = (title: string, message: string) => {
+  if (title == "null") {
+    return new MessageEmbed()
+      .setColor(COLORS.ANNOUNCEMENT)
+      .setDescription(message)
+      .setTimestamp()
+      .setFooter(
+        "Powered by SRMKZILLA and hamster-charged batteries",
+        "https://srmkzilla.net/assets/img/kzilla.png"
+      );
+  } else {
+    return new MessageEmbed()
+      .setTitle(title)
+      .setColor(COLORS.ANNOUNCEMENT)
+      .setDescription(message)
+      .setTimestamp()
+      .setFooter(
+        "Powered by SRMKZILLA and hamster-charged batteries",
+        "https://srmkzilla.net/assets/img/kzilla.png"
+      );
+  }
 };
