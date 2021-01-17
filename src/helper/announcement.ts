@@ -26,15 +26,16 @@ export async function handleAnnouncements(incomingMessage: Message) {
           "Announcement text missing"
         );
         incomingMessage.channel.send(invalidCommand());
-      }
-      const channel: TextChannel = incomingMessage.guild?.channels.cache.find(
-        (ch) => ch.name == channelName
-      ) as TextChannel;
-      if (channel && channel?.type == "text") {
-        channel.send(announcementMessage(title, announcement));
-        incomingMessage.channel.send("Sent! :white_check_mark: ");
       } else {
-        throw Error;
+        const channel: TextChannel = incomingMessage.guild?.channels.cache.find(
+          (ch) => ch.name == channelName
+        ) as TextChannel;
+        if (channel && channel?.type == "text") {
+          channel.send(announcementMessage(title, announcement));
+          incomingMessage.channel.send("Sent! :white_check_mark: ");
+        } else {
+          throw Error;
+        }
       }
     } else {
       serverLogger(
