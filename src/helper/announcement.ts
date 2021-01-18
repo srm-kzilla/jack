@@ -28,10 +28,12 @@ export async function handleAnnouncements(incomingMessage: Message) {
         );
         incomingMessage.channel.send(invalidCommand());
       } else {
-        const channel: TextChannel = incomingMessage.guild?.channels.cache.find(
+        const channel = incomingMessage.guild?.channels.cache.find(
           (ch) => ch.id == channelId
-        ) as TextChannel;
-        if (channel && channel?.type == "text") {
+        );
+        console.log(channel);
+        if (channel && (channel?.type === "text" || channel?.type === "news")) {
+          //@ts-ignore
           channel.send("@everyone", {
             embed: announcementMessage(title, announcement),
           });
