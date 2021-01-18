@@ -15,12 +15,11 @@ export async function handleAnnouncements(incomingMessage: Message) {
     if (isAllowed) {
       let channelId = incomingMessage.content.split(" ")[2];
       channelId = channelId.substring(2, channelId.length - 1);
-      let title = incomingMessage.content.split(" ")[3];
-      title = title.substring(1, title.length - 1);
-      const announcement = incomingMessage.content
-        .split(" ")
-        .slice(4)
-        .join(" ");
+      let title = incomingMessage.content.split("<")[2];
+      title = title.substring(0, title.indexOf(">"));
+      const tempString = incomingMessage.content.split(">")[2];
+      const index = incomingMessage.content.indexOf(tempString);
+      const announcement = incomingMessage.content.substring(index);
       if (!announcement) {
         serverLogger(
           "user-error",
