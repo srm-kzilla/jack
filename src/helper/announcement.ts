@@ -31,7 +31,9 @@ export async function handleAnnouncements(incomingMessage: Message) {
           (ch) => ch.name == channelName
         ) as TextChannel;
         if (channel && channel?.type == "text") {
-          channel.send(announcementMessage(title, announcement));
+          channel.send("@everyone", {
+            embed: announcementMessage(title, announcement),
+          });
           incomingMessage.channel.send("Sent! :white_check_mark: ");
         } else {
           throw Error;
