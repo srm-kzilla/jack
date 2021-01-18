@@ -13,12 +13,13 @@ export async function handleAnnouncements(incomingMessage: Message) {
       "Moderator",
     ]);
     if (isAllowed) {
-      const channelName = incomingMessage.content.split(" ")[2];
-      const title = incomingMessage.content.split(" ")[3];
-      const announcement = incomingMessage.content
-        .split(" ")
-        .slice(4)
-        .join(" ");
+      let channelId = incomingMessage.content.split(" ")[2];
+      channelId = channelId.substring(2, channelId.length - 1);
+      let title = incomingMessage.content.split("<")[2];
+      title = title.substring(0, title.indexOf(">"));
+      const tempString = incomingMessage.content.split(">")[2];
+      const index = incomingMessage.content.indexOf(tempString);
+      const announcement = incomingMessage.content.substring(index);
       if (!announcement) {
         serverLogger(
           "user-error",
@@ -27,10 +28,12 @@ export async function handleAnnouncements(incomingMessage: Message) {
         );
         incomingMessage.channel.send(invalidCommand());
       } else {
-        const channel: TextChannel = incomingMessage.guild?.channels.cache.find(
-          (ch) => ch.name == channelName
-        ) as TextChannel;
-        if (channel && channel?.type == "text") {
+        const channel = incomingMessage.guild?.channels.cache.find(
+          (ch) => ch.id == channelId
+        );
+        console.log(channel);
+        if (channel && (channel?.type === "text" || channel?.type === "news")) {
+          //@ts-ignore
           channel.send("@everyone", {
             embed: announcementMessage(title, announcement),
           });
