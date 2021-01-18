@@ -13,8 +13,10 @@ export async function handleAnnouncements(incomingMessage: Message) {
       "Moderator",
     ]);
     if (isAllowed) {
-      const channelName = incomingMessage.content.split(" ")[2];
-      const title = incomingMessage.content.split(" ")[3];
+      let channelId = incomingMessage.content.split(" ")[2];
+      channelId = channelId.substring(2, channelId.length - 1);
+      let title = incomingMessage.content.split(" ")[3];
+      title = title.substring(1, title.length - 1);
       const announcement = incomingMessage.content
         .split(" ")
         .slice(4)
@@ -28,7 +30,7 @@ export async function handleAnnouncements(incomingMessage: Message) {
         incomingMessage.channel.send(invalidCommand());
       } else {
         const channel: TextChannel = incomingMessage.guild?.channels.cache.find(
-          (ch) => ch.name == channelName
+          (ch) => ch.id == channelId
         ) as TextChannel;
         if (channel && channel?.type == "text") {
           channel.send("@everyone", {
