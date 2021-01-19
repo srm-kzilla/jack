@@ -5,9 +5,9 @@ import {
   handleIncomingDMCommand,
 } from "./src/controllers/incomingMessageHandler";
 import { getDiscordBot, initDiscordBot } from "./src/utils/discord";
-import { COMMANDS, CONSTANTS } from "./src/utils/constants";
+import { COMMANDS } from "./src/utils/constants";
 import { initDbClient } from "./src/utils/database";
-
+import { handleMemberJoin, handleMemberLeave } from "./src/helper/memberLogs";
 /******************************************
           Initialize Server
 *******************************************/
@@ -50,6 +50,14 @@ async function createServer() {
         }
       }
     }
+  });
+
+  client!.on("guildMemberAdd", (member) => {
+    handleMemberJoin(member, client);
+  });
+
+  client!.on("guildMemberRemove", (member) => {
+    handleMemberLeave(member, client);
   });
 }
 

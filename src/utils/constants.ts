@@ -15,6 +15,8 @@ export const COMMANDS = {
   dmcertificate: "get-certificate",
   membercount: "membercount",
   announce: "announce",
+  joke: "joke",
+  memes: "meme",
 };
 
 export const CONSTANTS = {
@@ -25,6 +27,9 @@ export const CONSTANTS = {
     "`#kzjack get-certificate <your_email>`", //FIXME remove hardcoded prefix
 
   KZILLA_XYZ_SHRINK_URL_ENDPOINT: "https://kzilla.xyz/api/v1/webhook/link",
+  JOKES_URL_ENDPOINT:
+    "https://official-joke-api.appspot.com/jokes/programming/random",
+  MEMES_URL_ENDPOINT: "https://meme-api.herokuapp.com/gimme/programmingmemes/",
 };
 
 export const COLORS = {

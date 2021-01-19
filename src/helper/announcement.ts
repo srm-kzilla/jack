@@ -31,7 +31,6 @@ export async function handleAnnouncements(incomingMessage: Message) {
         const channel = incomingMessage.guild?.channels.cache.find(
           (ch) => ch.id == channelId
         );
-        console.log(channel);
         if (channel && (channel?.type === "text" || channel?.type === "news")) {
           //@ts-ignore
           channel.send("@everyone", {
