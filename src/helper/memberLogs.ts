@@ -12,7 +12,7 @@ export function handleMemberJoin(
     //@ts-ignore
     channel.send(`Welcome to the server, ${member.toString()}`);
     member.send(
-      `Hello ${member.toString()} ,\nI am Jack, SRMKZILLA's discord assistant.\nWe at SRMKZILLA welcome you to SRMKZILLA - Official Mozilla Campus Club, a lovely community of developers.\nEveryone here has one goal - to learn new and exciting things. \nTo that effect, please do not hesitate to ask any doubts or share an interesting piece of information. If you have any issues with, how things are running, do ping up any Moderator or Manager. We are always here to help you and everyone have a magical experience.\n\nCheckout out ${client?.channels.cache
+      `Hello ${member.toString()} ,\nI am Jack, SRMKZILLA's discord assistant.\nWe at SRMKZILLA welcome you to SRMKZILLA - Official Mozilla Campus Club, a lovely community of developers.\nEveryone here has one goal - to learn new and exciting things. \nTo that effect, please do not hesitate to ask any doubts or share an interesting piece of information. If you have any issues with, how things are running, do ping up any <@&778861665826766868> or <@&761273035931516968>. We are always here to help you and everyone have a magical experience.\n\nCheckout out ${client?.channels.cache
         .get("793838431277023252")
         ?.toString()} to get started!\n- Sent from SRMKZILLA - Official Mozilla Campus Club`
     );
