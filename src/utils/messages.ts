@@ -78,8 +78,16 @@ export const getHelpMessage = () => {
         value: "`#kzjack membercount`",
       },
       {
+        name: "Tell me a joke",
+        value: "`#kzjack joke`",
+      },
+      {
+        name: "Send Memes",
+        value: "`#kzjack meme`",
+      },
+      {
         name: "Announcements [Only Mods]",
-        value: "`#kzjack announce <channel-name> <?title> <description>`",
+        value: "`#kzjack announce <channel> <?title> <description>`",
       },
       {
         name: "Start Certificates Thread [Only Mods]",
@@ -140,7 +148,7 @@ export const invalidURL = () => {
 
 export const internalError = () => {
   return new MessageEmbed()
-    .setTitle("SRMKZILLA Discord Bot")
+    .setTitle("Uhu! I encountered an error")
     .setColor(COLORS.ERROR)
     .setDescription(
       `Error 500! Our hamsters encountered a bug. Seek out to any <@&778861665826766868> or <@&761273035931516968> for support, if you need one. Type \`#kzjack\` for help`
@@ -193,7 +201,7 @@ export const shrinkedURLMessage = (data: any) => {
 
 export const membersCountMessage = (membersCount: number, botCount: number) => {
   return new MessageEmbed()
-    .setTitle(membersCount + botCount)
+    .setTitle(`It's ${membersCount + botCount}`)
     .setColor(COLORS.SUCCESS)
     .setDescription(
       `I shovelled coal into the server and counted the members for you! 🚂`
