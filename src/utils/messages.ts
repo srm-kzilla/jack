@@ -143,7 +143,7 @@ export const internalError = () => {
     .setTitle("SRMKZILLA Discord Bot")
     .setColor(COLORS.ERROR)
     .setDescription(
-      `Error 500. It's not you! It's us and we are on it! Meanwhile, try Help`
+      `Error 500! Our hamsters encountered a bug. Seek out to any <@&778861665826766868> or <@&761273035931516968> for support, if you need one. Type \`#kzjack\` for help`
     )
     .addFields({
       name: "Help",

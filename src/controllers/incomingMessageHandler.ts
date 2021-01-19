@@ -4,6 +4,7 @@ import {
   certificateDMHandler,
   getCertificateChannelMessage,
 } from "../helper/certificate";
+import { handleJokes, handleMemes } from "../helper/jokes";
 import { handleShrinkURLMessage } from "../helper/kzillaXYZ";
 import { handleGetMemberCount } from "../helper/memberCount";
 import { COMMANDS, CONSTANTS } from "../utils/constants";
@@ -43,6 +44,14 @@ export async function handleIncomingChannelCommand(incomingMessage: Message) {
           incomingMessage.content.split(" ").splice(0, 5),
           "Announcements"
         );
+        break;
+      }
+      case COMMANDS.joke: {
+        handleJokes(incomingMessage);
+        break;
+      }
+      case COMMANDS.memes: {
+        handleMemes(incomingMessage);
         break;
       }
       case COMMANDS.help: {

@@ -1,6 +1,6 @@
-import Discord, { Intents } from "discord.js";
+import Discord, { Intents, Client } from "discord.js";
 
-let bot: Discord.Client;
+let bot: Client;
 
 export async function getDiscordBot() {
   try {
