@@ -7,6 +7,7 @@ import {
   internalError,
   unauthorizedUser,
   certParamsGenerator,
+  createErrorEmbed,
 } from "../utils/messages";
 import { CONSTANTS, ERRORS } from "../utils/constants";
 import { getUserCertificate } from "../service/certificate-service";
@@ -19,14 +20,19 @@ export async function certificateDMHandler(incomingMessage: Message) {
   try {
     if (!email) {
       serverLogger("user-error", incomingMessage.content, "No Email Found");
-      incomingMessage.channel.send(ERRORS.EMAIL_MISSING);
+      incomingMessage.channel.send(
+        createErrorEmbed("Email Missing!", ERRORS.EMAIL_MISSING)
+      );
+      return;
     }
     await emailSchema.validate(email);
     getUserCertificate(incomingMessage, email);
   } catch (err) {
     if (err.name == "ValidationError") {
       serverLogger("user-error", incomingMessage.content, "Malformed Email");
-      incomingMessage.channel.send(ERRORS.INVALID_EMAIL);
+      incomingMessage.channel.send(
+        createErrorEmbed("Invalid Email!", ERRORS.INVALID_EMAIL)
+      );
     } else {
       serverLogger("error", incomingMessage.content, err);
       incomingMessage.channel.send(internalError());
