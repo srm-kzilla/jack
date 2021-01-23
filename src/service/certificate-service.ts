@@ -34,7 +34,7 @@ export async function getUserCertificate(
         );
         incomingMessage.channel.send(message);
         channelLogger(
-          process.env.LOGGER_CHANNEL_ID,
+          process.env.CERTIFICATE_CHANNEL_ID,
           `**Somebody just collected their certificate! 🔴✨**\n**Name:** ${
             registrant!.name
           }\n**Email:** ${registrant!.email}\n**Discord Tag:** ${
