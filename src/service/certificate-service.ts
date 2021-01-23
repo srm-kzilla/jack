@@ -6,6 +6,7 @@ import {
   internalError,
   waitCertificateMessage,
   certificateNotAccessible,
+  createErrorEmbed,
 } from "../utils/messages";
 import { getDbClient } from "../utils/database";
 import { ERRORS } from "../utils/constants";
@@ -34,7 +35,12 @@ export async function getUserCertificate(
         incomingMessage.channel.send(message);
         channelLogger(
           process.env.LOGGER_CHANNEL_ID,
-          `${registrant!.name} just collected their certificate!`
+          "`" +
+            registrant!.name +
+            "`::`" +
+            registrant!.email +
+            "`" +
+            " **just collected their certificate!**"
         );
         serverLogger(
           "success",
@@ -47,7 +53,12 @@ export async function getUserCertificate(
           incomingMessage.content,
           "Certificate Not Found"
         );
-        incomingMessage.channel.send(ERRORS.CERTIFICATE_NOT_FOUND);
+        incomingMessage.channel.send(
+          createErrorEmbed(
+            "Certificate Not Found!",
+            ERRORS.CERTIFICATE_NOT_FOUND
+          )
+        );
       }
     } else {
       incomingMessage.channel.send(certificateNotAccessible());

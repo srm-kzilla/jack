@@ -269,3 +269,15 @@ export const announcementMessage = (title: string, message: string) => {
       );
   }
 };
+
+export const createErrorEmbed = (title: string, error: string) => {
+  return new MessageEmbed()
+    .setColor(COLORS.ERROR)
+    .setTitle(title)
+    .setDescription(error)
+    .setTimestamp()
+    .setFooter(
+      "Powered by SRMKZILLA and hamster-charged batteries",
+      "https://srmkzilla.net/assets/img/kzilla.png"
+    );
+};
