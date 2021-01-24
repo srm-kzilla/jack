@@ -21,7 +21,7 @@ export async function sendDirectMessageToUser(
     await user.send(userMessage);
   } catch (err) {
     serverLogger("error", message, "DM Blocked");
-    message.channel.send(ERRORS.DM_BLOCKED);
+    message.channel.send(ERRORS.DM_BLOCKED(user));
   }
 }
 

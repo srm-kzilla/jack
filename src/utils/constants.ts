@@ -1,6 +1,8 @@
+import { User } from "discord.js";
+
 export const ERRORS = {
-  DM_BLOCKED:
-    "Oopsie! It seems your dm is blocked. Please change the settings and request again!",
+  DM_BLOCKED: (user: User) =>
+    `**Oopsie!** <@${user.id}>, it seems your **DM is blocked**. Please **change the settings** and request again!`,
   CERTIFICATE_NOT_FOUND:
     "**Oops!** A wide search across our records, but we couldn't trace your data. Our insights say you weren't able to register for the event. Hope to see you soon next time!",
   EMAIL_MISSING: "Invalid Command! Type `#kzjack help` for a list of commands",
@@ -23,8 +25,12 @@ export const CONSTANTS = {
   thumbsUpEmoji: "👍",
   jackLogo: "https://srmkzilla.net/static/jack_logo.png",
   certificateUserDirectMessage:
-    "Hello, Please drop your registered email here in the format " +
-    "`#kzjack get-certificate <your_email>`", //FIXME remove hardcoded prefix
+    "**Hello**, Please drop your **registered email** here in the **format:**\n" +
+    "`" +
+    `${COMMANDS.prefix} ${COMMANDS.dmcertificate} ` +
+    "<your_email>`\n**Example:**\n`" +
+    `${COMMANDS.prefix} ${COMMANDS.dmcertificate} ` +
+    "myemail@domain.com`",
 
   KZILLA_XYZ_SHRINK_URL_ENDPOINT: "https://kzilla.xyz/api/v1/webhook/link",
   JOKES_URL_ENDPOINT:

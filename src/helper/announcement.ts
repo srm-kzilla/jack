@@ -40,14 +40,14 @@ export async function handleAnnouncements(incomingMessage: Message) {
           );
           if (everyoneRegex.test(incomingMessage.content)) {
             (channel as TextChannel | NewsChannel).send(
-              "**Announcement @everyone!**",
+              "**📢 Announcement @everyone!**",
               {
                 embed: announcementMessage(title, announcement),
               }
             );
           } else if (hereRegex.test(incomingMessage.content)) {
             (channel as TextChannel | NewsChannel).send(
-              "**Announcement @here!**",
+              "**📢 Announcement @here!**",
               {
                 embed: announcementMessage(title, announcement),
               }
