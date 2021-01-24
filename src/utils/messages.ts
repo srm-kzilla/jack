@@ -87,7 +87,8 @@ export const getHelpMessage = () => {
       },
       {
         name: "Announcements [Only Mods]",
-        value: "`#kzjack announce <channel> <?title> <description>`",
+        value:
+          "`#kzjack announce <? here|everyone > <channel> {<?title>} <description>`",
       },
       {
         name: "Start Certificates Thread [Only Mods]",
