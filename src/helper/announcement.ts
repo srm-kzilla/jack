@@ -1,4 +1,4 @@
-import { Message, TextChannel } from "discord.js";
+import { Message, TextChannel, NewsChannel } from "discord.js";
 import { serverLogger } from "../utils/logger";
 import {
   announcementMessage,
@@ -39,18 +39,21 @@ export async function handleAnnouncements(incomingMessage: Message) {
             `^${COMMANDS.prefix} ${COMMANDS.announce} here`
           );
           if (everyoneRegex.test(incomingMessage.content)) {
-            //@ts-ignore
-            channel.send("**Announcement @everyone!**", {
-              embed: announcementMessage(title, announcement),
-            });
+            (channel as TextChannel | NewsChannel).send(
+              "**Announcement @everyone!**",
+              {
+                embed: announcementMessage(title, announcement),
+              }
+            );
           } else if (hereRegex.test(incomingMessage.content)) {
-            //@ts-ignore
-            channel.send("**Announcement @here!**", {
-              embed: announcementMessage(title, announcement),
-            });
+            (channel as TextChannel | NewsChannel).send(
+              "**Announcement @here!**",
+              {
+                embed: announcementMessage(title, announcement),
+              }
+            );
           } else {
-            //@ts-ignore
-            channel.send("**Announcement!**", {
+            (channel as TextChannel | NewsChannel).send({
               embed: announcementMessage(title, announcement),
             });
           }
@@ -66,34 +69,6 @@ export async function handleAnnouncements(incomingMessage: Message) {
         );
         incomingMessage.channel.send(invalidCommand());
       }
-      // let channelId = incomingMessage.content.split(" ")[2];
-      // channelId = channelId.substring(2, channelId.length - 1);
-      // let title = incomingMessage.content.split("<")[2];
-      // title = title.substring(0, title.indexOf(">"));
-      // const tempString = incomingMessage.content.split(">")[2];
-      // const index = incomingMessage.content.indexOf(tempString);
-      // const announcement = incomingMessage.content.substring(index);
-      // if (!announcement) {
-      //   serverLogger(
-      //     "user-error",
-      //     incomingMessage.content.split(" ").splice(0, 5),
-      //     "Announcement text missing"
-      //   );
-      //   incomingMessage.channel.send(invalidCommand());
-      // } else {
-      //   const channel = incomingMessage.guild?.channels.cache.find(
-      //     (ch) => ch.id == channelId
-      //   );
-      //   if (channel && (channel?.type === "text" || channel?.type === "news")) {
-      //     //@ts-ignore
-      //     channel.send("@everyone", {
-      //       embed: announcementMessage(title, announcement),
-      //     });
-      //     incomingMessage.channel.send("Sent! :white_check_mark: ");
-      //   } else {
-      //     throw Error;
-      //   }
-      // }
     } else {
       serverLogger(
         "user-error",
