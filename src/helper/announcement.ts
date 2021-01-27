@@ -21,10 +21,8 @@ export async function handleAnnouncements(incomingMessage: Message) {
       if (regex.test(incomingMessage.content)) {
         let channelId = incomingMessage.content.match(/<#.+?>/)![0];
         channelId = channelId.substring(2, channelId.length - 1);
-        console.log("channelId:", channelId);
         let title = incomingMessage.content.match(/\{.*?\}/)![0];
         title = title.substring(1, title.length - 1);
-        console.log("title:", title);
         const announcement = incomingMessage.content.substring(
           incomingMessage.content.indexOf("} ") + 2
         );

@@ -1,4 +1,5 @@
 import { Client, GuildMember, PartialGuildMember } from "discord.js";
+import { serverLogger } from "../utils/logger";
 
 export function handleMemberJoin(
   member: GuildMember,
@@ -17,7 +18,7 @@ export function handleMemberJoin(
         ?.toString()} to get started!\n- Sent from SRMKZILLA - Official Mozilla Campus Club`
     );
   } catch (err) {
-    console.log(err);
+    serverLogger("error", "InternalError", err);
   }
 }
 
@@ -33,6 +34,6 @@ export function handleMemberLeave(
     // @ts-ignore
     channel.send(`${member.toString()} left the server :(`);
   } catch (err) {
-    console.log(err);
+    serverLogger("error", "InternalError", err);
   }
 }
