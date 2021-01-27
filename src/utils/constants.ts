@@ -14,7 +14,6 @@ export const COMMANDS = {
   shrinkURL: "shrink",
   help: "help",
   certificate: "certificate",
-  dmcertificate: "get-certificate",
   membercount: "membercount",
   announce: "announce",
   joke: "joke",

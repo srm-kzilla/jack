@@ -92,7 +92,7 @@ export const getHelpMessage = () => {
       },
       {
         name: "Start Certificates Thread [Only Mods]",
-        value: "`#kzjack certificate`",
+        value: "`#kzjack certificate <event-slug>`",
       }
     )
     .setTimestamp()
