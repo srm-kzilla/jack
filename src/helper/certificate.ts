@@ -70,8 +70,11 @@ export async function getCertificateChannelMessage(incomingMessage: Message) {
   }
 }
 
-export async function generateCertificate(name: string): Promise<Buffer> {
-  let imgObject = await Jimp.read(process.env.CERTIFICATE_URL!);
+export async function generateCertificate(
+  name: string,
+  event: eventSchema
+): Promise<Buffer> {
+  let imgObject = await Jimp.read(event.certificate.url);
   const certParams = certParamsGenerator();
   imgObject = await imgObject.print(
     await Jimp.loadFont(

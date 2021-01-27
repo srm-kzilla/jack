@@ -32,7 +32,7 @@ export async function getUserCertificate(
           .collection(event.slug)
           .findOne<{ email: string; name: string }>({ email: email });
         const message = await certificateMessage(
-          await generateCertificate(registrant!.name)
+          await generateCertificate(registrant!.name, event)
         );
         incomingMessage.channel.send(message);
         channelLogger(

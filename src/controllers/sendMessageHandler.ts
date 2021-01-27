@@ -45,7 +45,7 @@ export async function sendDirectMessageToUser(
       if (serviceExecuted) collector.stop();
     });
     collector.on("end", () => {
-      serverLogger("success", "user-collector", "collector has ended");
+      serverLogger("success", "user-collector-ended", "collector has ended");
     });
   } catch (err) {
     serverLogger("error", message, "DM Blocked");
