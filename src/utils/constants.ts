@@ -1,4 +1,4 @@
-import { User } from "discord.js";
+import { User, MessageEmbed } from "discord.js";
 
 export const ERRORS = {
   DM_BLOCKED: (user: User) =>
@@ -24,13 +24,34 @@ export const COMMANDS = {
 export const CONSTANTS = {
   thumbsUpEmoji: "👍",
   jackLogo: "https://srmkzilla.net/static/jack_logo.png",
-  certificateUserDirectMessage:
-    "**Hello**, Please drop your **registered email** here in the **format:**\n" +
-    "`" +
-    `${COMMANDS.prefix} ${COMMANDS.dmcertificate} ` +
-    "<your_email>`\n**Example:**\n`" +
-    `${COMMANDS.prefix} ${COMMANDS.dmcertificate} ` +
-    "myemail@domain.com`",
+  certificateUserDirectMessage: (eventName: string) =>
+    new MessageEmbed()
+      .setTitle(`${eventName} Certificates`)
+      .setColor(COLORS.INFO)
+      .setDescription(
+        `
+  **Yayy!** You've made it to the end of ${eventName}! 🥳
+  **Thank you for attending!**
+  For your hard work, we would like to provide **certificates!** 🏆\n\n
+  `
+      )
+      .addFields([
+        {
+          name: "Email",
+          value:
+            "Drop your registered email 📨 **below** to **claim** your certificates!",
+        },
+        {
+          name: "Expiry",
+          value:
+            "This message is only **valid for 5 minutes!** Drop in your email ASAP! ⏱️",
+        },
+      ])
+      .setTimestamp()
+      .setFooter(
+        "Powered by SRMKZILLA and hamster-charged batteries",
+        "https://srmkzilla.net/assets/img/kzilla.png"
+      ),
 
   KZILLA_XYZ_SHRINK_URL_ENDPOINT: "https://kzilla.xyz/api/v1/webhook/link",
   JOKES_URL_ENDPOINT:
