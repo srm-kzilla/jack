@@ -7,6 +7,7 @@ import {
 import { handleJokes, handleMemes } from "../helper/jokes";
 import { handleShrinkURLMessage } from "../helper/kzillaXYZ";
 import { handleGetMemberCount } from "../helper/memberCount";
+import { eventSchema } from "../models/event";
 import { COMMANDS, CONSTANTS } from "../utils/constants";
 import { serverLogger } from "../utils/logger";
 import {
@@ -79,10 +80,6 @@ export function handleIncomingDMCommand(incomingMessage: Message) {
   try {
     const messageCommand = incomingMessage.content.split(" ")[1];
     switch (messageCommand) {
-      case COMMANDS.dmcertificate: {
-        certificateDMHandler(incomingMessage);
-        break;
-      }
       case COMMANDS.shrinkURL: {
         handleShrinkURLMessage(incomingMessage);
         break;
@@ -108,11 +105,13 @@ export function handleIncomingDMCommand(incomingMessage: Message) {
  *
  * @param {User} user
  * @param {MessageReaction} reaction
+ * @param {eventSchema} event
  * @param {Message} message
  */
 export async function handleIncomingReaction(
   user: User,
   reaction: MessageReaction,
+  event: eventSchema,
   message: Message
 ) {
   try {
@@ -121,11 +120,12 @@ export async function handleIncomingReaction(
         sendDirectMessageToUser(
           user,
           message,
-          CONSTANTS.certificateUserDirectMessage
+          event,
+          CONSTANTS.certificateUserDirectMessage(event.name)
         );
       }
     }
   } catch (err) {
-    console.log(err);
+    serverLogger("error", "InternalError", err);
   }
 }

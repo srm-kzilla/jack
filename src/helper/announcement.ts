@@ -15,16 +15,14 @@ export async function handleAnnouncements(incomingMessage: Message) {
     ]);
     if (isAllowed) {
       const regex = new RegExp(
-        `^${COMMANDS.prefix} ${COMMANDS.announce}( here | everyone | )<#.+> \{.*\} .+$`,
+        `^${COMMANDS.prefix} ${COMMANDS.announce}( here | everyone | )<#.+> \{.*\} (.|\n)+$`,
         "g"
       );
       if (regex.test(incomingMessage.content)) {
         let channelId = incomingMessage.content.match(/<#.+?>/)![0];
         channelId = channelId.substring(2, channelId.length - 1);
-        console.log("channelId:", channelId);
         let title = incomingMessage.content.match(/\{.*?\}/)![0];
         title = title.substring(1, title.length - 1);
-        console.log("title:", title);
         const announcement = incomingMessage.content.substring(
           incomingMessage.content.indexOf("} ") + 2
         );

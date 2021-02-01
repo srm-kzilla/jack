@@ -11,30 +11,32 @@ import {
 import { getDbClient } from "../utils/database";
 import { ERRORS } from "../utils/constants";
 import { channelLogger, serverLogger } from "../utils/logger";
+import { eventSchema } from "../models/event";
 
 export async function getUserCertificate(
   incomingMessage: Message,
+  event: eventSchema,
   email: Email
-) {
+): Promise<boolean> {
   try {
-    if (process.env.CERTIFICATE_ACCESS_ENABLED) {
+    if (event.enabled) {
       incomingMessage.channel.send(waitCertificateMessage());
       const dbClient = await getDbClient();
       const found = await dbClient
         .db()
-        .collection("tech-troduction")
+        .collection(event.slug)
         .countDocuments({ email: email });
       if (found) {
         const registrant = await dbClient
           .db()
-          .collection("tech-troduction")
+          .collection(event.slug)
           .findOne<{ email: string; name: string }>({ email: email });
         const message = await certificateMessage(
-          await generateCertificate(registrant!.name)
+          await generateCertificate(registrant!.name, event)
         );
         incomingMessage.channel.send(message);
         channelLogger(
-          process.env.CERTIFICATE_CHANNEL_ID,
+          event.ledgerChannel,
           `**Somebody just collected their certificate! 🔴✨**\n**Name:** ${
             registrant!.name
           }\n**Email:** ${registrant!.email}\n**Discord Tag:** ${
@@ -46,6 +48,7 @@ export async function getUserCertificate(
           incomingMessage.content,
           `Certificate Collected by ${registrant!.name}`
         );
+        return true;
       } else {
         serverLogger(
           "user-error",
@@ -58,13 +61,16 @@ export async function getUserCertificate(
             ERRORS.CERTIFICATE_NOT_FOUND
           )
         );
+        return false;
       }
     } else {
       incomingMessage.channel.send(certificateNotAccessible());
       serverLogger("user-error", incomingMessage.content, `Certificate N/A`);
+      return true;
     }
   } catch (err) {
     serverLogger("error", incomingMessage.content, err);
     incomingMessage.channel.send(internalError());
+    return true;
   }
 }

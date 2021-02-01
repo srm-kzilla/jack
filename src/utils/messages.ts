@@ -92,7 +92,7 @@ export const getHelpMessage = () => {
       },
       {
         name: "Start Certificates Thread [Only Mods]",
-        value: "`#kzjack certificate`",
+        value: "`#kzjack certificate <event-slug>`",
       }
     )
     .setTimestamp()
@@ -106,6 +106,24 @@ export const invalidCommand = () => {
     .setTitle("Oopsie! I didn't get that")
     .setColor(COLORS.ERROR)
     .setDescription(`Oops! It seems you have entered an invalid command.`)
+    .addFields({
+      name: "Help",
+      value: "Type `#kzjack help` for a list of commands",
+    })
+    .setTimestamp()
+    .setFooter(
+      "Powered by SRMKZILLA and hamster-charged batteries",
+      "https://srmkzilla.net/assets/img/kzilla.png"
+    );
+};
+
+export const eventDoesNotExist = () => {
+  return new MessageEmbed()
+    .setTitle("Event Does Not Exist!")
+    .setColor(COLORS.ERROR)
+    .setDescription(
+      `Oops! It seems you have entered an invalid slug for an event! Double check your inputs!`
+    )
     .addFields({
       name: "Help",
       value: "Type `#kzjack help` for a list of commands",

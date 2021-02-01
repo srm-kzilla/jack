@@ -8,6 +8,7 @@ import { getDiscordBot, initDiscordBot } from "./src/utils/discord";
 import { COMMANDS } from "./src/utils/constants";
 import { initDbClient } from "./src/utils/database";
 import { handleMemberJoin, handleMemberLeave } from "./src/helper/memberLogs";
+import { serverLogger } from "./src/utils/logger";
 /******************************************
           Initialize Server
 *******************************************/
@@ -45,7 +46,11 @@ async function createServer() {
             break;
           }
           default: {
-            console.log("Channel not supported");
+            serverLogger(
+              "user-error",
+              "ChannelNotSupported",
+              "Channel Not Supported"
+            );
           }
         }
       }

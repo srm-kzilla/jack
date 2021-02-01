@@ -1,9 +1,14 @@
+import { TextChannel } from "discord.js";
 import { getDiscordBot } from "./discord";
 
 export async function channelLogger(channelID: any, message: any) {
-  const client = await getDiscordBot();
-  //@ts-ignore
-  client.channels.cache.get(channelID).send(message);
+  try {
+    const client = await getDiscordBot();
+    //@ts-ignore
+    client.channels.cache.get(`${channelID}`).send(message);
+  } catch (err) {
+    serverLogger("error", "InternalError", err);
+  }
 }
 
 export function serverLogger(type: string, message: any, error: any) {

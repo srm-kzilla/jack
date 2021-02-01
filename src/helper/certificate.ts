@@ -8,35 +8,33 @@ import {
   unauthorizedUser,
   certParamsGenerator,
   createErrorEmbed,
+  invalidCommand,
+  eventDoesNotExist,
 } from "../utils/messages";
 import { CONSTANTS, ERRORS } from "../utils/constants";
 import { getUserCertificate } from "../service/certificate-service";
 import { sendReactableMessage } from "../controllers/sendMessageHandler";
 import { checkForAccessByRoles } from "./roleAuth";
 import { serverLogger } from "../utils/logger";
+import { getDbClient } from "../utils/database";
+import { eventSchema } from "../models/event";
 
-export async function certificateDMHandler(incomingMessage: Message) {
-  const email = incomingMessage.content.split(" ")[2];
+export async function certificateDMHandler(
+  incomingMessage: Message,
+  event: eventSchema
+): Promise<boolean> {
+  const email = incomingMessage.content.trim();
   try {
-    if (!email) {
-      serverLogger("user-error", incomingMessage.content, "No Email Found");
-      incomingMessage.channel.send(
-        createErrorEmbed("Email Missing!", ERRORS.EMAIL_MISSING)
-      );
-      return;
-    }
-    await emailSchema.validate(email);
-    getUserCertificate(incomingMessage, email);
+    const serviceExecuted = await getUserCertificate(
+      incomingMessage,
+      event,
+      email
+    );
+    return serviceExecuted;
   } catch (err) {
-    if (err.name == "ValidationError") {
-      serverLogger("user-error", incomingMessage.content, "Malformed Email");
-      incomingMessage.channel.send(
-        createErrorEmbed("Invalid Email!", ERRORS.INVALID_EMAIL)
-      );
-    } else {
-      serverLogger("error", incomingMessage.content, err);
-      incomingMessage.channel.send(internalError());
-    }
+    serverLogger("error", incomingMessage.content, err);
+    incomingMessage.channel.send(internalError());
+    return true;
   }
 }
 
@@ -45,9 +43,25 @@ export async function getCertificateChannelMessage(incomingMessage: Message) {
     "Moderator",
   ]);
   if (isAllowed) {
-    sendReactableMessage(
+    const eventSlug = incomingMessage.content.split(/ +/)[2];
+    if (!eventSlug) {
+      serverLogger("user-error", incomingMessage.content, "Invalid Command");
+      return incomingMessage.channel.send(invalidCommand());
+    }
+    const db = await (await getDbClient()).db().collection("events");
+    const event = await db.findOne<eventSchema>({ slug: eventSlug });
+    if (!event) {
+      serverLogger(
+        "user-error",
+        incomingMessage.content,
+        "Event Does Not Exist"
+      );
+      return incomingMessage.channel.send(eventDoesNotExist());
+    }
+    await sendReactableMessage(
       incomingMessage,
-      getYourCertificateChannelMessage("Tech-Troduction"),
+      event,
+      getYourCertificateChannelMessage(event.name),
       CONSTANTS.thumbsUpEmoji
     );
   } else {
@@ -56,8 +70,11 @@ export async function getCertificateChannelMessage(incomingMessage: Message) {
   }
 }
 
-export async function generateCertificate(name: string): Promise<Buffer> {
-  let imgObject = await Jimp.read(process.env.CERTIFICATE_URL!);
+export async function generateCertificate(
+  name: string,
+  event: eventSchema
+): Promise<Buffer> {
+  let imgObject = await Jimp.read(event.certificate.url);
   const certParams = certParamsGenerator();
   imgObject = await imgObject.print(
     await Jimp.loadFont(
