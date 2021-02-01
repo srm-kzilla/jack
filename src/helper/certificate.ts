@@ -6,7 +6,6 @@ import {
   getYourCertificateChannelMessage,
   internalError,
   unauthorizedUser,
-  certParamsGenerator,
   createErrorEmbed,
   invalidCommand,
   eventDoesNotExist,
@@ -74,8 +73,8 @@ export async function generateCertificate(
   name: string,
   event: eventSchema
 ): Promise<Buffer> {
-  let imgObject = await Jimp.read(event.certificate.url);
-  const certParams = certParamsGenerator();
+  const certParams = event.certificate;
+  let imgObject = await Jimp.read(certParams.url);
   imgObject = await imgObject.print(
     await Jimp.loadFont(
       join(__dirname, "..", "..", "..", "assets", "font.fnt")

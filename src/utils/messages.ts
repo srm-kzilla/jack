@@ -183,15 +183,6 @@ export const internalError = () => {
     );
 };
 
-export const certParamsGenerator = () => {
-  return {
-    x: +process.env.CERTIFICATE_X!,
-    y: +process.env.CERTIFICATE_Y!,
-    maxWidth: +process.env.CERTIFICATE_MAXWIDTH!,
-    maxHeight: +process.env.CERTIFICATE_MAXHEIGHT!,
-  };
-};
-
 export const shrinkedURLMessage = (data: any) => {
   return new MessageEmbed()
     .setTitle("Here's your dwindled URL")
