@@ -15,7 +15,7 @@ export async function handleAnnouncements(incomingMessage: Message) {
     ]);
     if (isAllowed) {
       const regex = new RegExp(
-        `^${COMMANDS.prefix} ${COMMANDS.announce}( here | everyone | )<#.+> \{.*\} .+$`,
+        `^${COMMANDS.prefix} ${COMMANDS.announce}( here | everyone | )<#.+> \{.*\} (.|\n)+$`,
         "g"
       );
       if (regex.test(incomingMessage.content)) {
