@@ -9,5 +9,5 @@ export interface eventSchema {
     maxHeight: number;
     url: string;
   };
-  ledgerChannel: number;
+  ledgerChannel: string;
 }
