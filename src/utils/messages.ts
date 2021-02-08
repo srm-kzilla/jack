@@ -94,6 +94,10 @@ export const getHelpMessage = () => {
       {
         name: "Start Certificates Thread [Only Mods]",
         value: "`#kzjack certificate <event-slug>`",
+      },
+      {
+        name: "Flush Cache [Only Mods]",
+        value: "`#kzjack flush`",
       }
     )
     .setTimestamp()
