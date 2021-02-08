@@ -41,7 +41,7 @@ export async function certificateDMHandler(
 export async function getCertificateChannelMessage(incomingMessage: Message) {
   try {
     const isAllowed = await checkForAccessByRoles(incomingMessage.member, [
-      "Moderator",
+      `${process.env.OPERATOR_ROLE_ID}`,
     ]);
     if (isAllowed) {
       const eventSlug = incomingMessage.content.split(/ +/)[2];

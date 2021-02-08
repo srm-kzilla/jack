@@ -4,9 +4,10 @@ import { getCertificateChannelMessage } from "../helper/certificate";
 import { handleJokes, handleMemes } from "../helper/jokes";
 import { handleShrinkURLMessage } from "../helper/kzillaXYZ";
 import { handleGetMemberCount } from "../helper/memberCount";
-import { getEvent, refreshKeys } from "../utils/nodecache";
+import { getEvent } from "../utils/nodecache";
 import { COMMANDS, CONSTANTS } from "../utils/constants";
 import { serverLogger } from "../utils/logger";
+import { flushCache } from "../helper/flushCache";
 import {
   getHelpMessage,
   invalidCommand,
@@ -53,15 +54,13 @@ export async function handleIncomingChannelCommand(incomingMessage: Message) {
         handleMemes(incomingMessage);
         break;
       }
+      case COMMANDS.cacheflush: {
+        flushCache(incomingMessage);
+        break;
+      }
       case COMMANDS.help: {
         incomingMessage.channel.send(getHelpMessage());
         serverLogger("success", incomingMessage.content, "Help Message");
-        break;
-      }
-      case COMMANDS.cacheflush: {
-        await refreshKeys();
-        incomingMessage.channel.send(flushSuccessMessage());
-        serverLogger("success", incomingMessage.content, "Cache Flush Keys");
         break;
       }
       default:
