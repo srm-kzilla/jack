@@ -5,7 +5,7 @@ import { certificateEmojifilter } from "../utils/filters";
 import { handleIncomingReaction } from "./incomingMessageHandler";
 import { serverLogger } from "../utils/logger";
 import { eventSchema } from "../models/event";
-import * as yup from "yup";
+import { getEvent } from "../utils/nodecache";
 import { certificateDMHandler } from "../helper/certificate";
 import { emailSchema } from "../models/email";
 /**
@@ -19,7 +19,7 @@ import { emailSchema } from "../models/email";
 export async function sendDirectMessageToUser(
   user: User,
   message: Message,
-  event: eventSchema,
+  eventSlug: string,
   userMessage: any
 ) {
   try {
@@ -38,10 +38,10 @@ export async function sendDirectMessageToUser(
           return false;
         }
       },
-      { time: 30000 }
+      { time: 300000 }
     );
     collector.on("collect", async (dm: Message) => {
-      const serviceExecuted = await certificateDMHandler(dm, event);
+      const serviceExecuted = await certificateDMHandler(dm, eventSlug);
       if (serviceExecuted) collector.stop();
     });
     collector.on("end", () => {
@@ -63,11 +63,13 @@ export async function sendDirectMessageToUser(
  */
 export async function sendReactableMessage(
   incomingMessage: Message,
-  event: eventSchema,
+  eventSlug: string,
   message: any,
   emoji: any
 ) {
   try {
+    const event = await getEvent(eventSlug);
+    if (!event) throw "eventKey Not Found in NodeCache!";
     const eventMessage = await incomingMessage.channel.send(message);
     await eventMessage.react(emoji);
     // create a reaction collector on the specific message
@@ -76,7 +78,7 @@ export async function sendReactableMessage(
     );
 
     eventCollector.on("collect", (reaction: MessageReaction, user: User) => {
-      handleIncomingReaction(user, reaction, event, message);
+      handleIncomingReaction(user, reaction, event.slug, message);
     });
   } catch (err) {
     serverLogger("error", incomingMessage.content, err);

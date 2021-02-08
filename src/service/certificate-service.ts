@@ -11,14 +11,16 @@ import {
 import { getDbClient } from "../utils/database";
 import { ERRORS } from "../utils/constants";
 import { channelLogger, serverLogger } from "../utils/logger";
-import { eventSchema } from "../models/event";
+import { getEvent } from "../utils/nodecache";
 
 export async function getUserCertificate(
   incomingMessage: Message,
-  event: eventSchema,
+  eventSlug: string,
   email: Email
 ): Promise<boolean> {
   try {
+    const event = await getEvent(eventSlug);
+    if (!event) throw "eventKey Not Found in NodeCache!";
     if (event.enabled) {
       incomingMessage.channel.send(waitCertificateMessage());
       const dbClient = await getDbClient();

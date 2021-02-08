@@ -18,6 +18,7 @@ export const COMMANDS = {
   announce: "announce",
   joke: "joke",
   memes: "meme",
+  cacheflush: "flush",
 };
 
 export const CONSTANTS = {
