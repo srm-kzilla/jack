@@ -1,5 +1,6 @@
 import { MessageEmbed } from "discord.js";
 import { COLORS, CONSTANTS } from "./constants";
+import { eventSchema } from "../models/event";
 
 export const getYourCertificateChannelMessage = (eventName: string) => {
   return new MessageEmbed()
@@ -93,6 +94,10 @@ export const getHelpMessage = () => {
       {
         name: "Start Certificates Thread [Only Mods]",
         value: "`#kzjack certificate <event-slug>`",
+      },
+      {
+        name: "Flush Cache [Only Mods]",
+        value: "`#kzjack flush`",
       }
     )
     .setTimestamp()
@@ -285,6 +290,20 @@ export const createErrorEmbed = (title: string, error: string) => {
     .setColor(COLORS.ERROR)
     .setTitle(title)
     .setDescription(error)
+    .setTimestamp()
+    .setFooter(
+      "Powered by SRMKZILLA and hamster-charged batteries",
+      "https://srmkzilla.net/assets/img/kzilla.png"
+    );
+};
+
+export const flushSuccessMessage = () => {
+  return new MessageEmbed()
+    .setColor(COLORS.INFO)
+    .setTitle("**Cache Flushed! :toilet:**")
+    .setDescription(
+      "The cache has been updated with the latest data pulled from MongoDB!"
+    )
     .setTimestamp()
     .setFooter(
       "Powered by SRMKZILLA and hamster-charged batteries",

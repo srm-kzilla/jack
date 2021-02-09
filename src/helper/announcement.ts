@@ -11,7 +11,7 @@ import { COMMANDS } from "../utils/constants";
 export async function handleAnnouncements(incomingMessage: Message) {
   try {
     const isAllowed = await checkForAccessByRoles(incomingMessage.member, [
-      "Moderator",
+      `${process.env.OPERATOR_ROLE_ID}`,
     ]);
     if (isAllowed) {
       const regex = new RegExp(

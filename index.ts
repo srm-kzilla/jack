@@ -7,6 +7,7 @@ import {
 import { getDiscordBot, initDiscordBot } from "./src/utils/discord";
 import { COMMANDS } from "./src/utils/constants";
 import { initDbClient } from "./src/utils/database";
+import { initCache, refreshKeys } from "./src/utils/nodecache";
 import { handleMemberJoin, handleMemberLeave } from "./src/helper/memberLogs";
 import { serverLogger } from "./src/utils/logger";
 /******************************************
@@ -17,6 +18,10 @@ async function createServer() {
   config();
   await initDiscordBot();
   await initDbClient();
+
+  await initCache();
+  await refreshKeys();
+
   const client = await getDiscordBot();
 
   client!.on("ready", () => {

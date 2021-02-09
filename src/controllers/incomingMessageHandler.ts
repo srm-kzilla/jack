@@ -1,19 +1,18 @@
 import { Message, MessageReaction, User } from "discord.js";
 import { handleAnnouncements } from "../helper/announcement";
-import {
-  certificateDMHandler,
-  getCertificateChannelMessage,
-} from "../helper/certificate";
+import { getCertificateChannelMessage } from "../helper/certificate";
 import { handleJokes, handleMemes } from "../helper/jokes";
 import { handleShrinkURLMessage } from "../helper/kzillaXYZ";
 import { handleGetMemberCount } from "../helper/memberCount";
-import { eventSchema } from "../models/event";
+import { getEvent } from "../utils/nodecache";
 import { COMMANDS, CONSTANTS } from "../utils/constants";
 import { serverLogger } from "../utils/logger";
+import { flushCache } from "../helper/flushCache";
 import {
   getHelpMessage,
   invalidCommand,
   internalError,
+  flushSuccessMessage,
 } from "../utils/messages";
 import { sendDirectMessageToUser } from "./sendMessageHandler";
 /**
@@ -53,6 +52,10 @@ export async function handleIncomingChannelCommand(incomingMessage: Message) {
       }
       case COMMANDS.memes: {
         handleMemes(incomingMessage);
+        break;
+      }
+      case COMMANDS.cacheflush: {
+        flushCache(incomingMessage);
         break;
       }
       case COMMANDS.help: {
@@ -111,16 +114,18 @@ export function handleIncomingDMCommand(incomingMessage: Message) {
 export async function handleIncomingReaction(
   user: User,
   reaction: MessageReaction,
-  event: eventSchema,
+  eventSlug: string,
   message: Message
 ) {
   try {
     if (!user.bot) {
+      const event = await getEvent(eventSlug);
+      if (!event) throw "eventKey Not Found in NodeCache!";
       if (reaction.emoji.name === CONSTANTS.thumbsUpEmoji) {
         sendDirectMessageToUser(
           user,
           message,
-          event,
+          event.slug,
           CONSTANTS.certificateUserDirectMessage(event.name)
         );
       }
