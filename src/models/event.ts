@@ -11,3 +11,8 @@ export interface eventSchema {
   };
   ledgerChannel: string;
 }
+
+export interface eventUserSchema {
+  userId: string;
+  joinedDiscord?: boolean;
+}
