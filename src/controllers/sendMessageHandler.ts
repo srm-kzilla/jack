@@ -1,5 +1,5 @@
 import { Message, MessageReaction, User } from "discord.js";
-import { createErrorEmbed, internalError } from "../utils/messages";
+import { createBasicEmbed, internalError } from "../utils/messages";
 import { ERRORS } from "../utils/constants";
 import { certificateEmojifilter } from "../utils/filters";
 import { handleIncomingReaction } from "./incomingMessageHandler";
@@ -33,7 +33,7 @@ export async function sendDirectMessageToUser(
         } catch (err) {
           serverLogger("user-error", dm.content, "Malformed Email");
           dm.channel.send(
-            createErrorEmbed("Invalid Email!", ERRORS.INVALID_EMAIL)
+            createBasicEmbed("Invalid Email!", ERRORS.INVALID_EMAIL, "ERROR")
           );
           return false;
         }

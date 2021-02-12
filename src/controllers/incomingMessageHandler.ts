@@ -8,6 +8,7 @@ import { getEvent } from "../utils/nodecache";
 import { COMMANDS, CONSTANTS } from "../utils/constants";
 import { serverLogger } from "../utils/logger";
 import { flushCache } from "../helper/flushCache";
+import { createPoll, getResult } from "../helper/polls";
 import {
   getHelpMessage,
   invalidCommand,
@@ -56,6 +57,12 @@ export async function handleIncomingChannelCommand(incomingMessage: Message) {
       }
       case COMMANDS.cacheflush: {
         flushCache(incomingMessage);
+        break;
+      }
+      case COMMANDS.createPoll: {
+        if (incomingMessage.content.split(" ")[2] == "create")
+          createPoll(incomingMessage);
+        else getResult(incomingMessage);
         break;
       }
       case COMMANDS.help: {

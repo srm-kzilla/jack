@@ -6,7 +6,7 @@ import {
   internalError,
   waitCertificateMessage,
   certificateNotAccessible,
-  createErrorEmbed,
+  createBasicEmbed,
 } from "../utils/messages";
 import { getDbClient } from "../utils/database";
 import { ERRORS } from "../utils/constants";
@@ -58,9 +58,10 @@ export async function getUserCertificate(
           "Certificate Not Found"
         );
         incomingMessage.channel.send(
-          createErrorEmbed(
+          createBasicEmbed(
             "Certificate Not Found!",
-            ERRORS.CERTIFICATE_NOT_FOUND
+            ERRORS.CERTIFICATE_NOT_FOUND,
+            "ERROR"
           )
         );
         return false;

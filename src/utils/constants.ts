@@ -19,10 +19,12 @@ export const COMMANDS = {
   joke: "joke",
   memes: "meme",
   cacheflush: "flush",
+  createPoll: "poll",
 };
 
 export const CONSTANTS = {
   thumbsUpEmoji: "👍",
+  pollReactions: ["1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣", "7️⃣", "8️⃣", "9️⃣"],
   jackLogo: "https://srmkzilla.net/static/jack_logo.png",
   certificateUserDirectMessage: (eventName: string) =>
     new MessageEmbed()
