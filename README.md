@@ -20,22 +20,28 @@ crafted with <span style="color: #8b0000;">&hearts;</span> by your friends on th
 
 > A cool discord bot which you can play around. 🖼️
 
-## Features 🔧
+## Commands 🔧
 
-> Here are just listed some of the various commands that you can use to intreact with the Jack.
+> Jack can do so much, but you need to tell him what to do. So, here's how you can do it
 
 - **Common Commands**
 
-  - `#kzjack help` - To get a list of commands
+  - `#kzjack help` - Get everything what Jack can do
+  - `#kzjack meme` - Jack sends you a crazyyyy meme
+  - `#kzjack joke` - Bored? Wait for j
   - `#kzjack shrink <URL>` - Shrink a looooong URL using [KZILLA.XYZ](https://kzilla.xyz/)
 
 - **Text Channel Commands**
 
   - `#kzjack membercount` - Get members count for the channel
-  - `#kzjack certificate` - [ONLY FOR MODS] Start a certificate thread
 
-- **DM Channel Commands**
-  - `#kzjack get-certificate <your-email>` - Get certificates for event by registered email.
+- **Moderators Channel Commands**
+
+  - `#kzjack flush` -Flush all cache
+  - `#kzjack certificate <event-slug>` - Start a certificate thread
+  - `#kzjack announce <? here|everyone > <channel> {<?title>} <description>` - Announcements
+  - `#kzjack poll create <channel> {<Some Question>} [[<Option 1>],[<Option 2>],[<Option 3>],[<Option 4>]]` - Start a Poll
+  - `#kzjack poll result <Poll ID>` - Get Poll Results
 
 ## Installation 🔧
 
@@ -56,6 +62,10 @@ Start the server
 ```
 $ yarn start
 ```
+
+## Shout outs 💥
+
+![Harsh Goel](https://github.com/harshgoel05.png?size=128) ![Gita Alekhya Paul](https://github.com/gitaalekhyapaul.png?size=128)<br>
 
 ## License 📜
 
