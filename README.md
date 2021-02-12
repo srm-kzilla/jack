@@ -65,7 +65,8 @@ $ yarn start
 
 ## Shout outs 💥
 
-![Harsh Goel](https://github.com/harshgoel05.png?size=128) ![Gita Alekhya Paul](https://github.com/gitaalekhyapaul.png?size=128)<br>
+| <p align="center">![Harsh Goel](https://github.com/harshgoel05.png?size=128)<br>[Harsh Goel](https://github.com/harshgoel05)</p> | <p align="center">![Gita Alekhya Paul](https://github.com/gitaalekhyapaul.png?size=128)<br>[Gita Alekhya Paul](https://github.com/gitaalekhyapaul)</p>|
+| ---------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
 
 ## License 📜
 
