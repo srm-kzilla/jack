@@ -1,5 +1,5 @@
 import { GuildMember } from "discord.js";
-import { MongoClient } from "mongodb";
+import { getEventDbClient } from "../utils/database";
 import { serverLogger } from "../utils/logger";
 import { eventUserSchema } from "../models/event";
 
@@ -8,16 +8,10 @@ export const updateUserJoinOrLeave = async (
   joinOrLeave: "join" | "leave"
 ) => {
   try {
-    const db = (
-      await MongoClient.connect(process.env.EVENT_DATABASE_URI!, {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-        ignoreUndefined: true,
-      })
-    )
+    const db = (await getEventDbClient())
       .db()
       .collection<eventUserSchema>("users");
-    const { result } = await db.updateOne(
+    await db.updateOne(
       { userId: member.id },
       {
         $set: {
