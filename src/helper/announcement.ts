@@ -8,6 +8,13 @@ import {
 } from "../utils/messages";
 import { checkForAccessByRoles } from "../helper/roleAuth";
 import { COMMANDS } from "../utils/constants";
+
+/**
+ * Handles all announcements
+ *
+ * @param {Message} incomingMessage
+ */
+
 export async function handleAnnouncements(incomingMessage: Message) {
   try {
     const isAllowed = await checkForAccessByRoles(incomingMessage.member, [

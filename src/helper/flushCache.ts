@@ -4,6 +4,11 @@ import { flushSuccessMessage, unauthorizedUser } from "../utils/messages";
 import { serverLogger } from "../utils/logger";
 import { checkForAccessByRoles } from "./roleAuth";
 
+/**
+ * Handles flushing the cache
+ *
+ * @param {Message} incomingMessage
+ */
 export const flushCache = async (incomingMessage: Message) => {
   const isAllowed = await checkForAccessByRoles(incomingMessage.member, [
     `${process.env.OPERATOR_ROLE_ID}`,

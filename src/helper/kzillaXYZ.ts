@@ -8,6 +8,11 @@ import {
 import { CONSTANTS, ERRORS } from "../utils/constants";
 import { serverLogger } from "../utils/logger";
 
+/**
+ * Shrinks looong URL using KZILLA.XYZ
+ *
+ * @param {shrink} longUrl
+ */
 export async function shrinkURL(longUrl: string) {
   const { data } = await axios.post(
     CONSTANTS.KZILLA_XYZ_SHRINK_URL_ENDPOINT,
@@ -17,6 +22,11 @@ export async function shrinkURL(longUrl: string) {
   return data;
 }
 
+/**
+ * Handles commands for shrinking message
+ *
+ * @param {Message} incomingMessage
+ */
 export async function handleShrinkURLMessage(incomingMessage: Message) {
   try {
     const longURL = incomingMessage.content.split(" ")[2];
