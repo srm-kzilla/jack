@@ -1,6 +1,7 @@
 import nodeCache from "node-cache";
 import { getDbClient } from "./database";
 import { eventSchema } from "../models/event";
+import { pollSchema } from "../models/poll";
 let cache: nodeCache;
 export const initCache = async (): Promise<nodeCache> => {
   try {
@@ -19,6 +20,10 @@ export const refreshKeys = async () => {
     await events.forEach((event: eventSchema) => {
       cache.set(`event-${event.slug}`, JSON.stringify(event));
     });
+    const polls = await db.collection("polls").find<pollSchema>();
+    await polls.forEach((poll: pollSchema) => {
+      cache.set(`poll-${poll.pollID}`, JSON.stringify(poll));
+    });
   } catch (err) {
     throw err;
   }
@@ -32,5 +37,16 @@ export const getEvent = async (slug: string): Promise<eventSchema | null> => {
 
 export const setEvent = async (event: eventSchema): Promise<boolean> => {
   const result = cache.set(`event-${event.slug}`, JSON.stringify(event));
+  return result;
+};
+
+export const getPoll = async (id: string): Promise<pollSchema | null> => {
+  const poll = cache.get(`poll-${id}`) as string;
+  if (poll) return JSON.parse(poll);
+  else return null;
+};
+
+export const setPoll = async (poll: pollSchema): Promise<boolean> => {
+  const result = cache.set(`poll-${poll.pollID}`, JSON.stringify(poll));
   return result;
 };

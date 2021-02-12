@@ -6,7 +6,6 @@ import {
   getYourCertificateChannelMessage,
   internalError,
   unauthorizedUser,
-  createErrorEmbed,
   invalidCommand,
   eventDoesNotExist,
 } from "../utils/messages";

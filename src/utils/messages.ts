@@ -1,6 +1,6 @@
 import { MessageEmbed } from "discord.js";
 import { COLORS, CONSTANTS } from "./constants";
-import { eventSchema } from "../models/event";
+import { pollSchema } from "../models/poll";
 
 export const getYourCertificateChannelMessage = (eventName: string) => {
   return new MessageEmbed()
@@ -98,6 +98,15 @@ export const getHelpMessage = () => {
       {
         name: "Flush Cache [Only Mods]",
         value: "`#kzjack flush`",
+      },
+      {
+        name: "Start a Poll (Upto 9 options) [Only Mods]",
+        value:
+          "`#kzjack poll create <channel> {<Some Question>} [[<Option 1>],[<Option 2>],[<Option 3>],[<Option 4>]]`",
+      },
+      {
+        name: "Get Poll Results [Only Mods]",
+        value: "`#kzjack poll result <Poll ID>`",
       }
     )
     .setTimestamp()
@@ -285,11 +294,15 @@ export const announcementMessage = (title: string, message: string) => {
   }
 };
 
-export const createErrorEmbed = (title: string, error: string) => {
+export const createBasicEmbed = (
+  title: string,
+  message: string,
+  level: "SUCCESS" | "INFO" | "ERROR" | "ANNOUNCEMENT"
+) => {
   return new MessageEmbed()
-    .setColor(COLORS.ERROR)
+    .setColor(COLORS[level])
     .setTitle(title)
-    .setDescription(error)
+    .setDescription(message)
     .setTimestamp()
     .setFooter(
       "Powered by SRMKZILLA and hamster-charged batteries",
@@ -307,6 +320,54 @@ export const flushSuccessMessage = () => {
     .setTimestamp()
     .setFooter(
       "Powered by SRMKZILLA and hamster-charged batteries",
+      "https://srmkzilla.net/assets/img/kzilla.png"
+    );
+};
+
+export const createPollMessage = (poll: pollSchema) => {
+  return new MessageEmbed()
+    .setColor(COLORS.ANNOUNCEMENT)
+    .setAuthor(`New Poll 💡!`, CONSTANTS.jackLogo)
+    .setTitle(`**${poll.title}**`)
+    .setDescription(
+      (() => {
+        let options = "";
+        poll.options.map((o) => {
+          options += `${o.emoji} **: ${o.value}**\n`;
+        });
+        return options;
+      })()
+    )
+    .setTimestamp()
+    .setFooter(
+      `Poll ID: ${poll.pollID}\nPowered by SRMKZILLA and hamster-charged batteries`,
+      "https://srmkzilla.net/assets/img/kzilla.png"
+    );
+};
+
+export const createPollResult = (poll: pollSchema) => {
+  return new MessageEmbed()
+    .setColor(COLORS.ANNOUNCEMENT)
+    .setAuthor(`Poll Results 📊!`, CONSTANTS.jackLogo)
+    .addField("Poll ID :", "`" + poll.pollID + "`", true)
+    .addField("Channel Deployed:", "<#" + poll.channelID + ">", true)
+    .addField("Title:", poll.title)
+    .addField("Created Time:", new Date(poll.timestamp as string))
+    .addField("\u200B", "\u200B")
+    .addFields(
+      (() => {
+        const ops = poll.options.map((o) => {
+          return {
+            name: `${o.emoji} **: ${o.value}**`,
+            value: `**${o.reactions.length}** votes`,
+          };
+        });
+        return ops;
+      })()
+    )
+    .setTimestamp()
+    .setFooter(
+      `Powered by SRMKZILLA and hamster-charged batteries`,
       "https://srmkzilla.net/assets/img/kzilla.png"
     );
 };
