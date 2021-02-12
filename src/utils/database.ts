@@ -41,7 +41,7 @@ export async function initEventDbClient() {
 
 export async function getEventDbClient() {
   if (!eventDbClient) {
-    await initDbClient();
+    await initEventDbClient();
   }
   return eventDbClient;
 }
