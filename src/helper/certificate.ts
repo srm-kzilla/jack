@@ -1,7 +1,6 @@
 import { Message } from "discord.js";
 import * as Jimp from "jimp";
 import { join } from "path";
-import { emailSchema } from "../models/email";
 import {
   getYourCertificateChannelMessage,
   internalError,
@@ -9,7 +8,7 @@ import {
   invalidCommand,
   eventDoesNotExist,
 } from "../utils/messages";
-import { CONSTANTS, ERRORS } from "../utils/constants";
+import { CONSTANTS } from "../utils/constants";
 import { getUserCertificate } from "../service/certificate-service";
 import { sendReactableMessage } from "../controllers/sendMessageHandler";
 import { checkForAccessByRoles } from "./roleAuth";
@@ -18,6 +17,12 @@ import { getDbClient } from "../utils/database";
 import { eventSchema } from "../models/event";
 import { setEvent } from "../utils/nodecache";
 
+/**
+ * Handles all certificate message in DM (email)
+ *
+ * @param {Message} incomingMessage
+ * @param {string} eventSlug
+ */
 export async function certificateDMHandler(
   incomingMessage: Message,
   eventSlug: string
@@ -36,7 +41,11 @@ export async function certificateDMHandler(
     return true;
   }
 }
-
+/**
+ * Handles certificate thread start message
+ *
+ * @param {Message} incomingMessage
+ */
 export async function getCertificateChannelMessage(incomingMessage: Message) {
   try {
     const isAllowed = await checkForAccessByRoles(incomingMessage.member, [
@@ -75,6 +84,12 @@ export async function getCertificateChannelMessage(incomingMessage: Message) {
   }
 }
 
+/**
+ * Generates certificate for user
+ *
+ * @param {string} name
+ * @param {eventSchema} event
+ */
 export async function generateCertificate(
   name: string,
   event: eventSchema

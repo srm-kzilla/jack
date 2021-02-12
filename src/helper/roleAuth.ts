@@ -1,5 +1,11 @@
-import { GuildMember, Role } from "discord.js";
+import { GuildMember } from "discord.js";
 
+/**
+ * Check for access for commands
+ *
+ * @param {GuildMember | null} user
+ * @param {Array<string>} roles
+ */
 export async function checkForAccessByRoles(
   user: GuildMember | null,
   roles: Array<string>

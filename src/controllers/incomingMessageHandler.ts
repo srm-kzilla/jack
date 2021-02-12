@@ -13,7 +13,6 @@ import {
   getHelpMessage,
   invalidCommand,
   internalError,
-  flushSuccessMessage,
 } from "../utils/messages";
 import { sendDirectMessageToUser } from "./sendMessageHandler";
 /**
@@ -97,6 +96,14 @@ export function handleIncomingDMCommand(incomingMessage: Message) {
       case COMMANDS.help: {
         incomingMessage.channel.send(getHelpMessage());
         serverLogger("success", incomingMessage.content, "Help Message");
+        break;
+      }
+      case COMMANDS.joke: {
+        handleJokes(incomingMessage);
+        break;
+      }
+      case COMMANDS.memes: {
+        handleMemes(incomingMessage);
         break;
       }
       default:

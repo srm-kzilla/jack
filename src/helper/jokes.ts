@@ -3,7 +3,6 @@ import { Message } from "discord.js";
 import { CONSTANTS } from "../utils/constants";
 import { serverLogger } from "../utils/logger";
 import { internalError } from "../utils/messages";
-// import { memeMessage } from "../utils/messages";
 
 export async function handleJokes(incomingMessage: Message) {
   try {
