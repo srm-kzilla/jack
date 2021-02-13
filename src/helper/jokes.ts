@@ -1,7 +1,7 @@
 import axios from "axios";
-import { Message } from "discord.js";
+import { Message, MessageEmbed } from "discord.js";
 import { incomingMessageSchema } from "../models/incomingMessage";
-import { CONSTANTS, ERRORS } from "../utils/constants";
+import { COLORS, CONSTANTS, ERRORS } from "../utils/constants";
 import { serverLogger } from "../utils/logger";
 import { createBasicEmbed } from "../utils/messages";
 
@@ -18,11 +18,19 @@ export async function handleJokes(
   try {
     const { data } = await axios.get(CONSTANTS.JOKES_URL_ENDPOINT);
     console.log(data);
-    incomingMessage.channel.send(data[0].setup + data[0].punchline);
+    incomingMessage.channel.send(
+      createBasicEmbed(
+        {
+          title: "Hahaha! Here's a joke for you 🤡!",
+          message: `**${data[0].setup}**\n*${data[0].punchline}*`,
+        },
+        "INFO"
+      )
+    );
   } catch (err) {
     incomingMessage.channel.send(
       `<@${messageType.incomingUser.id}>`,
-      createBasicEmbed(ERRORS.INTERNAL_ERROR, "ERROR")
+      createBasicEmbed(ERRORS.INTERNAL_ERROR(messageType.channelType), "ERROR")
     );
     serverLogger("error", incomingMessage.content, err);
   }
@@ -41,13 +49,22 @@ export async function handleMemes(
   try {
     const { data } = await axios.get(CONSTANTS.MEMES_URL_ENDPOINT);
     console.log(data);
-    incomingMessage.channel.send(data.title, {
-      files: [data.url],
-    });
+    incomingMessage.channel.send(
+      new MessageEmbed()
+        .setTitle("LMAOOO! Here's a meme for you 🤣!")
+        .setDescription(`**${data.title}**`)
+        .setColor(COLORS.INFO)
+        .setImage(data.url)
+        .setTimestamp()
+        .setFooter(
+          "Powered by SRMKZILLA and hamster-charged batteries",
+          "https://srmkzilla.net/assets/img/kzilla.png"
+        )
+    );
   } catch (err) {
     incomingMessage.channel.send(
       `<@${messageType.incomingUser.id}>`,
-      createBasicEmbed(ERRORS.INTERNAL_ERROR, "ERROR")
+      createBasicEmbed(ERRORS.INTERNAL_ERROR(messageType.channelType), "ERROR")
     );
     serverLogger("error", incomingMessage.content, err);
   }
