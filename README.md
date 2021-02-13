@@ -7,7 +7,7 @@
 
 <br>
 <p align="center">
-Discord Bot  🤖
+Meet Jack,a bot of all trades.
 </p>
 <p align="center">
 crafted with <span style="color: #8b0000;">&hearts;</span> by your friends on the <a href="https://srmkzilla.net">SRMKZILLA</a> team.
@@ -18,17 +18,17 @@ crafted with <span style="color: #8b0000;">&hearts;</span> by your friends on th
     <img src="https://img.shields.io/badge/author-SRMKZILLA-orange" alt="author SRMKZILLA"/>
 </p>
 
-> A cool discord bot which you can play around. 🖼️
+> To make this cool beep bot your own, refer to this [Wiki](https://github.com/srm-kzilla/jack/wiki/Make-Jack-your-own)
 
 ## Commands 🔧
 
-> Jack can do so much, but you need to tell him what to do. So, here's how you can do it
+> There's only so much Jack can do without you giving him further instructions
 
 - **Common Commands**
 
   - `#kzjack help` - Get everything what Jack can do
   - `#kzjack meme` - Jack sends you a crazyyyy meme
-  - `#kzjack joke` - Bored? Wait for j
+  - `#kzjack joke` - Bored? Wait for jack to send you a joke, perfect joke indeed.
   - `#kzjack shrink <URL>` - Shrink a looooong URL using [KZILLA.XYZ](https://kzilla.xyz/)
 
 - **Text Channel Commands**
@@ -40,7 +40,7 @@ crafted with <span style="color: #8b0000;">&hearts;</span> by your friends on th
   - `#kzjack flush` -Flush all cache
   - `#kzjack certificate <event-slug>` - Start a certificate thread
   - `#kzjack announce <? here|everyone > <channel> {<?title>} <description>` - Announcements
-  - `#kzjack poll create <channel> {<Some Question>} [[<Option 1>],[<Option 2>],[<Option 3>],[<Option 4>]]` - Start a Poll
+  - `#kzjack poll create <channel> {<Some Question>} [[<Option 1>],[<Option 2>],[<Option 3>]]` - Start a Poll
   - `#kzjack poll result <Poll ID>` - Get Poll Results
 
 ## Installation 🔧
@@ -65,8 +65,8 @@ $ yarn start
 
 ## Shout outs 💥
 
-| <p align="center">![Harsh Goel](https://github.com/harshgoel05.png?size=128)<br>[Harsh Goel](https://github.com/harshgoel05)</p> | <p align="center">![Gita Alekhya Paul](https://github.com/gitaalekhyapaul.png?size=128)<br>[Gita Alekhya Paul](https://github.com/gitaalekhyapaul)</p>|
-| ---------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| <p align="center">![Harsh Goel](https://github.com/harshgoel05.png?size=128)<br>[Harsh Goel](https://github.com/harshgoel05)</p> | <p align="center">![Gita Alekhya Paul](https://github.com/gitaalekhyapaul.png?size=128)<br>[Gita Alekhya Paul](https://github.com/gitaalekhyapaul)</p> |
+| -------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
 
 ## License 📜
 
