@@ -75,7 +75,7 @@ export const getHelpMessage = (messageType: incomingMessageSchema) => {
       {
         name: "Announcements [Only Mods]",
         value:
-          "`#kzjack announce <? here|everyone > <channel> {<?title>} <description>`",
+          "`#kzjack announce <? here|everyone > <#channel> {<?title>} <description>`",
       },
       {
         name: "Start Certificates Thread [Only Mods]",
@@ -88,7 +88,7 @@ export const getHelpMessage = (messageType: incomingMessageSchema) => {
       {
         name: "Start a Poll (Upto 9 options) [Only Mods]",
         value:
-          "`#kzjack poll create <channel> {<Some Question>} [[<Option 1>],[<Option 2>],[<Option 3>],[<Option 4>]]`",
+          "`#kzjack poll create <#channel> {<Some Question>} [[<Option 1>],[<Option 2>],[<Option 3>],[<Option 4>]]`",
       },
       {
         name: "Get Poll Results [Only Mods]",
