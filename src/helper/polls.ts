@@ -86,7 +86,7 @@ export const createPoll = async (
       serverLogger("internal-error", "Internal Error", err);
       incomingMessage.channel.send(
         `<@${messageType.incomingUser.id}>`,
-        createBasicEmbed(ERRORS.INTERNAL_ERROR, "ERROR")
+        createBasicEmbed(ERRORS.INTERNAL_ERROR(messageType.channelType), "ERROR")
       );
     }
   } else {
@@ -184,7 +184,7 @@ export const getResult = async (
       serverLogger("internal-error", "Internal Error", err);
       incomingMessage.channel.send(
         `<@${messageType.incomingUser.id}>`,
-        createBasicEmbed(ERRORS.INTERNAL_ERROR, "ERROR")
+        createBasicEmbed(ERRORS.INTERNAL_ERROR(messageType.channelType), "ERROR")
       );
     }
   } else {

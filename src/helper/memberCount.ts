@@ -35,7 +35,7 @@ export async function handleGetMemberCount(
     serverLogger("error", incomingMessage.content, err);
     incomingMessage.channel.send(
       `<@${messageType.incomingUser.id}>`,
-      createBasicEmbed(ERRORS.INTERNAL_ERROR, "ERROR")
+      createBasicEmbed(ERRORS.INTERNAL_ERROR(messageType.channelType), "ERROR")
     );
   }
 }

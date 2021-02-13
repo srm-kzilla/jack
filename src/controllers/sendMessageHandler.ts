@@ -89,7 +89,7 @@ export async function sendReactableMessage(
   } catch (err) {
     serverLogger("error", incomingMessage.content, err);
     incomingMessage.channel.send(
-      createBasicEmbed(ERRORS.INTERNAL_ERROR, "ERROR")
+      createBasicEmbed(ERRORS.INTERNAL_ERROR("dm"), "ERROR")
     );
   }
 }

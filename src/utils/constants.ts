@@ -1,4 +1,8 @@
 import { User, MessageEmbed } from "discord.js";
+import { config } from "dotenv";
+import { incomingMessageSchema } from "../models/incomingMessage";
+
+config();
 
 /**
  * Error Messages
@@ -34,10 +38,16 @@ export const ERRORS = {
     message:
       "Oops! It seems you have entered an invalid slug for an event! Double check your inputs!\n\n**Help**\nType `#kzjack help` for a list of commands",
   },
-  INTERNAL_ERROR: {
-    title: "Uhu! I encountered an error",
-    message:
-      "Error 500! Our hamsters encountered a bug. Seek out to any <@&761134182701072405> or <@&807504996496441346> for support, if you need one.\n\n**Help**\nType `#kzjack help` for a list of commands",
+  INTERNAL_ERROR: (messageType: "dm" | "text" | "news") => {
+    return {
+      title: "Uhu! I encountered an error",
+      message:
+        "Error 500! Our hamsters encountered a bug. Seek out to any" +
+        (messageType == "dm")
+          ? "**Moderator**"
+          : `<@${process.env.OPERATOR_ROLE_ID}` +
+            "for support, if you need one.\n\n**Help**\nType `#kzjack help` for a list of commands",
+    };
   },
   UNAUTHORIZED_USER: {
     title: "Wait! This area is not accessible.",

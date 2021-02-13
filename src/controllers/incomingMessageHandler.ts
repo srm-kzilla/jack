@@ -72,7 +72,7 @@ export async function handleIncomingChannelCommand(
       }
       default:
         incomingMessage.channel.send(
-          `<@${messageType.incomingUser.id}`,
+          `<@${messageType.incomingUser.id}>`,
           createBasicEmbed(ERRORS.INVALID_COMMAND, "ERROR")
         );
         serverLogger("user-error", incomingMessage.content, "Invalid Command");
@@ -82,7 +82,7 @@ export async function handleIncomingChannelCommand(
     serverLogger("error", incomingMessage.content, err);
     incomingMessage.channel.send(
       `<@${messageType.incomingUser.id}>`,
-      createBasicEmbed(ERRORS.INTERNAL_ERROR, "ERROR")
+      createBasicEmbed(ERRORS.INTERNAL_ERROR(messageType.channelType), "ERROR")
     );
   }
 }
@@ -129,7 +129,7 @@ export function handleIncomingDMCommand(
     serverLogger("error", incomingMessage.content, err);
     incomingMessage.channel.send(
       `<@${messageType.incomingUser.id}>`,
-      createBasicEmbed(ERRORS.INTERNAL_ERROR, "ERROR")
+      createBasicEmbed(ERRORS.INTERNAL_ERROR(messageType.channelType), "ERROR")
     );
   }
 }

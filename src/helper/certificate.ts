@@ -35,7 +35,7 @@ export async function certificateDMHandler(
   } catch (err) {
     serverLogger("error", incomingMessage.content, err);
     incomingMessage.channel.send(
-      createBasicEmbed(ERRORS.INTERNAL_ERROR, "ERROR")
+      createBasicEmbed(ERRORS.INTERNAL_ERROR("dm"), "ERROR")
     );
     return true;
   }
@@ -91,7 +91,7 @@ export async function getCertificateChannelMessage(
     serverLogger("internal-error", "Error", err);
     incomingMessage.channel.send(
       `<@${messageType.incomingUser.id}>`,
-      createBasicEmbed(ERRORS.INTERNAL_ERROR, "ERROR")
+      createBasicEmbed(ERRORS.INTERNAL_ERROR(messageType.channelType), "ERROR")
     );
   }
 }
