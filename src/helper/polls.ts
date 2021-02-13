@@ -86,7 +86,10 @@ export const createPoll = async (
       serverLogger("internal-error", "Internal Error", err);
       incomingMessage.channel.send(
         `<@${messageType.incomingUser.id}>`,
-        createBasicEmbed(ERRORS.INTERNAL_ERROR(messageType.channelType), "ERROR")
+        createBasicEmbed(
+          ERRORS.INTERNAL_ERROR(messageType.channelType),
+          "ERROR"
+        )
       );
     }
   } else {
@@ -113,7 +116,9 @@ const addPoll = async (incomingMessage: Message, poll: pollSchema) => {
       await pollMessage.react(option.emoji);
     })
   );
-  const pollCollector = pollMessage.createReactionCollector(pollEmojiFilter);
+  const pollCollector = pollMessage.createReactionCollector(pollEmojiFilter, {
+    dispose: true,
+  });
   pollCollector.on("collect", async (reaction: MessageReaction, user: User) => {
     const { result } = await db.updateOne(
       { pollID: poll.pollID, "options.emoji": reaction.emoji.name },
@@ -125,12 +130,27 @@ const addPoll = async (incomingMessage: Message, poll: pollSchema) => {
     );
     if (!(result.ok == 1)) throw "MongoDB Query Error: Failed to Add Reaction";
   });
+  pollCollector.on("remove", async (reaction: MessageReaction, user: User) => {
+    const { result } = await db.updateOne(
+      { pollID: poll.pollID, "options.emoji": reaction.emoji.name },
+      {
+        $pull: {
+          "options.$.reactions": `${user.username}#${user.discriminator}`,
+        },
+      }
+    );
+    if (!(result.ok == 1)) throw "MongoDB Query Error: Failed to Add Reaction";
+  });
   incomingMessage.channel.send(
     createBasicEmbed(
       {
         title: "**New Poll Created! :white_check_mark:**",
         message:
-          "**Poll ID:** `" +
+          "**Check Results:** `" +
+          COMMANDS.prefix +
+          " " +
+          COMMANDS.createPoll +
+          " result " +
           poll.pollID +
           "`\n**Time of Creation:** " +
           poll.timestamp,
@@ -184,7 +204,10 @@ export const getResult = async (
       serverLogger("internal-error", "Internal Error", err);
       incomingMessage.channel.send(
         `<@${messageType.incomingUser.id}>`,
-        createBasicEmbed(ERRORS.INTERNAL_ERROR(messageType.channelType), "ERROR")
+        createBasicEmbed(
+          ERRORS.INTERNAL_ERROR(messageType.channelType),
+          "ERROR"
+        )
       );
     }
   } else {
