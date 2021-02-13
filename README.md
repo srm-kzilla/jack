@@ -2,7 +2,7 @@
   <img alt="SRMKZILLA Logo" src="docs/srmkzilla_logo.png" height="56" />
 </div>
 <div align="center">
-  <img alt="kzilla-xyz Logo" src="docs/jack_logo.png" height="56" />
+  <img alt="Jack Logo" src="docs/jack_logo.png" height="56" />
 </div>
 
 <br>
