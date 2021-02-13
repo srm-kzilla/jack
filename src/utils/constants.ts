@@ -1,6 +1,5 @@
-import { User, MessageEmbed } from "discord.js";
+import { User, MessageEmbed, GuildMember } from "discord.js";
 import { config } from "dotenv";
-import { incomingMessageSchema } from "../models/incomingMessage";
 
 config();
 
@@ -74,12 +73,24 @@ export const ERRORS = {
     message:
       "Please check your Poll ID, or maybe even your command syntax!\n\n**Help**\nType `#kzjack help` for a list of commands",
   },
+  MEMBER_LEAVE: (member: GuildMember) => {
+    return {
+      title: `A member left the server 🥺!`,
+      message: `<@${member.id}> left the server. Sorry to see you go!`,
+    };
+  },
 };
 
 export const INFO = {
   WAIT: {
     title: "Things worth having are worth waiting for! 😉",
     message: "Please wait while we fetch a certificate for you! ⏲️",
+  },
+  MEMBER_JOIN: (member: GuildMember) => {
+    return {
+      title: `A new member joined the server 🥳!`,
+      message: `<@${member.id}> joined the server! Welcome home!`,
+    };
   },
 };
 
