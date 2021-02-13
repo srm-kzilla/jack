@@ -10,6 +10,8 @@ import { initDbClient, initEventDbClient } from "./src/utils/database";
 import { initCache, refreshKeys } from "./src/utils/nodecache";
 import { handleMemberJoin, handleMemberLeave } from "./src/helper/memberLogs";
 import { serverLogger } from "./src/utils/logger";
+import { checkForAccessByRoles } from "./src/helper/roleAuth";
+import { incomingMessageSchema } from "./src/models/incomingMessage";
 /******************************************
           Initialize Server
 *******************************************/
@@ -34,13 +36,24 @@ async function createServer() {
     *******************************************/
     if (!message.author.bot) {
       if (message.content.split(" ")[0] == COMMANDS.prefix) {
+        const messageType: incomingMessageSchema = {
+          channelType: message.channel.type,
+          incomingUser: {
+            username: message.author.username,
+            discriminator: message.author.discriminator,
+            id: message.author.id,
+            isMod: await checkForAccessByRoles(message.member, [
+              `${process.env.OPERATOR_ROLE_ID}`,
+            ]),
+          },
+        };
         switch (message.channel.type) {
           /******************************************
                         Text channel
           *******************************************/
           case "text": {
             //check for our command
-            handleIncomingChannelCommand(message);
+            handleIncomingChannelCommand(message, messageType);
 
             break;
           }
@@ -48,7 +61,7 @@ async function createServer() {
                             DM channel
           *******************************************/
           case "dm": {
-            handleIncomingDMCommand(message);
+            handleIncomingDMCommand(message, messageType);
             break;
           }
           default: {

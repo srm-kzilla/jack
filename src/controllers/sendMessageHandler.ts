@@ -1,10 +1,9 @@
 import { Message, MessageReaction, User } from "discord.js";
-import { createBasicEmbed, internalError } from "../utils/messages";
+import { createBasicEmbed } from "../utils/messages";
 import { ERRORS } from "../utils/constants";
 import { certificateEmojifilter } from "../utils/filters";
 import { handleIncomingReaction } from "./incomingMessageHandler";
 import { serverLogger } from "../utils/logger";
-import { eventSchema } from "../models/event";
 import { getEvent } from "../utils/nodecache";
 import { certificateDMHandler } from "../helper/certificate";
 import { emailSchema } from "../models/email";
@@ -32,9 +31,7 @@ export async function sendDirectMessageToUser(
           return true;
         } catch (err) {
           serverLogger("user-error", dm.content, "Malformed Email");
-          dm.channel.send(
-            createBasicEmbed("Invalid Email!", ERRORS.INVALID_EMAIL, "ERROR")
-          );
+          dm.channel.send(createBasicEmbed(ERRORS.INVALID_EMAIL, "ERROR"));
           return false;
         }
       },
@@ -49,7 +46,16 @@ export async function sendDirectMessageToUser(
     });
   } catch (err) {
     serverLogger("error", message, "DM Blocked");
-    message.channel.send(ERRORS.DM_BLOCKED(user));
+    message.channel.send(
+      `<@${user.id}>`,
+      createBasicEmbed(
+        {
+          title: ERRORS.DM_BLOCKED.title,
+          message: ERRORS.DM_BLOCKED.message(user),
+        },
+        "ERROR"
+      )
+    );
   }
 }
 
@@ -82,6 +88,8 @@ export async function sendReactableMessage(
     });
   } catch (err) {
     serverLogger("error", incomingMessage.content, err);
-    incomingMessage.channel.send(internalError());
+    incomingMessage.channel.send(
+      createBasicEmbed(ERRORS.INTERNAL_ERROR, "ERROR")
+    );
   }
 }

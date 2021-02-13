@@ -1,15 +1,9 @@
 import { Message } from "discord.js";
 import { generateCertificate } from "../helper/certificate";
 import { Email } from "../models/email";
-import {
-  certificateMessage,
-  internalError,
-  waitCertificateMessage,
-  certificateNotAccessible,
-  createBasicEmbed,
-} from "../utils/messages";
+import { certificateMessage, createBasicEmbed } from "../utils/messages";
 import { getDbClient } from "../utils/database";
-import { ERRORS } from "../utils/constants";
+import { ERRORS, INFO } from "../utils/constants";
 import { channelLogger, serverLogger } from "../utils/logger";
 import { getEvent } from "../utils/nodecache";
 
@@ -22,7 +16,7 @@ export async function getUserCertificate(
     const event = await getEvent(eventSlug);
     if (!event) throw "eventKey Not Found in NodeCache!";
     if (event.enabled) {
-      incomingMessage.channel.send(waitCertificateMessage());
+      incomingMessage.channel.send(createBasicEmbed(INFO.WAIT, "INFO"));
       const dbClient = await getDbClient();
       const found = await dbClient
         .db()
@@ -58,22 +52,22 @@ export async function getUserCertificate(
           "Certificate Not Found"
         );
         incomingMessage.channel.send(
-          createBasicEmbed(
-            "Certificate Not Found!",
-            ERRORS.CERTIFICATE_NOT_FOUND,
-            "ERROR"
-          )
+          createBasicEmbed(ERRORS.CERTIFICATE_NOT_FOUND, "ERROR")
         );
         return false;
       }
     } else {
-      incomingMessage.channel.send(certificateNotAccessible());
+      incomingMessage.channel.send(
+        createBasicEmbed(ERRORS.CERT_NOT_ACCESS, "ERROR")
+      );
       serverLogger("user-error", incomingMessage.content, `Certificate N/A`);
       return true;
     }
   } catch (err) {
     serverLogger("error", incomingMessage.content, err);
-    incomingMessage.channel.send(internalError());
+    incomingMessage.channel.send(
+      createBasicEmbed(ERRORS.INTERNAL_ERROR, "ERROR")
+    );
     return true;
   }
 }

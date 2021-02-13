@@ -1,22 +1,18 @@
 import { Message } from "discord.js";
+import { incomingMessageSchema } from "../models/incomingMessage";
 import { serverLogger } from "../utils/logger";
-import { internalError } from "../utils/messages";
-import { membersCountMessage } from "../utils/messages";
+import { createBasicEmbed, membersCountMessage } from "../utils/messages";
+import { ERRORS } from "../utils/constants";
 /**
  * Handles all incoming members count command in channel
- *
- * @param {Message} incomingMessage
- */
-export async function handleGetMemberCount(incomingMessage: Message) {
-  getMemberCount(incomingMessage);
-}
-
-/**
  * Get members count in channel
- *
  * @param {Message} incomingMessage
+ * @param {incomingMessageSchema} messageType
  */
-export async function getMemberCount(incomingMessage: Message) {
+export async function handleGetMemberCount(
+  incomingMessage: Message,
+  messageType: incomingMessageSchema
+) {
   try {
     const members = await incomingMessage.guild?.members.fetch({
       force: true,
@@ -37,6 +33,9 @@ export async function getMemberCount(incomingMessage: Message) {
     );
   } catch (err) {
     serverLogger("error", incomingMessage.content, err);
-    incomingMessage.channel.send(internalError());
+    incomingMessage.channel.send(
+      `<@${messageType.incomingUser.id}>`,
+      createBasicEmbed(ERRORS.INTERNAL_ERROR, "ERROR")
+    );
   }
 }
