@@ -43,10 +43,10 @@ export const ERRORS = {
       title: "Uhu! I encountered an error",
       message:
         "Error 500! Our hamsters encountered a bug. Seek out to any" +
-        (messageType == "dm")
-          ? "**Moderator**"
-          : `<@${process.env.OPERATOR_ROLE_ID}` +
-            "for support, if you need one.\n\n**Help**\nType `#kzjack help` for a list of commands",
+        (messageType == "dm"
+          ? "** @Moderator **"
+          : `<@${process.env.OPERATOR_ROLE_ID}`) +
+        "for support, if you need one.\n\n**Help**\nType `#kzjack help` for a list of commands",
     };
   },
   UNAUTHORIZED_USER: {

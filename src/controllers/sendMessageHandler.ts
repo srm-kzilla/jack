@@ -84,7 +84,7 @@ export async function sendReactableMessage(
     );
 
     eventCollector.on("collect", (reaction: MessageReaction, user: User) => {
-      handleIncomingReaction(user, reaction, event.slug, message);
+      handleIncomingReaction(user, reaction, event.slug, reaction.message);
     });
   } catch (err) {
     serverLogger("error", incomingMessage.content, err);
