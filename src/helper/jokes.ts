@@ -4,6 +4,9 @@ import { incomingMessageSchema } from "../models/incomingMessage";
 import { COLORS, CONSTANTS, ERRORS } from "../utils/constants";
 import { serverLogger } from "../utils/logger";
 import { createBasicEmbed } from "../utils/messages";
+import dialogFlow from "@google-cloud/dialogflow";
+import { join } from "path";
+import { nanoid } from "nanoid";
 
 /**
  * Handle joke commands.
@@ -19,13 +22,15 @@ export async function handleJokes(
     const { data } = await axios.get(CONSTANTS.JOKES_URL_ENDPOINT);
     console.log(data);
     incomingMessage.channel.send(
-      createBasicEmbed(
-        {
-          title: "Hahaha! Here's a joke for you 🤡!",
-          message: `**${data[0].setup}**\n*${data[0].punchline}*`,
-        },
-        "INFO"
-      )
+      new MessageEmbed()
+        .setTitle(data[0].setup)
+        .setDescription(`*${data[0].punchline}*`)
+        .setColor(COLORS.INFO)
+        .setTimestamp()
+        .setFooter(
+          "Powered by SRMKZILLA and hamster-charged batteries",
+          "https://srmkzilla.net/assets/img/kzilla.png"
+        )
     );
   } catch (err) {
     incomingMessage.channel.send(
@@ -51,7 +56,6 @@ export async function handleMemes(
     console.log(data);
     incomingMessage.channel.send(
       new MessageEmbed()
-        .setTitle("LMAOOO! Here's a meme for you 🤣!")
         .setDescription(`**${data.title}**`)
         .setColor(COLORS.INFO)
         .setImage(data.url)
