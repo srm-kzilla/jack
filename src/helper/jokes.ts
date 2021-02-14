@@ -4,9 +4,6 @@ import { incomingMessageSchema } from "../models/incomingMessage";
 import { COLORS, CONSTANTS, ERRORS } from "../utils/constants";
 import { serverLogger } from "../utils/logger";
 import { createBasicEmbed } from "../utils/messages";
-import dialogFlow from "@google-cloud/dialogflow";
-import { join } from "path";
-import { nanoid } from "nanoid";
 
 /**
  * Handle joke commands.
