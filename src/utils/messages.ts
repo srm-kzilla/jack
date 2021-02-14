@@ -1,6 +1,7 @@
 import { MessageEmbed } from "discord.js";
 import { COLORS, CONSTANTS } from "./constants";
 import { pollSchema } from "../models/poll";
+import { incomingMessageSchema } from "../models/incomingMessage";
 
 export const getYourCertificateChannelMessage = (eventName: string) => {
   return new MessageEmbed()
@@ -36,31 +37,8 @@ export const certificateMessage = async (cert: Buffer) => {
     .attachFiles([{ attachment: cert, name: "certificate.jpeg" }]);
 };
 
-export const waitCertificateMessage = () => {
-  return new MessageEmbed()
-    .setTitle("Things worth having are worth waiting for")
-    .setColor(COLORS.INFO)
-    .setDescription(`Please wait while we fetch a certificate for you!`)
-    .setTimestamp()
-    .setFooter(
-      "Powered by SRMKZILLA and hamster-charged batteries",
-      "https://srmkzilla.net/assets/img/kzilla.png"
-    );
-};
-export const certificateNotAccessible = () => {
-  return new MessageEmbed()
-    .setTitle("Ooops! Service Unavailable as the event hasn't ended yet!")
-    .setColor(COLORS.ERROR)
-    .setDescription(`Please do join us at the event to explore awesomeness!`)
-    .setTimestamp()
-    .setFooter(
-      "Powered by SRMKZILLA and hamster-charged batteries",
-      "https://srmkzilla.net/assets/img/kzilla.png"
-    );
-};
-
-export const getHelpMessage = () => {
-  return new MessageEmbed()
+export const getHelpMessage = (messageType: incomingMessageSchema) => {
+  let message = new MessageEmbed()
     .setTitle("Hi, This is Jack")
     .setThumbnail(CONSTANTS.jackLogo)
     .setColor(COLORS.INFO)
@@ -75,21 +53,29 @@ export const getHelpMessage = () => {
         value: "`#kzjack shrink <URL>`",
       },
       {
-        name: "Members Count",
-        value: "`#kzjack membercount`",
-      },
-      {
         name: "Tell me a joke",
         value: "`#kzjack joke`",
       },
       {
         name: "Send Memes",
         value: "`#kzjack meme`",
-      },
+      }
+    );
+  if (
+    messageType.channelType === "text" ||
+    messageType.channelType === "news"
+  ) {
+    message.addFields({
+      name: "Members Count",
+      value: "`#kzjack membercount`",
+    });
+  }
+  if (messageType.incomingUser.isMod) {
+    message.addFields(
       {
         name: "Announcements [Only Mods]",
         value:
-          "`#kzjack announce <? here|everyone > <channel> {<?title>} <description>`",
+          "`#kzjack announce <? here|everyone > <#channel> {<?title>} <description>`",
       },
       {
         name: "Start Certificates Thread [Only Mods]",
@@ -102,99 +88,21 @@ export const getHelpMessage = () => {
       {
         name: "Start a Poll (Upto 9 options) [Only Mods]",
         value:
-          "`#kzjack poll create <channel> {<Some Question>} [[<Option 1>],[<Option 2>],[<Option 3>],[<Option 4>]]`",
+          "`#kzjack poll create <#channel> {<Some Question>} [[<Option 1>],[<Option 2>],[<Option 3>],[<Option 4>]]`",
       },
       {
         name: "Get Poll Results [Only Mods]",
         value: "`#kzjack poll result <Poll ID>`",
       }
-    )
+    );
+  }
+  message
     .setTimestamp()
     .setFooter(
       "Powered by SRMKZILLA and hamster-charged batteries",
       "https://srmkzilla.net/assets/img/kzilla.png"
     );
-};
-export const invalidCommand = () => {
-  return new MessageEmbed()
-    .setTitle("Oopsie! I didn't get that")
-    .setColor(COLORS.ERROR)
-    .setDescription(`Oops! It seems you have entered an invalid command.`)
-    .addFields({
-      name: "Help",
-      value: "Type `#kzjack help` for a list of commands",
-    })
-    .setTimestamp()
-    .setFooter(
-      "Powered by SRMKZILLA and hamster-charged batteries",
-      "https://srmkzilla.net/assets/img/kzilla.png"
-    );
-};
-
-export const eventDoesNotExist = () => {
-  return new MessageEmbed()
-    .setTitle("Event Does Not Exist!")
-    .setColor(COLORS.ERROR)
-    .setDescription(
-      `Oops! It seems you have entered an invalid slug for an event! Double check your inputs!`
-    )
-    .addFields({
-      name: "Help",
-      value: "Type `#kzjack help` for a list of commands",
-    })
-    .setTimestamp()
-    .setFooter(
-      "Powered by SRMKZILLA and hamster-charged batteries",
-      "https://srmkzilla.net/assets/img/kzilla.png"
-    );
-};
-
-export const unauthorizedUser = () => {
-  return new MessageEmbed()
-    .setTitle("Wait! This area is not accessible.")
-    .setColor(COLORS.ERROR)
-    .setDescription(
-      `Oops! You are not authorized to use this command. Please contact any moderator for the same.`
-    )
-    .addFields({
-      name: "Help",
-      value: "Type `#kzjack help` for a list of commands",
-    })
-    .setTimestamp()
-    .setFooter(
-      "Powered by SRMKZILLA and hamster-charged batteries",
-      "https://srmkzilla.net/assets/img/kzilla.png"
-    );
-};
-
-export const invalidURL = () => {
-  return new MessageEmbed()
-    .setTitle("Malformed URL")
-    .setColor(COLORS.ERROR)
-    .setDescription(`Whoooop! It seems you entered an invalid or malformed URL`)
-    .setTimestamp()
-    .setFooter(
-      "Powered by SRMKZILLA and hamster-charged batteries",
-      "https://srmkzilla.net/assets/img/kzilla.png"
-    );
-};
-
-export const internalError = () => {
-  return new MessageEmbed()
-    .setTitle("Uhu! I encountered an error")
-    .setColor(COLORS.ERROR)
-    .setDescription(
-      `Error 500! Our hamsters encountered a bug. Seek out to any <@&778861665826766868> or <@&761273035931516968> for support, if you need one. Type \`#kzjack\` for help`
-    )
-    .addFields({
-      name: "Help",
-      value: "Type `#kzjack help` for a list of commands",
-    })
-    .setTimestamp()
-    .setFooter(
-      "Powered by SRMKZILLA and hamster-charged batteries",
-      "https://srmkzilla.net/assets/img/kzilla.png"
-    );
+  return message;
 };
 
 export const shrinkedURLMessage = (data: any) => {
@@ -257,20 +165,6 @@ export const membersCountMessage = (membersCount: number, botCount: number) => {
     );
 };
 
-export const invalidChannel = () => {
-  return new MessageEmbed()
-    .setTitle("Invalid Channel Name")
-    .setColor(COLORS.ERROR)
-    .setDescription(
-      `Oops! It seems you have entered an invalid channel name. Please enter a valid one and try again!`
-    )
-    .setTimestamp()
-    .setFooter(
-      "Powered by SRMKZILLA and hamster-charged batteries",
-      "https://srmkzilla.net/assets/img/kzilla.png"
-    );
-};
-
 export const announcementMessage = (title: string, message: string) => {
   if (title == "null") {
     return new MessageEmbed()
@@ -295,14 +189,13 @@ export const announcementMessage = (title: string, message: string) => {
 };
 
 export const createBasicEmbed = (
-  title: string,
-  message: string,
+  msg: { title: string; message: string },
   level: "SUCCESS" | "INFO" | "ERROR" | "ANNOUNCEMENT"
 ) => {
   return new MessageEmbed()
     .setColor(COLORS[level])
-    .setTitle(title)
-    .setDescription(message)
+    .setTitle(msg.title)
+    .setDescription(msg.message)
     .setTimestamp()
     .setFooter(
       "Powered by SRMKZILLA and hamster-charged batteries",

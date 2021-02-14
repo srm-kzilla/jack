@@ -3,19 +3,16 @@ import * as Jimp from "jimp";
 import { join } from "path";
 import {
   getYourCertificateChannelMessage,
-  internalError,
-  unauthorizedUser,
-  invalidCommand,
-  eventDoesNotExist,
+  createBasicEmbed,
 } from "../utils/messages";
-import { CONSTANTS } from "../utils/constants";
+import { CONSTANTS, ERRORS } from "../utils/constants";
 import { getUserCertificate } from "../service/certificate-service";
 import { sendReactableMessage } from "../controllers/sendMessageHandler";
-import { checkForAccessByRoles } from "./roleAuth";
 import { serverLogger } from "../utils/logger";
 import { getDbClient } from "../utils/database";
 import { eventSchema } from "../models/event";
 import { setEvent } from "../utils/nodecache";
+import { incomingMessageSchema } from "../models/incomingMessage";
 
 /**
  * Handles all certificate message in DM (email)
@@ -37,7 +34,9 @@ export async function certificateDMHandler(
     return serviceExecuted;
   } catch (err) {
     serverLogger("error", incomingMessage.content, err);
-    incomingMessage.channel.send(internalError());
+    incomingMessage.channel.send(
+      createBasicEmbed(ERRORS.INTERNAL_ERROR("dm"), "ERROR")
+    );
     return true;
   }
 }
@@ -45,17 +44,21 @@ export async function certificateDMHandler(
  * Handles certificate thread start message
  *
  * @param {Message} incomingMessage
+ * @param {incomingMessageSchema} messageType
  */
-export async function getCertificateChannelMessage(incomingMessage: Message) {
+export async function getCertificateChannelMessage(
+  incomingMessage: Message,
+  messageType: incomingMessageSchema
+) {
   try {
-    const isAllowed = await checkForAccessByRoles(incomingMessage.member, [
-      `${process.env.OPERATOR_ROLE_ID}`,
-    ]);
-    if (isAllowed) {
+    if (messageType.incomingUser.isMod) {
       const eventSlug = incomingMessage.content.split(/ +/)[2];
       if (!eventSlug) {
         serverLogger("user-error", incomingMessage.content, "Invalid Command");
-        return incomingMessage.channel.send(invalidCommand());
+        return incomingMessage.channel.send(
+          `<@${messageType.incomingUser.id}>`,
+          createBasicEmbed(ERRORS.INVALID_COMMAND, "ERROR")
+        );
       }
       const db = await (await getDbClient()).db().collection("events");
       const event = await db.findOne<eventSchema>({ slug: eventSlug });
@@ -65,7 +68,10 @@ export async function getCertificateChannelMessage(incomingMessage: Message) {
           incomingMessage.content,
           "Event Does Not Exist"
         );
-        return incomingMessage.channel.send(eventDoesNotExist());
+        return incomingMessage.channel.send(
+          `<@${messageType.incomingUser.id}>`,
+          createBasicEmbed(ERRORS.EVENT_DNE, "ERROR")
+        );
       }
       if (!(await setEvent(event))) throw "Cannot set nodeCache Key!";
       await sendReactableMessage(
@@ -76,11 +82,17 @@ export async function getCertificateChannelMessage(incomingMessage: Message) {
       );
     } else {
       serverLogger("user-error", incomingMessage.content, "Unauthorized User");
-      incomingMessage.channel.send(unauthorizedUser());
+      incomingMessage.channel.send(
+        `<@${messageType.incomingUser.id}>`,
+        createBasicEmbed(ERRORS.UNAUTHORIZED_USER, "ERROR")
+      );
     }
   } catch (err) {
     serverLogger("internal-error", "Error", err);
-    incomingMessage.channel.send(internalError());
+    incomingMessage.channel.send(
+      `<@${messageType.incomingUser.id}>`,
+      createBasicEmbed(ERRORS.INTERNAL_ERROR(messageType.channelType), "ERROR")
+    );
   }
 }
 

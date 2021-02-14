@@ -1,38 +1,33 @@
-import {
-  Message,
-  MessageEmbed,
-  MessageReaction,
-  TextChannel,
-  User,
-} from "discord.js";
+import { Message, MessageReaction, TextChannel, User } from "discord.js";
 import { pollSchema } from "../models/poll";
 import {
   createPollMessage,
   createPollResult,
-  internalError,
+  createBasicEmbed,
 } from "../utils/messages";
 import { getPoll, refreshKeys, setPoll } from "../utils/nodecache";
 import { nanoid } from "nanoid";
 import { checkForAccessByRoles } from "./roleAuth";
 import { serverLogger } from "../utils/logger";
 import { getDiscordBot } from "../utils/discord";
-import {
-  unauthorizedUser,
-  invalidCommand,
-  createBasicEmbed,
-} from "../utils/messages";
-import { COMMANDS, CONSTANTS } from "../utils/constants";
+import { COMMANDS, CONSTANTS, ERRORS } from "../utils/constants";
 import { getDbClient } from "../utils/database";
 import { pollEmojiFilter } from "../utils/filters";
+import { incomingMessageSchema } from "../models/incomingMessage";
 
-export const createPoll = async (incomingMessage: Message) => {
-  const isAllowed = await checkForAccessByRoles(incomingMessage.member, [
-    `${process.env.OPERATOR_ROLE_ID}`,
-  ]);
+/**
+ *Handles create poll command
+ * @param {Message} incomingMessage
+ * @param {incomingMessageSchema} messageType
+ */
+export const createPoll = async (
+  incomingMessage: Message,
+  messageType: incomingMessageSchema
+) => {
   const pollRegex = new RegExp(
     `^${COMMANDS.prefix} ${COMMANDS.createPoll} create (<#.+?>) ({.*?}) (\\[.*\\])$`
   );
-  if (isAllowed) {
+  if (messageType.incomingUser.isMod) {
     try {
       if (pollRegex.test(incomingMessage.content)) {
         const tokens = incomingMessage.content.match(
@@ -46,15 +41,18 @@ export const createPoll = async (incomingMessage: Message) => {
         if (optionsArray.length > 9) {
           return incomingMessage.channel.send(
             createBasicEmbed(
-              "Invalid arguments!",
-              `
+              {
+                title: "Invalid arguments!",
+                message:
+                  `
             Maximum number of options supported: **9**
             **Syntax for Poll Command:**\n
             ` +
-                "`" +
-                COMMANDS.prefix +
-                ` ${COMMANDS.createPoll} create <channel> {<Some Question>} [[<Option 1>],[<Option 2>],[<Option 3>],[<Option 4>]]` +
-                "`",
+                  "`" +
+                  COMMANDS.prefix +
+                  ` ${COMMANDS.createPoll} create <channel> {<Some Question>} [[<Option 1>],[<Option 2>],[<Option 3>],[<Option 4>]]` +
+                  "`",
+              },
               "ERROR"
             )
           );
@@ -79,15 +77,27 @@ export const createPoll = async (incomingMessage: Message) => {
           incomingMessage.content.split(" ").splice(0, 5),
           "Invalid command"
         );
-        incomingMessage.channel.send(invalidCommand());
+        incomingMessage.channel.send(
+          `<@${messageType.incomingUser.id}>`,
+          createBasicEmbed(ERRORS.INVALID_COMMAND, "ERROR")
+        );
       }
     } catch (err) {
       serverLogger("internal-error", "Internal Error", err);
-      incomingMessage.channel.send(internalError());
+      incomingMessage.channel.send(
+        `<@${messageType.incomingUser.id}>`,
+        createBasicEmbed(
+          ERRORS.INTERNAL_ERROR(messageType.channelType),
+          "ERROR"
+        )
+      );
     }
   } else {
     serverLogger("user-error", incomingMessage.content, "Unauthorized User");
-    incomingMessage.channel.send(unauthorizedUser());
+    incomingMessage.channel.send(
+      `<@${messageType.incomingUser.id}>`,
+      createBasicEmbed(ERRORS.UNAUTHORIZED_USER, "ERROR")
+    );
   }
 };
 
@@ -106,7 +116,9 @@ const addPoll = async (incomingMessage: Message, poll: pollSchema) => {
       await pollMessage.react(option.emoji);
     })
   );
-  const pollCollector = pollMessage.createReactionCollector(pollEmojiFilter);
+  const pollCollector = pollMessage.createReactionCollector(pollEmojiFilter, {
+    dispose: true,
+  });
   pollCollector.on("collect", async (reaction: MessageReaction, user: User) => {
     const { result } = await db.updateOne(
       { pollID: poll.pollID, "options.emoji": reaction.emoji.name },
@@ -118,19 +130,45 @@ const addPoll = async (incomingMessage: Message, poll: pollSchema) => {
     );
     if (!(result.ok == 1)) throw "MongoDB Query Error: Failed to Add Reaction";
   });
+  pollCollector.on("remove", async (reaction: MessageReaction, user: User) => {
+    const { result } = await db.updateOne(
+      { pollID: poll.pollID, "options.emoji": reaction.emoji.name },
+      {
+        $pull: {
+          "options.$.reactions": `${user.username}#${user.discriminator}`,
+        },
+      }
+    );
+    if (!(result.ok == 1)) throw "MongoDB Query Error: Failed to Add Reaction";
+  });
   incomingMessage.channel.send(
     createBasicEmbed(
-      "**New Poll Created! :white_check_mark:**",
-      "**Poll ID:** `" +
-        poll.pollID +
-        "`\n**Time of Creation:** " +
-        poll.timestamp,
+      {
+        title: "**New Poll Created! :white_check_mark:**",
+        message:
+          "**Check Results:** `" +
+          COMMANDS.prefix +
+          " " +
+          COMMANDS.createPoll +
+          " result " +
+          poll.pollID +
+          "`\n**Time of Creation:** " +
+          poll.timestamp,
+      },
       "INFO"
     )
   );
 };
 
-export const getResult = async (incomingMessage: Message) => {
+/**
+ * Handles poll result command
+ * @param {Message} incomingMessage
+ * @param {incomingMessageSchema} messageType
+ */
+export const getResult = async (
+  incomingMessage: Message,
+  messageType: incomingMessageSchema
+) => {
   const isAllowed = await checkForAccessByRoles(incomingMessage.member, [
     `${process.env.OPERATOR_ROLE_ID}`,
   ]);
@@ -148,11 +186,7 @@ export const getResult = async (incomingMessage: Message) => {
         const poll = await getPoll(pollID);
         if (!poll)
           return incomingMessage.channel.send(
-            createBasicEmbed(
-              "Poll ID invalid!",
-              "Please check your Poll ID, or maybe even your command syntax!",
-              "ERROR"
-            )
+            createBasicEmbed(ERRORS.INVALID_POLL, "ERROR")
           );
         incomingMessage.channel.send(createPollResult(poll));
       } else {
@@ -161,14 +195,26 @@ export const getResult = async (incomingMessage: Message) => {
           incomingMessage.content.split(" ").splice(0, 5),
           "Invalid command"
         );
-        incomingMessage.channel.send(invalidCommand());
+        incomingMessage.channel.send(
+          `<@${messageType.incomingUser.id}>`,
+          createBasicEmbed(ERRORS.INVALID_COMMAND, "ERROR")
+        );
       }
     } catch (err) {
       serverLogger("internal-error", "Internal Error", err);
-      incomingMessage.channel.send(internalError());
+      incomingMessage.channel.send(
+        `<@${messageType.incomingUser.id}>`,
+        createBasicEmbed(
+          ERRORS.INTERNAL_ERROR(messageType.channelType),
+          "ERROR"
+        )
+      );
     }
   } else {
     serverLogger("user-error", incomingMessage.content, "Unauthorized User");
-    incomingMessage.channel.send(unauthorizedUser());
+    incomingMessage.channel.send(
+      `<@${messageType.incomingUser.id}>`,
+      createBasicEmbed(ERRORS.UNAUTHORIZED_USER, "ERROR")
+    );
   }
 };

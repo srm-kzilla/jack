@@ -1,26 +1,22 @@
 import { Message, TextChannel, NewsChannel } from "discord.js";
 import { serverLogger } from "../utils/logger";
-import {
-  announcementMessage,
-  invalidChannel,
-  invalidCommand,
-  unauthorizedUser,
-} from "../utils/messages";
-import { checkForAccessByRoles } from "../helper/roleAuth";
-import { COMMANDS } from "../utils/constants";
+import { announcementMessage, createBasicEmbed } from "../utils/messages";
+import { COMMANDS, ERRORS } from "../utils/constants";
+import { incomingMessageSchema } from "../models/incomingMessage";
 
 /**
  * Handles all announcements
  *
  * @param {Message} incomingMessage
+ * @param {incomingMessageSchema} messageType
  */
 
-export async function handleAnnouncements(incomingMessage: Message) {
+export async function handleAnnouncements(
+  incomingMessage: Message,
+  messageType: incomingMessageSchema
+) {
   try {
-    const isAllowed = await checkForAccessByRoles(incomingMessage.member, [
-      `${process.env.OPERATOR_ROLE_ID}`,
-    ]);
-    if (isAllowed) {
+    if (messageType.incomingUser.isMod) {
       const regex = new RegExp(
         `^${COMMANDS.prefix} ${COMMANDS.announce}( here | everyone | )<#.+> \{.*\} (.|\n)+$`,
         "g"
@@ -72,7 +68,10 @@ export async function handleAnnouncements(incomingMessage: Message) {
           incomingMessage.content.split(" ").splice(0, 5),
           "Invalid command"
         );
-        incomingMessage.channel.send(invalidCommand());
+        incomingMessage.channel.send(
+          `<@${messageType.incomingUser.id}>`,
+          createBasicEmbed(ERRORS.INVALID_COMMAND, "ERROR")
+        );
       }
     } else {
       serverLogger(
@@ -80,10 +79,16 @@ export async function handleAnnouncements(incomingMessage: Message) {
         incomingMessage.content.split(" ").splice(0, 5),
         "Unauthorized User"
       );
-      incomingMessage.channel.send(unauthorizedUser());
+      incomingMessage.channel.send(
+        `<@${messageType.incomingUser.id}>`,
+        createBasicEmbed(ERRORS.UNAUTHORIZED_USER, "ERROR")
+      );
     }
   } catch (err) {
-    incomingMessage.channel.send(invalidChannel());
+    incomingMessage.channel.send(
+      `<@${messageType.incomingUser.id}>`,
+      createBasicEmbed(ERRORS.INVALID_CHANNEL, "ERROR")
+    );
     serverLogger(
       "user-error",
       incomingMessage.content.split(" ").splice(0, 5),

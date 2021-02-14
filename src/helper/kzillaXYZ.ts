@@ -1,12 +1,9 @@
 import axios from "axios";
 import { Message } from "discord.js";
-import {
-  internalError,
-  invalidURL,
-  shrinkedURLMessage,
-} from "../utils/messages";
-import { CONSTANTS, ERRORS } from "../utils/constants";
+import { createBasicEmbed, shrinkedURLMessage } from "../utils/messages";
+import { COLORS, CONSTANTS, ERRORS } from "../utils/constants";
 import { serverLogger } from "../utils/logger";
+import { incomingMessageSchema } from "../models/incomingMessage";
 
 /**
  * Shrinks looong URL using KZILLA.XYZ
@@ -26,8 +23,12 @@ export async function shrinkURL(longUrl: string) {
  * Handles commands for shrinking message
  *
  * @param {Message} incomingMessage
+ * @param {incomingMessageSchema} messageType
  */
-export async function handleShrinkURLMessage(incomingMessage: Message) {
+export async function handleShrinkURLMessage(
+  incomingMessage: Message,
+  messageType: incomingMessageSchema
+) {
   try {
     const longURL = incomingMessage.content.split(" ")[2];
     if (longURL) {
@@ -40,15 +41,24 @@ export async function handleShrinkURLMessage(incomingMessage: Message) {
       );
     } else {
       serverLogger("user-error", incomingMessage.content, "No URL");
-      incomingMessage.channel.send(ERRORS.URL_MISSING);
+      incomingMessage.channel.send(
+        `<@${messageType.incomingUser.id}>`,
+        createBasicEmbed(ERRORS.URL_MISSING, "ERROR")
+      );
     }
   } catch (err) {
     if (err.isAxiosError && err.response.status == 400) {
       serverLogger("user-error", incomingMessage.content, "Malformed URL");
-      incomingMessage.channel.send(invalidURL());
+      incomingMessage.channel.send(
+        `<@${messageType.incomingUser.id}>`,
+        createBasicEmbed(ERRORS.INVALID_URL, "ERROR")
+      );
     } else {
       serverLogger("error", incomingMessage.content, err);
-      incomingMessage.channel.send(internalError());
+      incomingMessage.channel.send(
+        `<@${messageType.incomingUser.id}>`,
+        createBasicEmbed(ERRORS.UNAUTHORIZED_USER, "ERROR")
+      );
     }
   }
 }

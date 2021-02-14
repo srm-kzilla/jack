@@ -26,22 +26,29 @@ crafted with <span style="color: #8b0000;">&hearts;</span> by your friends on th
 
 - **Common Commands**
 
-  - `#kzjack help` - Get everything what Jack can do
-  - `#kzjack meme` - Jack sends you a crazyyyy meme
-  - `#kzjack joke` - Bored? Wait for jack to send you a joke, perfect joke indeed.
-  - `#kzjack shrink <URL>` - Shrink a looooong URL using [KZILLA.XYZ](https://kzilla.xyz/)
+  - **`#kzjack help` - Get everything what Jack can do**
+  - **`#kzjack meme` - Jack sends you a crazyyyy meme**
+  - **`#kzjack joke` - Bored? Wait for jack to send you a joke, perfect joke indeed.**
+  - **`#kzjack shrink <URL>` - Shrink a looooong URL using [KZILLA.XYZ](https://kzilla.xyz/)**
+    - **Example:** `#kzjack shrink https://srmkzilla.net`
 
 - **Text Channel Commands**
 
-  - `#kzjack membercount` - Get members count for the channel
+  - **`#kzjack membercount` - Get members count for the channel**
 
 - **Moderators Channel Commands**
 
-  - `#kzjack flush` -Flush all cache
-  - `#kzjack certificate <event-slug>` - Start a certificate thread
-  - `#kzjack announce <? here|everyone > <channel> {<?title>} <description>` - Announcements
-  - `#kzjack poll create <channel> {<Some Question>} [[<Option 1>],[<Option 2>],[<Option 3>]]` - Start a Poll
-  - `#kzjack poll result <Poll ID>` - Get Poll Results
+  - **`#kzjack flush` -Flush all cache**
+  - **`#kzjack certificate <event-slug>` - Start a certificate thread**
+    - `#kzjack certificate my-event`
+  - **`#kzjack announce <? here|everyone > <#channel> {<?title>} <description>` - Announcements**
+    - **Example:** `#kzjack announce #announcements {Hello World!} How are you?`
+    - **Example:** `#kzjack announce here #announcements {Hello World!} How are you?`
+    - **Example:** `#kzjack announce everyone #announcements {Hello World!} How are you?`
+  - **`#kzjack poll create <#channel> {<Some Question>} [[<Option 1>],[<Option 2>],[<Option 3>]]` - Start a Poll**
+    - **Example:** `#kzjack poll create #polls {Who's the best?} [[Jack],[Yvette]]`
+  - **`#kzjack poll result <Poll ID>` - Get Poll Results**
+    - **Example:** `#kzjack poll result s3cRe7ID`
 
 ## Installation 🔧
 
