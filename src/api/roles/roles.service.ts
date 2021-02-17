@@ -1,5 +1,5 @@
 import { getDiscordBot } from "../../utils/discord";
-import { DiscordAPIError, GuildMember, MessageEmbed } from "discord.js";
+import { GuildMember, MessageEmbed } from "discord.js";
 import { ERRORS } from "../error/error.constant";
 import { COLORS, CONSTANTS } from "../../utils/constants";
 import { getDbClient } from "../../utils/database";
@@ -61,6 +61,32 @@ export const addRole = async (
         }
       } catch (err) {
         serverLogger("non-fatal-error", "Webhook Role Add", err);
+      }
+    }),
+  ]);
+};
+
+export const deleteRole = async (
+  userId: string,
+  roles: Array<{ roleId: string; eventSlug: string }>
+) => {
+  const client = await getDiscordBot();
+  const guild = client?.guilds.cache.get(process.env.GUILD_ID!);
+  let guildMember: GuildMember | undefined;
+  try {
+    guildMember = await guild?.members.fetch(userId);
+  } catch (err) {
+    throw ERRORS.DISCORD_404;
+  }
+  await Promise.all([
+    roles.map(async (role) => {
+      try {
+        const roleAssigned = guildMember!.roles.cache.has(role.roleId);
+        if (roleAssigned) {
+          guildMember?.roles.remove(role.roleId);
+        }
+      } catch (err) {
+        serverLogger("non-fatal-error", "Webhook Role Delete", err);
       }
     }),
   ]);

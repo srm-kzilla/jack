@@ -2,7 +2,7 @@ import { NextFunction, Request, Response, Router } from "express";
 import validateQuery from "../middlewares/validate-query";
 import { validateWebhook } from "../middlewares/validate-webhook";
 import { rolesRequestSchema, roleRequest } from "./roles.schema";
-import { addRole } from "./roles.service";
+import { addRole, deleteRole } from "./roles.service";
 
 const router = Router();
 
@@ -30,10 +30,10 @@ const handleDeleteRole = async (
 ) => {
   try {
     const { userId, roles } = req.body as roleRequest;
-    await addRole(userId, roles);
+    await deleteRole(userId, roles);
     res.status(201).json({
       success: true,
-      message: "Appropriate roles have been assigned!",
+      message: "Appropriate roles have been deleted!",
     });
   } catch (err) {
     next(err);
