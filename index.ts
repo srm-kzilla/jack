@@ -73,6 +73,9 @@ async function createServer() {
           }
         }
       }
+      message.react(process.env.CUSTOM_EMOJI_ID!).catch((err) => {
+        serverLogger("non-fatal-error", "Could not find custom emoji", err);
+      });
     }
   });
 
