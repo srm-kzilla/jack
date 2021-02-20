@@ -6,6 +6,7 @@ import rolesRoutes from "./roles/roles.routes";
 import { errorHandler } from "./error/error.handler";
 import { initDbClient } from "../utils/database";
 import { initDiscordBot } from "../utils/discord";
+import { ERRORS } from "./error/error.constant";
 
 /**
  * Initialize Webhook API Server
@@ -25,6 +26,17 @@ app.use(cors());
  * Mount Routes
  */
 app.use("/api/v1", rolesRoutes);
+app.use("/healthcheck", (req: Request, res: Response, next: NextFunction) => {
+  try {
+    res.status(200).json({
+      uptime: process.uptime(),
+      message: "OK",
+      timestamp: Date.now(),
+    });
+  } catch (err) {
+    next(ERRORS.SERVICE_UNAVAILABLE);
+  }
+});
 app.use((req: Request, res: Response, next: NextFunction) => {
   res.status(404).json({
     success: false,

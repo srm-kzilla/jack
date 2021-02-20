@@ -35,4 +35,8 @@ export const ERRORS = {
     httpStatus: 400,
     message: "User DM Blocked!",
   },
+  SERVICE_UNAVAILABLE: {
+    httpStatus: 503,
+    message: "Service Unavailable!",
+  },
 };
