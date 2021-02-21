@@ -1,0 +1,125 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap");
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: "Poppins", sans-serif;
+}
+
+.section {
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  text-align: center;
+}
+
+.main {
+  margin: auto;
+}
+
+.logo {
+  margin: auto;
+  width: 14rem;
+  margin-bottom: 0;
+}
+
+h1 {
+  color: #fafafa;
+  text-align: center;
+  margin: 0 auto;
+  font-size: 4rem;
+}
+
+p {
+  color: #fafafa;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 2rem;
+  text-align: center;
+  font-size: 1rem;
+  background-color: transparent;
+}
+
+#discord-button .icon {
+  width: 25px;
+  height: 25px;
+  margin-right: 15px;
+}
+
+#discord-button .icon svg {
+  fill: white;
+}
+
+#discord-button a {
+  color: white;
+  font-weight: bold;
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  padding: 10px 15px;
+  background-color: #7289da;
+  text-decoration: none;
+}
+
+#discord-button a:hover {
+  background-color: #6a7fc9;
+}
+
+.readdocs {
+  font-size: 2.8rem;
+  color: #fafafa;
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  display: flex;
+  text-decoration: none;
+  align-items: center;
+  justify-content: flex-end;
+  margin-right: 2rem;
+  margin-bottom: 1rem;
+}
+
+.readdocs::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 100%;
+  height: 4px;
+  background-color: #7289da;
+}
+
+.readdocs > img {
+  width: 1em;
+  margin-left: 1rem;
+  transform: translateY(4px);
+}
+
+@media (max-width: 640px) {
+  .logo {
+    width: 8rem;
+  }
+
+  h1 {
+    font-size: 2rem;
+  }
+
+  p {
+    font-size: 0.8rem;
+    margin-bottom: 1.2rem;
+  }
+
+  .readdocs {
+    font-size: 1.6rem;
+    margin-right: 1rem;
+    margin-bottom: 0.6rem;
+  }
+
+  .readdocs > img {
+    transform: translateY(2px);
+  }
+}
