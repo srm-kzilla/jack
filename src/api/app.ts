@@ -7,6 +7,7 @@ import { errorHandler } from "./error/error.handler";
 import { initDbClient } from "../utils/database";
 import { initDiscordBot } from "../utils/discord";
 import { ERRORS } from "./error/error.constant";
+import { join } from "path";
 
 /**
  * Initialize Webhook API Server
@@ -25,6 +26,14 @@ app.use(cors());
 /**
  * Mount Routes
  */
+app.use(express.static(join(__dirname, "..", "..", "..", "public")));
+app.get("/", (req: Request, res: Response, next: NextFunction) => {
+  try {
+    res.sendFile(join(__dirname, "..", "..", "..", "public", "index.html"));
+  } catch (err) {
+    next(ERRORS.SERVICE_UNAVAILABLE);
+  }
+});
 app.use("/api/v1", rolesRoutes);
 app.use("/healthcheck", (req: Request, res: Response, next: NextFunction) => {
   try {
