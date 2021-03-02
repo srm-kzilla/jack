@@ -75,7 +75,7 @@ export const getHelpMessage = (messageType: incomingMessageSchema) => {
       {
         name: "Announcements [Only Mods]",
         value:
-          "`#kzjack announce <? here|everyone > <#channel> {<?title>} <description>`",
+          "`#kzjack announce <? here|everyone|@role > <#channel> {<?title>} <description>`",
       },
       {
         name: "Start Certificates Thread [Only Mods]",
