@@ -41,7 +41,7 @@ crafted with <span style="color: #8b0000;">&hearts;</span> by your friends on th
   - **`#kzjack flush` -Flush all cache**
   - **`#kzjack certificate <event-slug>` - Start a certificate thread**
     - `#kzjack certificate my-event`
-  - **`#kzjack announce <? here|everyone > <#channel> {<?title>} <description>` - Announcements**
+  - **`#kzjack announce <? here|everyone|@role > <#channel> {<?title>} <description>` - Announcements**
     - **Example:** `#kzjack announce #announcements {Hello World!} How are you?`
     - **Example:** `#kzjack announce here #announcements {Hello World!} How are you?`
     - **Example:** `#kzjack announce everyone #announcements {Hello World!} How are you?`
