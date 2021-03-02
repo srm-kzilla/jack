@@ -31,6 +31,10 @@ export const ERRORS = {
     httpStatus: 404,
     message: "Discord User Not Found!",
   },
+  DISCORD_CHANNEL_404: {
+    httpStatus: 404,
+    message: "Discord Channel Not Found!",
+  },
   USER_DM_BLOCKED: {
     httpStatus: 400,
     message: "User DM Blocked!",
