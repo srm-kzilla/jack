@@ -18,7 +18,7 @@ export async function handleAnnouncements(
   try {
     if (messageType.incomingUser.isMod) {
       const regex = new RegExp(
-        `^${COMMANDS.prefix} ${COMMANDS.announce}( here | everyone | )<#.+> \{.*\} (.|\n)+$`,
+        `^${COMMANDS.prefix} ${COMMANDS.announce}( here | everyone | | <@&.+> )<#.+> \{.*\} (.|\n)+$`,
         "g"
       );
       if (regex.test(incomingMessage.content)) {
@@ -39,6 +39,9 @@ export async function handleAnnouncements(
           const hereRegex = new RegExp(
             `^${COMMANDS.prefix} ${COMMANDS.announce} here`
           );
+          const roleMentionRegex = new RegExp(
+            `^${COMMANDS.prefix} ${COMMANDS.announce} <@&.+>`
+          );
           if (everyoneRegex.test(incomingMessage.content)) {
             (channel as TextChannel | NewsChannel).send(
               "**📢 Announcement @everyone!**",
@@ -49,6 +52,16 @@ export async function handleAnnouncements(
           } else if (hereRegex.test(incomingMessage.content)) {
             (channel as TextChannel | NewsChannel).send(
               "**📢 Announcement @here!**",
+              {
+                embed: announcementMessage(title, announcement),
+              }
+            );
+          } else if (roleMentionRegex.test(incomingMessage.content)) {
+            let roleId = incomingMessage.content.split(" ")[2];
+            roleId = roleId.substring(3, roleId.length - 1);
+            console.log(roleId);
+            (channel as TextChannel | NewsChannel).send(
+              `**📢 Announcement <@&${roleId}>!**`,
               {
                 embed: announcementMessage(title, announcement),
               }
