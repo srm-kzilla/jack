@@ -3,6 +3,7 @@ import cors from "cors";
 import { config } from "dotenv";
 import { serverLogger } from "../utils/logger";
 import rolesRoutes from "./roles/roles.routes";
+import channelRoutes from "./channels/channels.routes";
 import { errorHandler } from "./error/error.handler";
 import { initDbClient } from "../utils/database";
 import { initDiscordBot } from "../utils/discord";
@@ -35,6 +36,7 @@ app.get("/", (req: Request, res: Response, next: NextFunction) => {
   }
 });
 app.use("/api/v1", rolesRoutes);
+app.use("/api/v1", channelRoutes);
 app.use("/healthcheck", (req: Request, res: Response, next: NextFunction) => {
   try {
     res.status(200).json({
