@@ -61,7 +61,10 @@ export async function getCertificateChannelMessage(
         );
       }
       const db = await (await getDbClient()).db().collection("events");
-      const event = await db.findOne<eventSchema>({ slug: eventSlug });
+      const event = await db.findOne<eventSchema>({
+        slug: eventSlug,
+        type: "certificate",
+      });
       if (!event) {
         serverLogger(
           "user-error",
@@ -107,20 +110,20 @@ export async function generateCertificate(
   event: eventSchema
 ): Promise<Buffer> {
   const certParams = event.certificate;
-  let imgObject = await Jimp.read(certParams.url);
+  let imgObject = await Jimp.read(certParams!.url);
   imgObject = await imgObject.print(
     await Jimp.loadFont(
       join(__dirname, "..", "..", "..", "assets", "font.fnt")
     ),
-    certParams.x,
-    certParams.y,
+    certParams!.x,
+    certParams!.y,
     {
       text: name,
       alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER,
       alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE,
     },
-    certParams.maxWidth,
-    certParams.maxHeight
+    certParams!.maxWidth,
+    certParams!.maxHeight
   );
   return imgObject.quality(100).getBufferAsync(Jimp.MIME_JPEG);
 }
