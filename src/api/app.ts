@@ -70,3 +70,13 @@ Promise.all([initDbClient(), initDiscordBot()])
     console.dir(_);
     process.exit(1);
   });
+
+/**
+ * For better development experience
+ */
+process.on("SIGINT", () => {
+  process.exit(0);
+});
+process.on("SIGTERM", () => {
+  process.exit(0);
+});
