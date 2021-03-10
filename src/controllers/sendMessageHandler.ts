@@ -74,7 +74,7 @@ export async function sendReactableMessage(
   emoji: any
 ) {
   try {
-    const event = await getEvent(eventSlug);
+    const event = await getEvent(eventSlug, "certificate");
     if (!event) throw "eventKey Not Found in NodeCache!";
     const eventMessage = await incomingMessage.channel.send(message);
     await eventMessage.react(emoji);

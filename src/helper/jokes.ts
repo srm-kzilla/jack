@@ -26,7 +26,7 @@ export async function handleJokes(
         .setTimestamp()
         .setFooter(
           "Powered by SRMKZILLA and hamster-charged batteries",
-          "https://srmkzilla.net/assets/img/kzilla.png"
+          "https://jack.srmkzilla.net/assets/srmkzilla_logo_white_mono.png"
         )
     );
   } catch (err) {
@@ -59,7 +59,7 @@ export async function handleMemes(
         .setTimestamp()
         .setFooter(
           "Powered by SRMKZILLA and hamster-charged batteries",
-          "https://srmkzilla.net/assets/img/kzilla.png"
+          "https://jack.srmkzilla.net/assets/srmkzilla_logo_white_mono.png"
         )
     );
   } catch (err) {

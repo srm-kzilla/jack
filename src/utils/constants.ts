@@ -108,6 +108,7 @@ export const COMMANDS = {
   memes: "meme",
   cacheflush: "flush",
   createPoll: "poll",
+  checkIn: "checkin",
 };
 
 /**
@@ -116,7 +117,7 @@ export const COMMANDS = {
 export const CONSTANTS = {
   thumbsUpEmoji: "👍",
   pollReactions: ["1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣", "7️⃣", "8️⃣", "9️⃣"],
-  jackLogo: "https://srmkzilla.net/static/jack_logo.png",
+  jackLogo: "https://jack.srmkzilla.net/assets/jack_logo.png",
   certificateUserDirectMessage: (eventName: string, username: string) =>
     new MessageEmbed()
       .setTitle(`${eventName} Certificates`)
@@ -143,7 +144,7 @@ export const CONSTANTS = {
       .setTimestamp()
       .setFooter(
         "Powered by SRMKZILLA and hamster-charged batteries",
-        "https://srmkzilla.net/assets/img/kzilla.png"
+        "https://jack.srmkzilla.net/assets/srmkzilla_logo_white_mono.png"
       ),
 
   KZILLA_XYZ_SHRINK_URL_ENDPOINT: "https://kzilla.xyz/api/v1/webhook/link",

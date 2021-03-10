@@ -30,6 +30,7 @@ export const addChannel = async (
         id: myId,
         allow: [
           "VIEW_CHANNEL",
+          "READ_MESSAGE_HISTORY",
           "SEND_MESSAGES",
           "EMBED_LINKS",
           "ATTACH_FILES",

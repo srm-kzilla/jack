@@ -51,7 +51,7 @@ export const addRole = async (
             .setTimestamp()
             .setFooter(
               "Powered by SRMKZILLA and hamster-charged batteries",
-              "https://srmkzilla.net/assets/img/kzilla.png"
+              "https://jack.srmkzilla.net/assets/srmkzilla_logo_white_mono.png"
             );
           try {
             await (await guildMember?.createDM(true))?.send(message);

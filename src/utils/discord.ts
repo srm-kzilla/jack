@@ -23,7 +23,7 @@ export async function initDiscordBot() {
     bot.user!.setActivity("#kzjack help", {
       name: "#kzjack help",
       type: "LISTENING",
-      url: "https://srmkzilla.net",
+      url: "https://jack.srmkzilla.net",
     });
     return bot;
   } catch (err) {
