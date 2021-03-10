@@ -23,3 +23,10 @@ export interface eventUserSchema {
   userId: string;
   joinedDiscord?: boolean;
 }
+
+export interface registrantSchema {
+  name: string;
+  email: string;
+  teamName?: string;
+  checkedIn?: boolean;
+}

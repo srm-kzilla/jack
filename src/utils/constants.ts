@@ -1,5 +1,6 @@
 import { User, MessageEmbed, GuildMember } from "discord.js";
 import { config } from "dotenv";
+import { eventSchema } from "../models/event";
 
 config();
 
@@ -79,6 +80,15 @@ export const ERRORS = {
       message: `<@${member.id}> left the server. Sorry to see you go!`,
     };
   },
+  EVENT_DISABLED: {
+    title: "Event has not been enabled yet! ⏲️",
+    message:
+      "The event requested hasn't been enabled by the admin yet! Please contact admins!",
+  },
+  CHECKIN_CREATE_FAIL: {
+    title: "Checkin Collector Creation Failed!",
+    message: "There has been some error while creating the check-in collector!",
+  },
 };
 
 export const INFO = {
@@ -90,6 +100,19 @@ export const INFO = {
     return {
       title: `A new member joined the server 🥳!`,
       message: `<@${member.id}> joined the server! Welcome home!`,
+    };
+  },
+  CHECKIN_END: (event: eventSchema) => {
+    return {
+      title: `And....it's a wrap up for ${event.name} check-ins 🎊!`,
+      message:
+        "Thank you for co-operating with us! We really appreciate it 🥰!\n**P.S: If you're still not checked-in, contact admins ASAP!**",
+    };
+  },
+  CHECKIN_CREATED: (event: eventSchema) => {
+    return {
+      title: "Check-in Collector Started! 🥳",
+      message: `**Event Slug:** ${event.slug}\n**Event Name:** ${event.name}\n**Channel Started:** <#${event.checkin?.channelId}>`,
     };
   },
 };
@@ -117,6 +140,11 @@ export const COMMANDS = {
 export const CONSTANTS = {
   thumbsUpEmoji: "👍",
   pollReactions: ["1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣", "7️⃣", "8️⃣", "9️⃣"],
+  checkinReactions: {
+    accept: "✅",
+    reject: "❌",
+    error: "❗",
+  },
   jackLogo: "https://jack.srmkzilla.net/assets/jack_logo.png",
   certificateUserDirectMessage: (eventName: string, username: string) =>
     new MessageEmbed()

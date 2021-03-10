@@ -273,20 +273,20 @@ export const checkInChannelAnnouncement = (event: eventSchema) =>
     .setAuthor("Check-in Begins! 🏁", CONSTANTS.jackLogo)
     .setTitle(`Check yourself in for ${event.name} 🏁🏁🏁`)
     .setDescription(
-      `We are all geared ⚙️ up to host ${event.name}!\n**But before we can begin, we need to get y'all checked in! 📝**\n\nKindly enter **your registered e-mail** 📩 below!\n\n\n**Upon check-in, you will receive reactions from Jack:**\n\n`
+      `We are all geared ⚙️ up to host **${event.name}**!\n**But before we can begin, we need to get y'all checked in! 📝**\n\nKindly enter **your registered e-mail** 📩 below!\n\n\n**Upon check-in, you will receive reactions from Jack:**\n\n`
     )
     .addFields(
       {
-        name: "✅ - **Successfully Checked-In!**",
-        value: `You are on your way to participate in ${event.name}! 🥳\nYou will be auto-joined to a private channel with your team! 💪`,
+        name: `${CONSTANTS.checkinReactions.accept} - **Successfully Checked-In!**`,
+        value: `You are on your way to participate in **${event.name}**! 🥳\nYou will be auto-joined to a private channel with your team! 💪`,
       },
       {
-        name: "❌ - **Cannot Check-In!**",
+        name: `${CONSTANTS.checkinReactions.reject} - **Cannot Check-In!**`,
         value:
           "You are not qualified, or your details are not with us.\nIf you think this is a mistake, contact **@SRMKZILLA Team**",
       },
       {
-        name: "❗ - **There is Some Error!**",
+        name: `${CONSTANTS.checkinReactions.error} - **There is Some Error!**`,
         value:
           "There has been some error from our side! Contact **@SRMKZILLA Team**, please!",
       },
