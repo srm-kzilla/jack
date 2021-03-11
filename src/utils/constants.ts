@@ -115,6 +115,32 @@ export const INFO = {
       message: `**Event Slug:** ${event.slug}\n**Event Name:** ${event.name}\n**Channel Started:** <#${event.checkin?.channelId}>`,
     };
   },
+  TEAM_CHANNEL_INTRO: (
+    channelType: string,
+    eventName: string,
+    teamName?: string | null
+  ) => {
+    return {
+      title: "Welcome to the channel! You're the first one here!",
+      message:
+        `Channel Type: **${channelType}**\nEvent Name: **${eventName}**\n` +
+        (teamName
+          ? `Team Name: **${teamName}**`
+          : "**Support will join soon!**"),
+    };
+  },
+  CHANNEL_CREATION: (
+    channels: { text: string; voice: string },
+    channelType: string,
+    teamName?: string
+  ) => {
+    return {
+      title: `New ${channelType} Channels Created!`,
+      message:
+        `Text Channel: **<#${channels.text}>**\nVoice Channel: **<#${channels.voice}>**\n` +
+        (teamName ? `Team Name: **${teamName}**` : ""),
+    };
+  },
 };
 
 /**

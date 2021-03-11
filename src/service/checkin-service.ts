@@ -1,9 +1,11 @@
 import { Message, MessageCollector, TextChannel } from "discord.js";
 import { emailSchema } from "../models/email";
-import { registrantSchema } from "../models/event";
+import { eventSchema, registrantSchema } from "../models/event";
 import { CONSTANTS, ERRORS, INFO } from "../utils/constants";
 import { getDbClient } from "../utils/database";
 import { serverLogger } from "../utils/logger";
+import { addChannel } from "../api/channels/channels.service";
+import slugify from "slugify";
 import {
   checkInChannelAnnouncement,
   createBasicEmbed,
@@ -98,6 +100,9 @@ const checkInEmails = async (
             },
           }
         );
+        if (event.checkin?.teamEvent) {
+          await findAndJoinTeams(incomingMessage, registrant, event);
+        }
         incomingMessage.react(CONSTANTS.checkinReactions.accept);
       }
     } else {
@@ -108,3 +113,88 @@ const checkInEmails = async (
     serverLogger("error", incomingMessage.content, err);
   }
 };
+
+const findAndJoinTeams = async (
+  incomingMessage: Message,
+  registrant: registrantSchema,
+  event: eventSchema
+) => {
+  try {
+    const db = await (await getDbClient()).db().collection("private-channels");
+    const teamName = slugify(registrant.teamName!, {
+      strict: true,
+      lower: true,
+      replacement: "-",
+    });
+    const channelExists = await db.findOne({ channelName: teamName });
+    if (!channelExists) {
+      const createdChannels = await createTeamChannel(
+        incomingMessage,
+        event,
+        teamName,
+        "team",
+        registrant.teamName
+      );
+      const ledgerChannel = (await incomingMessage.client.channels.fetch(
+        event.ledgerChannel
+      )) as TextChannel;
+      ledgerChannel.send(
+        createBasicEmbed(
+          INFO.CHANNEL_CREATION(
+            createdChannels,
+            "Team Channels 💪",
+            registrant.teamName!
+          ),
+          "SUCCESS"
+        )
+      );
+    } else {
+      await joinTeamChannel(incomingMessage, event, teamName, "team");
+    }
+  } catch (err) {
+    serverLogger("error", incomingMessage.content, err);
+    throw "Team Channel Creation Failed!";
+  }
+};
+
+const createTeamChannel = async (
+  incomingMessage: Message,
+  event: eventSchema,
+  channelName: string,
+  channelType: "team" | "support",
+  teamName?: string
+): Promise<{ text: string; voice: string }> => {
+  enum cTypes {
+    team = "Team Channels 💪",
+    support = "Support Channels 🔧",
+  }
+  const channelsCreated = await addChannel({
+    channelName,
+    userIds: [incomingMessage.author.id],
+    categoryId: process.env.TEAM_CHANNEL_CATEGORY_ID!,
+  });
+  if (!channelsCreated.text || !channelsCreated.voice)
+    throw "Channel Creation Failed!";
+  const channel = (await incomingMessage.client.channels.fetch(
+    channelsCreated.text!
+  )) as TextChannel;
+  await channel.send(
+    "@here",
+    createBasicEmbed(
+      INFO.TEAM_CHANNEL_INTRO(
+        cTypes[channelType],
+        event.name,
+        channelType === "team" ? teamName : null
+      ),
+      "SUCCESS"
+    )
+  );
+  return { text: channelsCreated.text!, voice: channelsCreated.voice! };
+};
+
+const joinTeamChannel = async (
+  incomingMessage: Message,
+  event: eventSchema,
+  channelName: string,
+  channelType: "team" | "support"
+) => {};
