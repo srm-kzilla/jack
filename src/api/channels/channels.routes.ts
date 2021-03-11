@@ -6,8 +6,10 @@ import {
   channelDeleteRequestSchema,
   channelPostRequest,
   channelDeleteRequest,
+  channelJoinRequestSchema,
+  channelJoinRequest,
 } from "./channels.schema";
-import { addChannel, deleteChannel } from "./channels.service";
+import { addChannel, deleteChannel, joinChannel } from "./channels.service";
 
 const router = Router();
 
@@ -18,7 +20,7 @@ const handlePostChannel = async (
 ) => {
   try {
     const { userIds, categoryId, channelName } = req.body as channelPostRequest;
-    const channelIds = await addChannel({channelName, categoryId, userIds});
+    const channelIds = await addChannel({ channelName, categoryId, userIds });
     res.status(201).json({
       success: true,
       message: `New Channels Created!`,
@@ -47,6 +49,25 @@ const handleDeleteChannel = async (
   }
 };
 
+const handleJoinChannel = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { userIds, channelId } = req.body as channelJoinRequest;
+    const addedUserIds = await joinChannel({ userIds, channelId });
+    res.status(201).json({
+      success: true,
+      message: `Requested Users Added to Channel`,
+      channelId,
+      addedUserIds,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
 router.post(
   "/channel",
   validateWebhook(),
@@ -59,6 +80,12 @@ router.delete(
   validateWebhook(),
   validateQuery("body", channelDeleteRequestSchema),
   handleDeleteChannel
+);
+router.post(
+  "/channel/join",
+  validateWebhook(),
+  validateQuery("body", channelJoinRequestSchema),
+  handleJoinChannel
 );
 
 export default router;
