@@ -4,7 +4,8 @@ import { validateWebhook } from "../middlewares/validate-webhook";
 import {
   channelPostRequestSchema,
   channelDeleteRequestSchema,
-  channelRequest,
+  channelPostRequest,
+  channelDeleteRequest,
 } from "./channels.schema";
 import { addChannel, deleteChannel } from "./channels.service";
 
@@ -16,8 +17,8 @@ const handlePostChannel = async (
   next: NextFunction
 ) => {
   try {
-    const { userIds, categoryId, channelName } = req.body as channelRequest;
-    const channelIds = await addChannel(channelName, categoryId, userIds);
+    const { userIds, categoryId, channelName } = req.body as channelPostRequest;
+    const channelIds = await addChannel({channelName, categoryId, userIds});
     res.status(201).json({
       success: true,
       message: `New Channels Created!`,
@@ -34,12 +35,12 @@ const handleDeleteChannel = async (
   next: NextFunction
 ) => {
   try {
-    const { channelName } = req.body as channelRequest;
-    const channelIds = await deleteChannel(channelName);
+    const { channelIds } = req.body as channelDeleteRequest;
+    const deletedChannelIds = await deleteChannel(channelIds);
     res.status(201).json({
       success: true,
       message: `Requested Channels Deleted!`,
-      deletedIds: channelIds,
+      deletedIds: deletedChannelIds,
     });
   } catch (err) {
     next(err);

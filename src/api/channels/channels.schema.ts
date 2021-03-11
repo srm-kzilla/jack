@@ -6,6 +6,12 @@ const userIdSchema = yup
   .min(1, "userId cannot be null")
   .required();
 
+const channelIdSchema = yup
+  .string()
+  .trim()
+  .min(1, "channelID cannot be null")
+  .required();
+
 export const channelPostRequestSchema = yup
   .object({
     channelName: yup
@@ -27,12 +33,24 @@ export const channelPostRequestSchema = yup
 
 export const channelDeleteRequestSchema = yup
   .object({
-    channelName: yup
-      .string()
-      .trim()
-      .min(1, "channelName cannot be null")
+    channelIds: yup
+      .array(channelIdSchema)
+      .min(1, "channelIds cannot be empty array")
       .required(),
   })
   .required();
 
-export type channelRequest = yup.InferType<typeof channelPostRequestSchema>;
+export type channelPostRequest = yup.InferType<typeof channelPostRequestSchema>;
+export type channelDeleteRequest = yup.InferType<
+  typeof channelDeleteRequestSchema
+>;
+
+export interface channelDBSchema {
+  channelName: string;
+  categoryId: string;
+  userIds: Array<string>;
+  channelId: {
+    text: string;
+    voice: string;
+  };
+}
