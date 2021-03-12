@@ -95,6 +95,10 @@ export const getHelpMessage = (messageType: incomingMessageSchema) => {
       {
         name: "Get Poll Results [Only Mods]",
         value: "`#kzjack poll result <Poll ID>`",
+      },
+      {
+        name: "Start a check-in Channel [Only Mods]",
+        value: "`kzjack checkin <Event Slug>`",
       }
     );
   }

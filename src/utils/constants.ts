@@ -135,12 +135,12 @@ export const INFO = {
     channelType: "team" | "support"
   ) => {
     return {
-      title: `Hola <@${user.id}> 👋! Welcome to your ${channelType} channel!`,
+      title: `Hola ${user.username}#${user.discriminator} 👋 ! Welcome to your ${channelType} channel!`,
       message:
-        `Event Name: **${event.name}**` +
+        `Event Name: **${event.name}**\nNew Member: **<@${user.id}>**\n` +
         (channelType === "support"
-          ? "We are here to help you! 😇"
-          : "This is your private team channel! Discuss, chat or even chill-out with your team!"),
+          ? "**We are here to help you! 😇**"
+          : "**This is your private team channel 💪!\nDiscuss, chat or even chill-out with your team!**"),
     };
   },
   CHANNEL_CREATION: (

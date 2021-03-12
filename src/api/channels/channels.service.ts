@@ -130,7 +130,9 @@ export const deleteChannel = async (
   }
 };
 
-export const joinChannel = async (request: channelJoinRequest): Promise<Array<string | null>> => {
+export const joinChannel = async (
+  request: channelJoinRequest
+): Promise<Array<string | null>> => {
   const { channelId, userIds } = request;
   const client = await getDiscordBot();
   const guild = client?.guilds.cache.get(process.env.GUILD_ID!);
@@ -171,6 +173,28 @@ export const joinChannel = async (request: channelJoinRequest): Promise<Array<st
       return userId;
     });
     const addedUserIds = await Promise.all(promises);
+    const userPromises = addedUserIds.map(async (userId) => {
+      if (userId) {
+        await db.updateOne(
+          {
+            $or: [
+              {
+                "channelId.text": request.channelId,
+              },
+              {
+                "channelId.voice": request.channelId,
+              },
+            ],
+          },
+          {
+            $push: {
+              userIds: userId,
+            },
+          }
+        );
+      }
+    });
+    await Promise.all(userPromises);
     return addedUserIds;
   } catch (err) {
     serverLogger("webhook-error", "Webhook Channel Join", err);
