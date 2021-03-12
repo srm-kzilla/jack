@@ -5,10 +5,7 @@ import { startCheckInCollector } from "../service/checkin-service";
 import { ERRORS, INFO } from "../utils/constants";
 import { getDbClient } from "../utils/database";
 import { serverLogger } from "../utils/logger";
-import {
-  checkInChannelAnnouncement,
-  createBasicEmbed,
-} from "../utils/messages";
+import { createBasicEmbed } from "../utils/messages";
 import { setEvent } from "../utils/nodecache";
 
 /**

@@ -4,13 +4,14 @@ import { eventSchema, registrantSchema } from "../models/event";
 import { CONSTANTS, ERRORS, INFO } from "../utils/constants";
 import { getDbClient } from "../utils/database";
 import { serverLogger } from "../utils/logger";
-import { addChannel } from "../api/channels/channels.service";
+import { addChannel, joinChannel } from "../api/channels/channels.service";
 import slugify from "slugify";
 import {
   checkInChannelAnnouncement,
   createBasicEmbed,
 } from "../utils/messages";
 import { getEvent } from "../utils/nodecache";
+import { channelDBSchema } from "../api/channels/channels.schema";
 
 export const startCheckInCollector = async (
   incomingMessage: Message,
@@ -53,7 +54,7 @@ export const startCheckInCollector = async (
       collector.on("end", async () => {
         checkInChannel.send(createBasicEmbed(INFO.CHECKIN_END(event), "INFO"));
       });
-      await checkInChannel.send(checkInChannelAnnouncement(event));
+      await checkInChannel.send("@everyone", checkInChannelAnnouncement(event));
       await checkInChannel.send("**For Example:**");
       (await checkInChannel.send("jack@srmkzilla.net")).react(
         CONSTANTS.checkinReactions.accept
@@ -204,4 +205,26 @@ const joinTeamChannel = async (
   event: eventSchema,
   channelName: string,
   channelType: "team" | "support"
-) => {};
+) => {
+  const db = await (await getDbClient()).db().collection("private-channels");
+  const channelExists = await db.findOne<channelDBSchema>({ channelName });
+  if (!channelExists) throw "Expected channel to exist, but no channel found!";
+  await joinChannel({
+    channelId: channelExists.channelId.text,
+    userIds: [incomingMessage.author.id],
+  });
+  await joinChannel({
+    channelId: channelExists.channelId.voice,
+    userIds: [incomingMessage.author.id],
+  });
+  const channel = (await incomingMessage.client.channels.fetch(
+    channelExists.channelId.text
+  )) as TextChannel;
+  channel.send(
+    "@here",
+    createBasicEmbed(
+      INFO.TEAM_CHANNEL_NEW_MEMBER(incomingMessage.author, event, channelType),
+      "SUCCESS"
+    )
+  );
+};

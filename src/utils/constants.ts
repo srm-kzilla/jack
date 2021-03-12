@@ -129,6 +129,20 @@ export const INFO = {
           : "**Support will join soon!**"),
     };
   },
+  TEAM_CHANNEL_NEW_MEMBER: (
+    user: User,
+    event: eventSchema,
+    channelType: "team" | "support"
+  ) => {
+    return {
+      title: `Hola <@${user.id}> 👋! Welcome to your ${channelType} channel!`,
+      message:
+        `Event Name: **${event.name}**` +
+        (channelType === "support"
+          ? "We are here to help you! 😇"
+          : "This is your private team channel! Discuss, chat or even chill-out with your team!"),
+    };
+  },
   CHANNEL_CREATION: (
     channels: { text: string; voice: string },
     channelType: string,
