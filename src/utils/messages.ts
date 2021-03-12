@@ -283,12 +283,11 @@ export const checkInChannelAnnouncement = (event: eventSchema) =>
       {
         name: `${CONSTANTS.checkinReactions.reject} - **Cannot Check-In!**`,
         value:
-          "You are not qualified, or your details are not with us.\nIf you think this is a mistake, contact **@SRMKZILLA Team**",
+          "You are not qualified, or your details are not with us.\n**If you think this is a mistake, contact the admins!**",
       },
       {
         name: `${CONSTANTS.checkinReactions.error} - **There is Some Error!**`,
-        value:
-          "There has been some error from our side! Contact **@SRMKZILLA Team**, please!",
+        value: `There has been some error from our side! Contact **<@&${process.env.OPERATOR_ROLE_ID}>**, please!`,
       },
       {
         name: "\u200B",

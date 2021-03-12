@@ -100,6 +100,9 @@ const checkInEmails = async (
             },
           }
         );
+        if (event.checkin?.roleId) {
+          await giveCheckinRole(incomingMessage, event.checkin!.roleId);
+        }
         if (event.checkin?.teamEvent) {
           await findAndJoinTeams(incomingMessage, registrant, event);
         }
@@ -155,6 +158,10 @@ const findAndJoinTeams = async (
     serverLogger("error", incomingMessage.content, err);
     throw "Team Channel Creation Failed!";
   }
+};
+
+const giveCheckinRole = async (incomingMessage: Message, roleId: string) => {
+  await incomingMessage.member?.roles.add(roleId);
 };
 
 const createTeamChannel = async (
