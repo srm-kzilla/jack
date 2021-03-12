@@ -1,8 +1,8 @@
 <div align="center">
-  <img alt="SRMKZILLA Logo" src="docs/srmkzilla_logo.png" height="56" />
+  <img alt="SRMKZILLA Logo" src="public/assets/srmkzilla_logo.png" height="56" />
 </div>
 <div align="center">
-  <img alt="Jack Logo" src="docs/jack_logo.png" height="56" />
+  <img alt="Jack Logo" src="public/assets/jack_logo.png" height="56" />
 </div>
 
 <br>
