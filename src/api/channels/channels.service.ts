@@ -187,7 +187,7 @@ export const joinChannel = async (
             ],
           },
           {
-            $push: {
+            $addToSet: {
               userIds: userId,
             },
           }
