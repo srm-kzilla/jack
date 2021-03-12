@@ -1,8 +1,8 @@
 <div align="center">
-  <img alt="SRMKZILLA Logo" src="docs/srmkzilla_logo.png" height="56" />
+  <img alt="SRMKZILLA Logo" src="public/assets/srmkzilla_logo.png" height="56" />
 </div>
 <div align="center">
-  <img alt="Jack Logo" src="docs/jack_logo.png" height="56" />
+  <img alt="Jack Logo" src="public/assets/jack_logo.png" height="56" />
 </div>
 
 <br>
@@ -49,6 +49,8 @@ crafted with <span style="color: #8b0000;">&hearts;</span> by your friends on th
     - **Example:** `#kzjack poll create #polls {Who's the best?} [[Jack],[Yvette]]`
   - **`#kzjack poll result <Poll ID>` - Get Poll Results**
     - **Example:** `#kzjack poll result s3cRe7ID`
+  - **`#kzjack checkin <Event Slug>` - Start event Checkin Collector**
+    - **Example:** `#kzjack checkin mozohack`
 
 ## Installation 🔧
 

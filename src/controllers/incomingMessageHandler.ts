@@ -9,6 +9,7 @@ import { COMMANDS, CONSTANTS, ERRORS } from "../utils/constants";
 import { serverLogger } from "../utils/logger";
 import { flushCache } from "../helper/flushCache";
 import { createPoll, getResult } from "../helper/polls";
+import { startCheckIn } from "../helper/checkIn";
 import { createBasicEmbed, getHelpMessage } from "../utils/messages";
 import { sendDirectMessageToUser } from "./sendMessageHandler";
 import { incomingMessageSchema } from "../models/incomingMessage";
@@ -63,6 +64,10 @@ export async function handleIncomingChannelCommand(
         if (incomingMessage.content.split(" ")[2] == "create")
           createPoll(incomingMessage, messageType);
         else getResult(incomingMessage, messageType);
+        break;
+      }
+      case COMMANDS.checkIn: {
+        startCheckIn(incomingMessage, messageType);
         break;
       }
       case COMMANDS.help: {
@@ -150,7 +155,7 @@ export async function handleIncomingReaction(
 ) {
   try {
     if (!user.bot) {
-      const event = await getEvent(eventSlug);
+      const event = await getEvent(eventSlug, "certificate");
       if (!event) throw "eventKey Not Found in NodeCache!";
       if (reaction.emoji.name === CONSTANTS.thumbsUpEmoji) {
         sendDirectMessageToUser(

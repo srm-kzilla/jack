@@ -89,3 +89,13 @@ async function createServer() {
 }
 
 createServer();
+
+/**
+ * For better development experience
+ */
+process.on("SIGINT", () => {
+  process.exit(0);
+});
+process.on("SIGTERM", () => {
+  process.exit(0);
+});

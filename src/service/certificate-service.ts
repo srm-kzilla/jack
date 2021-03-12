@@ -13,7 +13,7 @@ export async function getUserCertificate(
   email: Email
 ): Promise<boolean> {
   try {
-    const event = await getEvent(eventSlug);
+    const event = await getEvent(eventSlug, "certificate");
     if (!event) throw "eventKey Not Found in NodeCache!";
     if (event.enabled) {
       incomingMessage.channel.send(createBasicEmbed(INFO.WAIT, "INFO"));
