@@ -159,6 +159,7 @@ export const joinChannel = async (
         }
         case "voice": {
           await channel?.updateOverwrite(user?.id, {
+            VIEW_CHANNEL: true,
             CONNECT: true,
             STREAM: true,
             SPEAK: true,
