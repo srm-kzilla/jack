@@ -13,6 +13,7 @@ export interface eventSchema {
   };
   checkin?: {
     roleId: string;
+    categoryId: string;
     teamEvent: boolean;
     channelId: string;
   };
