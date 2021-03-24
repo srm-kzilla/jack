@@ -155,6 +155,16 @@ export const INFO = {
         (teamName ? `Team Name: **${teamName}**` : ""),
     };
   },
+  CERTIFICATE_COLLECTED: (
+    event: eventSchema,
+    registrant: { email: string; name: string },
+    user: User
+  ) => {
+    return {
+      title: `**Somebody just collected their ${event.name} certificate! 🔴✨**`,
+      message: `**Event name:** ${event.name}\n\n**Name:** ${registrant.name}\n**E-mail:** ${registrant.email}\n**Discord Tag:** ${user.username}#${user.discriminator}`,
+    };
+  },
 };
 
 /**
