@@ -111,18 +111,19 @@ export async function generateCertificate(
 ): Promise<Buffer> {
   const certParams = event.certificate;
   let imgObject = await Jimp.read(certParams!.url);
+  let fontPath = join(
+    __dirname,
+    "..",
+    "..",
+    "..",
+    "assets",
+    "font",
+    `${certParams?.font.color}_${certParams?.font.size}`,
+    "font.fnt"
+  );
+  console.log(fontPath);
   imgObject = await imgObject.print(
-    await Jimp.loadFont(
-      join(
-        __dirname,
-        "..",
-        "..",
-        "assets",
-        "font",
-        `${certParams?.font.color}_${certParams?.font.size}`,
-        "font.fnt"
-      )
-    ),
+    await Jimp.loadFont(fontPath),
     certParams!.x,
     certParams!.y,
     {
