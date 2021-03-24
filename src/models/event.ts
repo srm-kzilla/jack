@@ -10,14 +10,20 @@ export interface eventSchema {
     maxWidth: number;
     maxHeight: number;
     url: string;
+    channelId: string;
+    font: {
+      color: "WHITE" | "BLACK";
+      size: 32 | 64 | 128 | 256;
+    };
   };
   checkin?: {
+    //checkin configuration
     roleId: string;
     categoryId: string;
     teamEvent: boolean;
     channelId: string;
   };
-  ledgerChannel: string; // channel id for logging certficate collection / checkin confirmation
+  ledgerChannel: string; // channel id for logging certificate collection / checkin confirmation
 }
 
 export interface eventUserSchema {

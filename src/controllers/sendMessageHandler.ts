@@ -1,4 +1,4 @@
-import { Message, MessageReaction, User } from "discord.js";
+import { Message, MessageReaction, TextChannel, User } from "discord.js";
 import { createBasicEmbed } from "../utils/messages";
 import { ERRORS } from "../utils/constants";
 import { certificateEmojifilter } from "../utils/filters";
@@ -76,7 +76,10 @@ export async function sendReactableMessage(
   try {
     const event = await getEvent(eventSlug, "certificate");
     if (!event) throw "eventKey Not Found in NodeCache!";
-    const eventMessage = await incomingMessage.channel.send(message);
+    const messageChannel = (await incomingMessage.guild?.channels.cache.find(
+      (e) => e.id === event.certificate?.channelId
+    )) as TextChannel;
+    const eventMessage = await messageChannel.send(message);
     await eventMessage.react(emoji);
     // create a reaction collector on the specific message
     const eventCollector = eventMessage.createReactionCollector(

@@ -113,7 +113,16 @@ export async function generateCertificate(
   let imgObject = await Jimp.read(certParams!.url);
   imgObject = await imgObject.print(
     await Jimp.loadFont(
-      join(__dirname, "..", "..", "..", "assets", "font.fnt")
+      join(
+        __dirname,
+        "..",
+        "..",
+        "..",
+        "assets",
+        "font",
+        `${certParams?.font.color}_${certParams?.font.size}`,
+        "font.fnt"
+      )
     ),
     certParams!.x,
     certParams!.y,
