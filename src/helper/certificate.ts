@@ -117,7 +117,6 @@ export async function generateCertificate(
         __dirname,
         "..",
         "..",
-        "..",
         "assets",
         "font",
         `${certParams?.font.color}_${certParams?.font.size}`,
