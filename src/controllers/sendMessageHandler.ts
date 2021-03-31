@@ -1,11 +1,4 @@
-import {
-	Guild,
-	Message,
-	MessageReaction,
-	TextChannel,
-	User,
-	Client,
-} from "discord.js";
+import { Guild, Message, MessageReaction, TextChannel, User } from "discord.js";
 import { createBasicEmbed, guildJoinMessage } from "../utils/messages";
 import { ERRORS } from "../utils/constants";
 import { certificateEmojifilter } from "../utils/filters";
@@ -38,9 +31,7 @@ export async function sendDirectMessageToUser(
 					return true;
 				} catch (err) {
 					serverLogger("user-error", dm.content, "Malformed Email");
-					dm.channel.send(
-						createBasicEmbed(ERRORS.INVALID_EMAIL, "ERROR")
-					);
+					dm.channel.send(createBasicEmbed(ERRORS.INVALID_EMAIL, "ERROR"));
 					return false;
 				}
 			},
@@ -51,11 +42,7 @@ export async function sendDirectMessageToUser(
 			if (serviceExecuted) collector.stop();
 		});
 		collector.on("end", () => {
-			serverLogger(
-				"success",
-				"user-collector-ended",
-				"collector has ended"
-			);
+			serverLogger("success", "user-collector-ended", "collector has ended");
 		});
 	} catch (err) {
 		serverLogger("error", message, "DM Blocked");
@@ -99,17 +86,9 @@ export async function sendReactableMessage(
 			certificateEmojifilter
 		);
 
-		eventCollector.on(
-			"collect",
-			(reaction: MessageReaction, user: User) => {
-				handleIncomingReaction(
-					user,
-					reaction,
-					event.slug,
-					reaction.message
-				);
-			}
-		);
+		eventCollector.on("collect", (reaction: MessageReaction, user: User) => {
+			handleIncomingReaction(user, reaction, event.slug, reaction.message);
+		});
 	} catch (err) {
 		serverLogger("error", incomingMessage.content, err);
 		incomingMessage.channel.send(

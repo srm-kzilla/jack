@@ -46,10 +46,7 @@ export function handleMemberLeave(
 		) as TextChannel;
 		if (!channel) return;
 		channel.send(
-			createBasicEmbed(
-				ERRORS.MEMBER_LEAVE(member as GuildMember),
-				"LOG_1"
-			)
+			createBasicEmbed(ERRORS.MEMBER_LEAVE(member as GuildMember), "LOG_1")
 		);
 		updateUserJoinOrLeave(member as GuildMember, "leave");
 	} catch (err) {
@@ -75,9 +72,7 @@ export function handleMemberUnban(guild: Guild, user: User) {
 			(ch: any) => ch.id === process.env.LOGGER_CHANNEL_ID
 		) as TextChannel;
 		if (!channel) return;
-		channel.send(
-			createBasicEmbed(INFO.MEMBER_UNBAN(user as User), "LOG_2")
-		);
+		channel.send(createBasicEmbed(INFO.MEMBER_UNBAN(user as User), "LOG_2"));
 	} catch (err) {
 		serverLogger("error", "InternalError", err);
 	}
@@ -88,21 +83,11 @@ export function handleMemberUpdate(
 	newUser: GuildMember
 ) {
 	try {
-		console.log(
-			oldUser.user?.avatarURL +
-				"    " +
-				newUser.user.avatarURL +
-				" " +
-				oldUser.user?.displayAvatarURL
-		);
 		const channel = newUser.guild.channels.cache.find(
 			(ch: any) => ch.id === process.env.LOGGER_CHANNEL_ID
 		) as TextChannel;
 		if (!channel) return;
-		if (
-			oldUser.displayName !== newUser.displayName ||
-			oldUser.user?.avatar !== newUser.user.avatar
-		)
+		if (oldUser.displayName !== newUser.displayName)
 			channel.send(
 				createBasicEmbed(
 					INFO.MEMBER_UPDATE(oldUser, newUser),
@@ -135,9 +120,7 @@ export function handleRoleUpdate(oldRole: Role, newRole: Role) {
 			(ch: any) => ch.id === process.env.LOGGER_CHANNEL_ID
 		) as TextChannel;
 		if (!channel) return;
-		channel.send(
-			createBasicEmbed(INFO.ROLE_UPDATE(oldRole, newRole), "LOG_2")
-		);
+		channel.send(createBasicEmbed(INFO.ROLE_UPDATE(oldRole, newRole), "LOG_2"));
 	} catch (err) {
 		serverLogger("error", "InternalError", err);
 	}
@@ -160,17 +143,14 @@ export function handleVoiceStatus(
 	newStatus: VoiceState
 ) {
 	try {
-		let avatarUrl = CONSTANTS.jackLogo;
 		const channel = oldStatus.guild.channels.cache.find(
 			(ch: any) => ch.id === process.env.LOGGER_CHANNEL_ID
 		) as TextChannel;
 		if (!channel) return;
-		if (newStatus.member?.user.avatar)
-			avatarUrl = CONSTANTS.AVATAR_URL(newStatus);
 		let embed = createBasicEmbed(
 			INFO.VOICE_STATUS(oldStatus, newStatus),
 			"MOVE_VOICE"
-		).setThumbnail(avatarUrl);
+		).setThumbnail(CONSTANTS.AVATAR_URL(newStatus));
 		if (oldStatus.channel?.id === newStatus.channel?.id) return;
 		if (oldStatus.channel?.id && newStatus.channel?.id)
 			embed.setColor(COLORS.MOVE_VOICE);
