@@ -1,4 +1,11 @@
-import { User, MessageEmbed, GuildMember } from "discord.js";
+import {
+	User,
+	MessageEmbed,
+	GuildMember,
+	PartialGuildMember,
+	Role,
+	VoiceState,
+} from "discord.js";
 import { config } from "dotenv";
 import { eventSchema } from "../models/event";
 
@@ -156,6 +163,81 @@ export const INFO = {
 				(teamName ? `Team Name: **${teamName}**` : ""),
 		};
 	},
+	MEMBER_BAN: (user: User) => {
+		return {
+			title: `A member was banned 👮‍♀️!`,
+			message: `\n\n<@${user.id}> was banned from the server!😢\n**Username:** ${user.username}#${user.discriminator}`,
+		};
+	},
+	MEMBER_UNBAN: (user: User) => {
+		return {
+			title: `A member was un-banned ‍🥳!`,
+			message: `\n\n<@${user.id}> was un-banned from the Server.😄\n**Username:** ${user.username}#${user.discriminator}`,
+		};
+	},
+	MEMBER_UPDATE: (
+		oldInfo: GuildMember | PartialGuildMember,
+		newInfo: GuildMember
+	) => {
+		if (!(oldInfo.displayName === newInfo.displayName))
+			return {
+				title: `${oldInfo.displayName} 's details were updated!👀`,
+				message: `\n\n**Old name:** ${oldInfo.displayName}\n**new name:** ${newInfo.displayName}\n**user:** <@${oldInfo.user?.id}>\n**Tag:** ${oldInfo.user?.tag}`,
+			};
+		return {
+			title: `${oldInfo.displayName} 's details were updated!👀`,
+			message: `\n\n**user:** <@${oldInfo.user?.id}>\n**Tag:** ${
+				oldInfo.user?.tag
+			}\n**Old avatar:** [**Old avatar**](${CONSTANTS.AVATAR_URL(
+				oldInfo.voice
+			)})\n**New avatar:** [**New avatar**](${CONSTANTS.AVATAR_URL(
+				newInfo.voice
+			)})`,
+		};
+	},
+	ROLE_CREATE: (role: Role) => {
+		return {
+			title: `A new **role** was created!🎉`,
+			message: ``,
+		};
+	},
+	ROLE_DELETE: (role: Role) => {
+		return {
+			title: `A **role** was deleted!😭`,
+			message: `\n**Role Name:** ${role.name}`,
+		};
+	},
+	VOICE_STATUS: (oldStatus: VoiceState, newStatus: VoiceState) => {
+		let voiceMessage = ` `;
+		let titleMessage = ` `;
+		if (!(oldStatus.channel?.id === newStatus.channel?.id)) {
+			if (oldStatus.channel?.id && newStatus.channel?.id) {
+				titleMessage = `${newStatus.member?.user.username}#${newStatus.member?.user.discriminator}`;
+				voiceMessage = `\n**${oldStatus.member?.displayName}** moved from the **<#${oldStatus.channel?.id}>** voice channel to the **<#${newStatus.channel?.id}>** voice channel! 🏃‍♂️`;
+			} else if (oldStatus.channel?.id) {
+				titleMessage = `${oldStatus.member?.user.username}#${oldStatus.member?.user.discriminator}`;
+				voiceMessage = `\n**${oldStatus.member?.displayName}** left the **<#${oldStatus.channel?.id}>** voice channel! 🥺`;
+			} else if (newStatus.channel?.id) {
+				titleMessage = `${newStatus.member?.user.username}#${newStatus.member?.user.discriminator}`;
+				voiceMessage = `\n**${newStatus.member?.displayName}** joined the **<#${newStatus.channel?.id}>** voice channel! ✨`;
+			}
+		}
+		return {
+			title: titleMessage,
+			message: voiceMessage,
+		};
+	},
+	ROLE_UPDATE: (oldRole: Role, newRole: Role) => {
+		if (!(oldRole.name === newRole.name))
+			return {
+				title: `A **role name** was updated!`,
+				message: `**Old role Name**: ${oldRole.name}\n**New role name:** ${newRole.name}`,
+			};
+		return {
+			title: `A **role color** was updated!`,
+			message: ``,
+		};
+	},
 };
 
 /**
@@ -226,6 +308,11 @@ export const CONSTANTS = {
 		"pcmemes/",
 		"programmingmemes/",
 	],
+	AVATAR_URL: (newStatus: VoiceState) => {
+		if (newStatus.member?.user.avatar)
+			return `https://cdn.discordapp.com/avatars/${newStatus.member?.user.id}/${newStatus.member?.user.avatar}.jpeg`;
+		return `https://cdn.discordapp.com/embed/avatars/0.png`;
+	},
 };
 
 export const COLORS = {
@@ -233,6 +320,11 @@ export const COLORS = {
 	INFO: "#DAF7A6",
 	ERROR: "#F42929",
 	ANNOUNCEMENT: "#26BAFF",
+	LOG_1: "#800000",
+	LOG_2: "#008080",
+	JOIN_VOICE: "#00ff00",
+	LEAVE_VOICE: "#ff0066",
+	MOVE_VOICE: "#00ccff",
 };
 
 export const randomMemesEndpoint = () => {
