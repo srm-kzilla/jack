@@ -1,4 +1,4 @@
-import { Message } from "discord.js";
+import { Message, TextChannel } from "discord.js";
 import { generateCertificate } from "../helper/certificate";
 import { Email } from "../models/email";
 import { certificateMessage, createBasicEmbed } from "../utils/messages";
@@ -31,13 +31,18 @@ export async function getUserCertificate(
           await generateCertificate(registrant!.name, event)
         );
         incomingMessage.channel.send(message);
-        channelLogger(
-          event.ledgerChannel,
-          `**Somebody just collected their certificate! 🔴✨**\n**Name:** ${
-            registrant!.name
-          }\n**Email:** ${registrant!.email}\n**Discord Tag:** ${
-            incomingMessage.author.username
-          }#${incomingMessage.author.discriminator}`
+        const ledgerChannel = incomingMessage.client.channels.cache.find(
+          (c) => c.id === event.ledgerChannel
+        ) as TextChannel;
+        ledgerChannel.send(
+          createBasicEmbed(
+            INFO.CERTIFICATE_COLLECTED(
+              event,
+              registrant!,
+              incomingMessage.author
+            ),
+            "SUCCESS"
+          )
         );
         serverLogger(
           "success",

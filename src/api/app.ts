@@ -60,7 +60,7 @@ app.use(errorHandler);
 /**
  * Start Webhook API Server
  */
-Promise.all([initDbClient()])
+Promise.all([initDbClient(), initDiscordBot()])
 	.then(() => {
 		app.listen(process.env.PORT, () => {
 			console.log(

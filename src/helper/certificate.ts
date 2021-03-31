@@ -76,6 +76,17 @@ export async function getCertificateChannelMessage(
           createBasicEmbed(ERRORS.EVENT_DNE, "ERROR")
         );
       }
+      if(!event.enabled){
+        serverLogger(
+          "user-error",
+          incomingMessage.content,
+          "Event Not Enabled"
+        );
+        return incomingMessage.channel.send(
+          `<@${messageType.incomingUser.id}>`,
+          createBasicEmbed(ERRORS.EVENT_DISABLED, "ERROR")
+        );
+      }
       if (!(await setEvent(event))) throw "Cannot set nodeCache Key!";
       await sendReactableMessage(
         incomingMessage,
