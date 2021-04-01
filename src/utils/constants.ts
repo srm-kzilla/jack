@@ -94,8 +94,7 @@ export const ERRORS = {
 	},
 	CHECKIN_CREATE_FAIL: {
 		title: "Checkin Collector Creation Failed!",
-		message:
-			"There has been some error while creating the check-in collector!",
+		message: "There has been some error while creating the check-in collector!",
 	},
 };
 

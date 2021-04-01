@@ -37,10 +37,7 @@ export async function handleJokes(
 	} catch (err) {
 		incomingMessage.channel.send(
 			`<@${messageType.incomingUser.id}>`,
-			createBasicEmbed(
-				ERRORS.INTERNAL_ERROR(messageType.channelType),
-				"ERROR"
-			)
+			createBasicEmbed(ERRORS.INTERNAL_ERROR(messageType.channelType), "ERROR")
 		);
 		serverLogger("error", incomingMessage.content, err);
 	}
@@ -73,10 +70,7 @@ export async function handleMemes(
 	} catch (err) {
 		incomingMessage.channel.send(
 			`<@${messageType.incomingUser.id}>`,
-			createBasicEmbed(
-				ERRORS.INTERNAL_ERROR(messageType.channelType),
-				"ERROR"
-			)
+			createBasicEmbed(ERRORS.INTERNAL_ERROR(messageType.channelType), "ERROR")
 		);
 		serverLogger("error", incomingMessage.content, err);
 	}

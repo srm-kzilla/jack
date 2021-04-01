@@ -63,9 +63,7 @@ app.use(errorHandler);
 Promise.all([initDbClient(), initDiscordBot()])
 	.then(() => {
 		app.listen(process.env.PORT, () => {
-			console.log(
-				`✔️   Webhook API Listening on Port ${process.env.PORT}`
-			);
+			console.log(`✔️   Webhook API Listening on Port ${process.env.PORT}`);
 		});
 	})
 	.catch((_) => {

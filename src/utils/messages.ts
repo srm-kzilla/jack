@@ -2,7 +2,6 @@ import { MessageEmbed } from "discord.js";
 import { COLORS, CONSTANTS } from "./constants";
 import { pollSchema } from "../models/poll";
 import { incomingMessageSchema } from "../models/incomingMessage";
-import { join } from "path";
 import { eventSchema } from "../models/event";
 
 export const getYourCertificateChannelMessage = (eventName: string) => {
@@ -16,9 +15,7 @@ export const getYourCertificateChannelMessage = (eventName: string) => {
 			name: "Event Name",
 			value: eventName,
 		})
-		.setImage(
-			"https://jack.srmkzilla.net/assets/srmkzilla_logo_white_mono.png"
-		)
+		.setImage("https://jack.srmkzilla.net/assets/srmkzilla_logo_white_mono.png")
 		.setTimestamp()
 		.setFooter(
 			"Powered by SRMKZILLA and hamster-charged batteries",
@@ -46,9 +43,7 @@ export const getHelpMessage = (messageType: incomingMessageSchema) => {
 		.setTitle("Hi, This is Jack")
 		.setThumbnail(CONSTANTS.jackLogo)
 		.setColor(COLORS.INFO)
-		.setDescription(
-			`A cool Beep Bot. Talk with me with the following commands`
-		)
+		.setDescription(`A cool Beep Bot. Talk with me with the following commands`)
 		.addFields(
 			{
 				name: "Get List of Commands",
