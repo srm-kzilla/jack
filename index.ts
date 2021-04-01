@@ -31,7 +31,6 @@ async function createServer() {
 	config();
 	await initDbClient();
 	await initEventDbClient();
-	await initDiscordBot();
 	await initCache();
 	await refreshKeys();
 
