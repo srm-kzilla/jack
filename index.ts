@@ -1,4 +1,4 @@
-import { Message } from "discord.js";
+import { Message, VoiceChannel } from "discord.js";
 import { config } from "dotenv";
 import {
   handleIncomingChannelCommand,
@@ -8,10 +8,19 @@ import { getDiscordBot, initDiscordBot } from "./src/utils/discord";
 import { COMMANDS } from "./src/utils/constants";
 import { initDbClient, initEventDbClient } from "./src/utils/database";
 import { initCache, refreshKeys } from "./src/utils/nodecache";
-import { handleMemberJoin, handleMemberLeave } from "./src/helper/memberLogs";
+import {
+  handleMemberJoin,
+  handleMemberLeave,
+  handleChannelCreate,
+  handleChannelDelete,
+  handleChannelUpdate,
+  handleEmojiCreate,
+  handleEmojiDelete,
+} from "./src/helper/memberLogs";
 import { serverLogger } from "./src/utils/logger";
 import { checkForAccessByRoles } from "./src/helper/roleAuth";
 import { incomingMessageSchema } from "./src/models/incomingMessage";
+import { Delete } from "./src/models/customTypes";
 /******************************************
           Initialize Server
 *******************************************/
@@ -72,7 +81,7 @@ async function createServer() {
             );
           }
         }
-        message.react(process.env.CUSTOM_EMOJI_ID!).catch((err) => {
+        message.react("😇").catch((err) => {
           serverLogger("non-fatal-error", "Could not find custom emoji", err);
         });
       }
@@ -85,6 +94,27 @@ async function createServer() {
 
   client!.on("guildMemberRemove", (member) => {
     handleMemberLeave(member, client);
+  });
+
+  client!.on("channelCreate", (channel) => {
+    handleChannelCreate(channel, client);
+  });
+
+  client!.on("channelDelete", (channel) => {
+    const channelDelete = (channel as unknown) as Delete;
+    handleChannelDelete(channelDelete, client);
+  });
+  client!.on("channelUpdate", (channel) => {
+    handleChannelUpdate(channel, client);
+  });
+  client!.on("emojiCreate", (emoji) => {
+    handleEmojiCreate(emoji, client);
+  });
+  client!.on("emojiDelete", (event) => {
+    handleEmojiDelete((event as unknown) as Delete, client);
+  });
+  client!.on("error", (error) => {
+    serverLogger("error", "InternalError", error);
   });
 }
 
