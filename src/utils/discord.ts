@@ -16,7 +16,7 @@ export async function getDiscordBot() {
 export async function initDiscordBot() {
   try {
     let intents = new Intents(Intents.NON_PRIVILEGED);
-    intents.add("GUILD_MEMBERS");
+    intents.add(["GUILD_MEMBERS", "GUILD_PRESENCES"]);
     bot = new Discord.Client({ ws: { intents: intents } });
     await bot.login(process.env.DISCORD_TOKEN || "");
     console.log("✔️   Discord Bot Login");

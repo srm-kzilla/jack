@@ -8,20 +8,29 @@ import { getDiscordBot, initDiscordBot } from "./src/utils/discord";
 import { COMMANDS } from "./src/utils/constants";
 import { initDbClient, initEventDbClient } from "./src/utils/database";
 import { initCache, refreshKeys } from "./src/utils/nodecache";
-import { handleMemberJoin, handleMemberLeave } from "./src/helper/memberLogs";
+import {
+  handleMemberBan,
+  handleMemberJoin,
+  handleMemberLeave,
+  handleMemberUnban,
+  handleMemberUpdate,
+  handleRoleCreate,
+  handleRoleDelete,
+  handleRoleUpdate,
+  handleVoiceStatus,
+} from "./src/helper/memberLogs";
 import { serverLogger } from "./src/utils/logger";
 import { checkForAccessByRoles } from "./src/helper/roleAuth";
 import { incomingMessageSchema } from "./src/models/incomingMessage";
+import { guildJoin } from "./src/controllers/sendMessageHandler";
 /******************************************
           Initialize Server
 *******************************************/
 async function createServer() {
   // Mount Initializers
   config();
-  await initDiscordBot();
   await initDbClient();
   await initEventDbClient();
-
   await initCache();
   await refreshKeys();
 
@@ -85,6 +94,38 @@ async function createServer() {
 
   client!.on("guildMemberRemove", (member) => {
     handleMemberLeave(member, client);
+  });
+
+  client!.on("guildBanAdd", (guild, user) => {
+    handleMemberBan(guild, user);
+  });
+
+  client!.on("guildBanRemove", (guild, user) => {
+    handleMemberUnban(guild, user);
+  });
+
+  client!.on("guildCreate", (guild) => {
+    guildJoin(guild);
+  }); //gets the job done but throws an unknown error
+
+  client!.on("guildMemberUpdate", (oldUser, newUser) => {
+    handleMemberUpdate(oldUser, newUser);
+  });
+
+  client!.on("roleCreate", (role) => {
+    handleRoleCreate(role);
+  });
+
+  client!.on("roleDelete", (role) => {
+    handleRoleDelete(role);
+  });
+
+  client!.on("roleUpdate", (oldRole, newrRole) => {
+    handleRoleUpdate(oldRole, newrRole);
+  });
+
+  client!.on("voiceStateUpdate", (oldState, newState) => {
+    handleVoiceStatus(oldState, newState);
   });
 }
 

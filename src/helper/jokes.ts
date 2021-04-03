@@ -1,7 +1,12 @@
 import axios from "axios";
 import { Message, MessageEmbed } from "discord.js";
 import { incomingMessageSchema } from "../models/incomingMessage";
-import { COLORS, CONSTANTS, ERRORS } from "../utils/constants";
+import {
+  COLORS,
+  CONSTANTS,
+  ERRORS,
+  randomMemesEndpoint,
+} from "../utils/constants";
 import { serverLogger } from "../utils/logger";
 import { createBasicEmbed } from "../utils/messages";
 
@@ -49,7 +54,7 @@ export async function handleMemes(
   messageType: incomingMessageSchema
 ) {
   try {
-    const { data } = await axios.get(CONSTANTS.MEMES_URL_ENDPOINT);
+    const { data } = await axios.get(randomMemesEndpoint());
     console.log(data);
     incomingMessage.channel.send(
       new MessageEmbed()

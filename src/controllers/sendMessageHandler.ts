@@ -1,5 +1,5 @@
-import { Message, MessageReaction, TextChannel, User } from "discord.js";
-import { createBasicEmbed } from "../utils/messages";
+import { Guild, Message, MessageReaction, TextChannel, User } from "discord.js";
+import { createBasicEmbed, guildJoinMessage } from "../utils/messages";
 import { ERRORS } from "../utils/constants";
 import { certificateEmojifilter } from "../utils/filters";
 import { handleIncomingReaction } from "./incomingMessageHandler";
@@ -95,4 +95,14 @@ export async function sendReactableMessage(
       createBasicEmbed(ERRORS.INTERNAL_ERROR("dm"), "ERROR")
     );
   }
+}
+
+export function guildJoin(guild: Guild) {
+  try {
+    const channel = guild.channels.cache.find(
+      (channel) => channel.type === "text"
+    ) as TextChannel;
+    if (!channel) return;
+    channel.send(guildJoinMessage());
+  } catch (error) {}
 }
