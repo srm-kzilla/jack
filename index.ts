@@ -1,4 +1,4 @@
-import { Message } from "discord.js";
+import { Message, VoiceChannel } from "discord.js";
 import { config } from "dotenv";
 import {
   handleIncomingChannelCommand,
@@ -9,6 +9,11 @@ import { COMMANDS } from "./src/utils/constants";
 import { initDbClient, initEventDbClient } from "./src/utils/database";
 import { initCache, refreshKeys } from "./src/utils/nodecache";
 import {
+  handleChannelCreate,
+  handleChannelDelete,
+  handleChannelUpdate,
+  handleEmojiCreate,
+  handleEmojiDelete,
   handleMemberBan,
   handleMemberJoin,
   handleMemberLeave,
@@ -22,6 +27,7 @@ import {
 import { serverLogger } from "./src/utils/logger";
 import { checkForAccessByRoles } from "./src/helper/roleAuth";
 import { incomingMessageSchema } from "./src/models/incomingMessage";
+import { Delete } from "./src/models/customTypes";
 import { guildJoin } from "./src/controllers/sendMessageHandler";
 /******************************************
           Initialize Server
@@ -81,7 +87,7 @@ async function createServer() {
             );
           }
         }
-        message.react(process.env.CUSTOM_EMOJI_ID!).catch((err) => {
+        message.react("😇").catch((err) => {
           serverLogger("non-fatal-error", "Could not find custom emoji", err);
         });
       }
@@ -96,36 +102,56 @@ async function createServer() {
     handleMemberLeave(member, client);
   });
 
-  client!.on("guildBanAdd", (guild, user) => {
-    handleMemberBan(guild, user);
+  client!.on("channelCreate", (channel) => {
+    handleChannelCreate(channel, client);
   });
 
-  client!.on("guildBanRemove", (guild, user) => {
-    handleMemberUnban(guild, user);
+  client!.on("channelDelete", (channel) => {
+    const channelDelete = (channel as unknown) as Delete;
+    handleChannelDelete(channelDelete, client);
   });
-
-  client!.on("guildCreate", (guild) => {
-    guildJoin(guild);
-  }); //gets the job done but throws an unknown error
-
-  client!.on("guildMemberUpdate", (oldUser, newUser) => {
-    handleMemberUpdate(oldUser, newUser);
+  client!.on("channelUpdate", (channel) => {
+    handleChannelUpdate(channel, client);
   });
-
-  client!.on("roleCreate", (role) => {
-    handleRoleCreate(role);
+  client!.on("emojiCreate", (emoji) => {
+    handleEmojiCreate(emoji, client);
   });
-
-  client!.on("roleDelete", (role) => {
-    handleRoleDelete(role);
+  client!.on("emojiDelete", (event) => {
+    handleEmojiDelete((event as unknown) as Delete, client);
   });
+  client!.on("error", (error) => {
+    serverLogger("error", "InternalError", error);
+    client!.on("guildBanAdd", (guild, user) => {
+      handleMemberBan(guild, user);
+    });
 
-  client!.on("roleUpdate", (oldRole, newrRole) => {
-    handleRoleUpdate(oldRole, newrRole);
-  });
+    client!.on("guildBanRemove", (guild, user) => {
+      handleMemberUnban(guild, user);
+    });
 
-  client!.on("voiceStateUpdate", (oldState, newState) => {
-    handleVoiceStatus(oldState, newState);
+    client!.on("guildCreate", (guild) => {
+      guildJoin(guild);
+    }); //gets the job done but throws an unknown error
+
+    client!.on("guildMemberUpdate", (oldUser, newUser) => {
+      handleMemberUpdate(oldUser, newUser);
+    });
+
+    client!.on("roleCreate", (role) => {
+      handleRoleCreate(role);
+    });
+
+    client!.on("roleDelete", (role) => {
+      handleRoleDelete(role);
+    });
+
+    client!.on("roleUpdate", (oldRole, newrRole) => {
+      handleRoleUpdate(oldRole, newrRole);
+    });
+
+    client!.on("voiceStateUpdate", (oldState, newState) => {
+      handleVoiceStatus(oldState, newState);
+    });
   });
 }
 

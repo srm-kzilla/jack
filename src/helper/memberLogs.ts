@@ -1,5 +1,7 @@
 import {
+  Channel,
   Client,
+  Emoji,
   Guild,
   GuildMember,
   PartialGuildMember,
@@ -11,6 +13,7 @@ import {
 import { serverLogger } from "../utils/logger";
 import { updateUserJoinOrLeave } from "../service/user-service";
 import { createBasicEmbed } from "../utils/messages";
+import { Delete } from "../models/customTypes";
 import { COLORS, CONSTANTS, ERRORS, INFO } from "../utils/constants";
 
 export function handleMemberJoin(
@@ -54,6 +57,21 @@ export function handleMemberLeave(
   }
 }
 
+export function handleChannelCreate(
+  newChannel: Channel,
+  client: Client | undefined
+) {
+  try {
+    const channel = client?.channels.cache.find(
+      (ch: any) => ch.id === process.env.LOGGER_CHANNEL_ID
+    ) as TextChannel;
+    if (!channel) return;
+    channel.send(createBasicEmbed(INFO.CHANNEL_CREATED(newChannel), "SUCCESS"));
+  } catch (err) {
+    serverLogger("error", "InternalError", err);
+  }
+}
+
 export function handleMemberBan(guild: Guild, user: User) {
   try {
     const channel = guild.channels.cache.find(
@@ -66,6 +84,20 @@ export function handleMemberBan(guild: Guild, user: User) {
   }
 }
 
+export function handleChannelDelete(
+  deleteChannel: Delete,
+  client: Client | undefined
+) {
+  try {
+    const channel = client?.channels.cache.find(
+      (ch: any) => ch.id === process.env.LOGGER_CHANNEL_ID
+    ) as TextChannel;
+    if (!channel) return;
+    channel.send(createBasicEmbed(INFO.CHANNEL_DELETE(deleteChannel), "INFO"));
+  } catch (err) {
+    serverLogger("error", "InternalError", err);
+  }
+}
 export function handleMemberUnban(guild: Guild, user: User) {
   try {
     const channel = guild.channels.cache.find(
@@ -78,6 +110,22 @@ export function handleMemberUnban(guild: Guild, user: User) {
   }
 }
 
+export function handleChannelUpdate(
+  updateChannel: Channel,
+  client: Client | undefined
+) {
+  try {
+    const channel = client?.channels.cache.find(
+      (ch: any) => ch.id === process.env.LOGGER_CHANNEL_ID
+    ) as TextChannel;
+    if (!channel) return;
+    channel.send(
+      createBasicEmbed(INFO.CHANNEL_UPDATE(updateChannel), "SUCCESS")
+    );
+  } catch (err) {
+    serverLogger("error", "InternalError", err);
+  }
+}
 export function handleMemberUpdate(
   oldUser: GuildMember | PartialGuildMember,
   newUser: GuildMember
@@ -111,6 +159,17 @@ export function handleRoleCreate(role: Role) {
   }
 }
 
+export function handleEmojiCreate(emoji: Emoji, client: Client | undefined) {
+  try {
+    const channel = client?.channels.cache.find(
+      (ch: any) => ch.id === process.env.LOGGER_CHANNEL_ID
+    ) as TextChannel;
+    if (!channel) return;
+    channel.send(createBasicEmbed(INFO.EMOJI_CREATE(emoji), "SUCCESS"));
+  } catch (err) {
+    serverLogger("error", "InternalError", err);
+  }
+}
 export function handleRoleUpdate(oldRole: Role, newRole: Role) {
   try {
     if (oldRole.name === newRole.name && oldRole.color === newRole.color)
@@ -126,6 +185,17 @@ export function handleRoleUpdate(oldRole: Role, newRole: Role) {
   }
 }
 
+export function handleEmojiDelete(emoji: Delete, client: Client | undefined) {
+  try {
+    const channel = client?.channels.cache.find(
+      (ch: any) => ch.id === process.env.LOGGER_CHANNEL_ID
+    ) as TextChannel;
+    if (!channel) return;
+    channel.send(createBasicEmbed(INFO.EMOJI_DELETE(emoji), "ERROR"));
+  } catch (err) {
+    serverLogger("error", "InternalError", err);
+  }
+}
 export function handleRoleDelete(role: Role) {
   try {
     const channel = role.guild.channels.cache.find(

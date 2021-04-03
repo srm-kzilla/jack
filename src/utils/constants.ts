@@ -2,11 +2,14 @@ import {
   User,
   MessageEmbed,
   GuildMember,
+  Channel,
+  Emoji,
   PartialGuildMember,
   Role,
   VoiceState,
 } from "discord.js";
 import { config } from "dotenv";
+import { Delete } from "../models/customTypes";
 import { eventSchema } from "../models/event";
 
 config();
@@ -160,6 +163,36 @@ export const INFO = {
       message:
         `Text Channel: **<#${channels.text}>**\nVoice Channel: **<#${channels.voice}>**\n` +
         (teamName ? `Team Name: **${teamName}**` : ""),
+    };
+  },
+  CHANNEL_CREATED: (channel: Channel) => {
+    return {
+      title: `A new Channel is created 🥳!`,
+      message: `<#${channel.id}> is created on our Server!\n created at: ${channel.createdTimestamp}\n channel type: ${channel.type}`,
+    };
+  },
+  CHANNEL_DELETE: (channel: Delete) => {
+    return {
+      title: `A Channel is Deleted!`,
+      message: `${channel.name} is deleted on our Server!`,
+    };
+  },
+  CHANNEL_UPDATE: (channel: Channel) => {
+    return {
+      title: `A Channel is Updated!`,
+      message: `<#${channel.id}> is updated on our Server\n channel type:  ${channel.type} !`,
+    };
+  },
+  EMOJI_CREATE: (emoji: Emoji) => {
+    return {
+      title: `A Emoji is created 🌽❗`,
+      message: `<:${emoji.name}:${emoji.id}> is created on our Server\n created At:  ${emoji.createdAt} !`,
+    };
+  },
+  EMOJI_DELETE: (emoji: Delete) => {
+    return {
+      title: `A Emoji is Deleted 🙊`,
+      message: `Name of the Emoji :${emoji.name}:${emoji.id} is deleted on our Server`,
     };
   },
   CERTIFICATE_COLLECTED: (
