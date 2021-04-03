@@ -2,15 +2,19 @@ import {
   Channel,
   Client,
   Emoji,
+  Guild,
   GuildMember,
   PartialGuildMember,
+  Role,
   TextChannel,
+  User,
+  VoiceState,
 } from "discord.js";
 import { serverLogger } from "../utils/logger";
 import { updateUserJoinOrLeave } from "../service/user-service";
 import { createBasicEmbed } from "../utils/messages";
-import { ERRORS, INFO } from "../utils/constants";
 import { Delete } from "../models/customTypes";
+import { COLORS, CONSTANTS, ERRORS, INFO } from "../utils/constants";
 
 export function handleMemberJoin(
   member: GuildMember,
@@ -45,7 +49,7 @@ export function handleMemberLeave(
     ) as TextChannel;
     if (!channel) return;
     channel.send(
-      createBasicEmbed(ERRORS.MEMBER_LEAVE(member as GuildMember), "ERROR")
+      createBasicEmbed(ERRORS.MEMBER_LEAVE(member as GuildMember), "LOG_1")
     );
     updateUserJoinOrLeave(member as GuildMember, "leave");
   } catch (err) {
@@ -68,6 +72,18 @@ export function handleChannelCreate(
   }
 }
 
+export function handleMemberBan(guild: Guild, user: User) {
+  try {
+    const channel = guild.channels.cache.find(
+      (ch: any) => ch.id === process.env.LOGGER_CHANNEL_ID
+    ) as TextChannel;
+    if (!channel) return;
+    channel.send(createBasicEmbed(INFO.MEMBER_BAN(user as User), "LOG_1"));
+  } catch (err) {
+    serverLogger("error", "InternalError", err);
+  }
+}
+
 export function handleChannelDelete(
   deleteChannel: Delete,
   client: Client | undefined
@@ -78,6 +94,17 @@ export function handleChannelDelete(
     ) as TextChannel;
     if (!channel) return;
     channel.send(createBasicEmbed(INFO.CHANNEL_DELETE(deleteChannel), "INFO"));
+  } catch (err) {
+    serverLogger("error", "InternalError", err);
+  }
+}
+export function handleMemberUnban(guild: Guild, user: User) {
+  try {
+    const channel = guild.channels.cache.find(
+      (ch: any) => ch.id === process.env.LOGGER_CHANNEL_ID
+    ) as TextChannel;
+    if (!channel) return;
+    channel.send(createBasicEmbed(INFO.MEMBER_UNBAN(user as User), "LOG_2"));
   } catch (err) {
     serverLogger("error", "InternalError", err);
   }
@@ -99,6 +126,38 @@ export function handleChannelUpdate(
     serverLogger("error", "InternalError", err);
   }
 }
+export function handleMemberUpdate(
+  oldUser: GuildMember | PartialGuildMember,
+  newUser: GuildMember
+) {
+  try {
+    const channel = newUser.guild.channels.cache.find(
+      (ch: any) => ch.id === process.env.LOGGER_CHANNEL_ID
+    ) as TextChannel;
+    if (!channel) return;
+    if (oldUser.displayName !== newUser.displayName)
+      channel.send(
+        createBasicEmbed(
+          INFO.MEMBER_UPDATE(oldUser, newUser),
+          "LOG_2"
+        ).setThumbnail(CONSTANTS.AVATAR_URL(newUser.voice))
+      );
+  } catch (err) {
+    serverLogger("error", "InternalError", err);
+  }
+}
+
+export function handleRoleCreate(role: Role) {
+  try {
+    const channel = role.guild.channels.cache.find(
+      (ch: any) => ch.id === process.env.LOGGER_CHANNEL_ID
+    ) as TextChannel;
+    if (!channel) return;
+    channel.send(createBasicEmbed(INFO.ROLE_CREATE(role), "LOG_2"));
+  } catch (err) {
+    serverLogger("error", "InternalError", err);
+  }
+}
 
 export function handleEmojiCreate(emoji: Emoji, client: Client | undefined) {
   try {
@@ -111,6 +170,20 @@ export function handleEmojiCreate(emoji: Emoji, client: Client | undefined) {
     serverLogger("error", "InternalError", err);
   }
 }
+export function handleRoleUpdate(oldRole: Role, newRole: Role) {
+  try {
+    if (oldRole.name === newRole.name && oldRole.color === newRole.color)
+      return;
+    console.log(newRole.members.array);
+    const channel = oldRole.guild.channels.cache.find(
+      (ch: any) => ch.id === process.env.LOGGER_CHANNEL_ID
+    ) as TextChannel;
+    if (!channel) return;
+    channel.send(createBasicEmbed(INFO.ROLE_UPDATE(oldRole, newRole), "LOG_2"));
+  } catch (err) {
+    serverLogger("error", "InternalError", err);
+  }
+}
 
 export function handleEmojiDelete(emoji: Delete, client: Client | undefined) {
   try {
@@ -119,6 +192,41 @@ export function handleEmojiDelete(emoji: Delete, client: Client | undefined) {
     ) as TextChannel;
     if (!channel) return;
     channel.send(createBasicEmbed(INFO.EMOJI_DELETE(emoji), "ERROR"));
+  } catch (err) {
+    serverLogger("error", "InternalError", err);
+  }
+}
+export function handleRoleDelete(role: Role) {
+  try {
+    const channel = role.guild.channels.cache.find(
+      (ch: any) => ch.id === process.env.LOGGER_CHANNEL_ID
+    ) as TextChannel;
+    if (!channel) return;
+    channel.send(createBasicEmbed(INFO.ROLE_DELETE(role), "LOG_1"));
+  } catch (err) {
+    serverLogger("error", "InternalError", err);
+  }
+}
+
+export function handleVoiceStatus(
+  oldStatus: VoiceState,
+  newStatus: VoiceState
+) {
+  try {
+    const channel = oldStatus.guild.channels.cache.find(
+      (ch: any) => ch.id === process.env.LOGGER_CHANNEL_ID
+    ) as TextChannel;
+    if (!channel) return;
+    let embed = createBasicEmbed(
+      INFO.VOICE_STATUS(oldStatus, newStatus),
+      "MOVE_VOICE"
+    ).setThumbnail(CONSTANTS.AVATAR_URL(newStatus));
+    if (oldStatus.channel?.id === newStatus.channel?.id) return;
+    if (oldStatus.channel?.id && newStatus.channel?.id)
+      embed.setColor(COLORS.MOVE_VOICE);
+    else if (oldStatus.channel?.id) embed.setColor(COLORS.LEAVE_VOICE);
+    else if (newStatus.channel?.id) embed.setColor(COLORS.JOIN_VOICE);
+    channel.send(embed);
   } catch (err) {
     serverLogger("error", "InternalError", err);
   }

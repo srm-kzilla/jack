@@ -2,7 +2,6 @@ import { MessageEmbed } from "discord.js";
 import { COLORS, CONSTANTS } from "./constants";
 import { pollSchema } from "../models/poll";
 import { incomingMessageSchema } from "../models/incomingMessage";
-import { join } from "path";
 import { eventSchema } from "../models/event";
 
 export const getYourCertificateChannelMessage = (eventName: string) => {
@@ -196,7 +195,16 @@ export const announcementMessage = (title: string, message: string) => {
 
 export const createBasicEmbed = (
   msg: { title: string; message: string },
-  level: "SUCCESS" | "INFO" | "ERROR" | "ANNOUNCEMENT"
+  level:
+    | "SUCCESS"
+    | "INFO"
+    | "ERROR"
+    | "ANNOUNCEMENT"
+    | "LOG_1"
+    | "LOG_2"
+    | "JOIN_VOICE"
+    | "MOVE_VOICE"
+    | "LEAVE_VOICE"
 ) => {
   return new MessageEmbed()
     .setColor(COLORS[level])
@@ -303,3 +311,71 @@ export const checkInChannelAnnouncement = (event: eventSchema) =>
       `Powered by SRMKZILLA and hamster-charged batteries`,
       "https://jack.srmkzilla.net/assets/srmkzilla_logo_white_mono.png"
     );
+
+export const guildJoinMessage = () => {
+  let message = new MessageEmbed()
+    .setTitle(
+      "Hi, This is Jack. Thank you inviting me to your server and trusting me with so many responsibilities!"
+    )
+    .setThumbnail(CONSTANTS.jackLogo)
+    .setColor(COLORS.INFO)
+    .setDescription(
+      `I am a cool Beep Bot. Talk with me with the following commands`
+    )
+    .addFields(
+      {
+        name: "Get List of Commands",
+        value: "`#kzjack help`",
+      },
+      {
+        name: "Shrink URLs using KZILLA.XYZ",
+        value: "`#kzjack shrink <URL>`",
+      },
+      {
+        name: "Tell me a joke",
+        value: "`#kzjack joke`",
+      },
+      {
+        name: "Send Memes",
+        value: "`#kzjack meme`",
+      },
+      {
+        name: "Members Count",
+        value: "`#kzjack membercount`",
+      },
+      {
+        name: "Announcements [Only Mods]",
+        value:
+          "`#kzjack announce <? here|everyone|@role > <#channel> {<?title>} <description>`",
+      },
+      {
+        name: "Start Certificates Thread [Only Mods]",
+        value: "`#kzjack certificate <event-slug>`",
+      },
+      {
+        name: "Flush Cache [Only Mods]",
+        value: "`#kzjack flush`",
+      },
+      {
+        name: "Start a Poll (Upto 9 options) [Only Mods]",
+        value:
+          "`#kzjack poll create <#channel> {<Some Question>} [[<Option 1>],[<Option 2>],[<Option 3>],[<Option 4>]]`",
+      },
+      {
+        name: "Get Poll Results [Only Mods]",
+        value: "`#kzjack poll result <Poll ID>`",
+      },
+      {
+        name: "Start a check-in Channel [Only Mods]",
+        value: "`kzjack checkin <Event Slug>`",
+      }
+    );
+
+  message
+    .setTimestamp()
+    .setFooter(
+      "Powered by SRMKZILLA and hamster-charged batteries",
+      "https://jack.srmkzilla.net/assets/srmkzilla_logo_white_mono.png"
+    );
+  return message;
+};
