@@ -29,10 +29,7 @@ export async function handleJokes(
         .setDescription(`*${data[0].punchline}*`)
         .setColor(COLORS.INFO)
         .setTimestamp()
-        .setFooter(
-          "Powered by SRMKZILLA and hamster-charged batteries",
-          "https://jack.srmkzilla.net/assets/srmkzilla_logo_white_mono.png"
-        )
+        .setFooter(CONSTANTS.FOOTER, CONSTANTS.FOOTER_LOGO_URL)
     );
   } catch (err) {
     incomingMessage.channel.send(
@@ -62,10 +59,7 @@ export async function handleMemes(
         .setColor(COLORS.INFO)
         .setImage(data.url)
         .setTimestamp()
-        .setFooter(
-          "Powered by SRMKZILLA and hamster-charged batteries",
-          "https://jack.srmkzilla.net/assets/srmkzilla_logo_white_mono.png"
-        )
+        .setFooter(CONSTANTS.FOOTER, CONSTANTS.FOOTER_LOGO_URL)
     );
   } catch (err) {
     incomingMessage.channel.send(

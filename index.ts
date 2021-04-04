@@ -107,8 +107,7 @@ async function createServer() {
   });
 
   client!.on("channelDelete", (channel) => {
-    const channelDelete = (channel as unknown) as Delete;
-    handleChannelDelete(channelDelete, client);
+    handleChannelDelete((channel as unknown) as Delete, client);
   });
 
   client!.on("channelUpdate", (channel) => {

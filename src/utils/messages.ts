@@ -15,12 +15,9 @@ export const getYourCertificateChannelMessage = (eventName: string) => {
       name: "Event Name",
       value: eventName,
     })
-    .setImage("https://jack.srmkzilla.net/assets/srmkzilla_logo_white_mono.png")
+    .setImage(CONSTANTS.SRMKZILLA_WHITE_LOGO)
     .setTimestamp()
-    .setFooter(
-      "Powered by SRMKZILLA and hamster-charged batteries",
-      "https://jack.srmkzilla.net/assets/srmkzilla_logo_white_mono.png"
-    );
+    .setFooter(CONSTANTS.FOOTER, CONSTANTS.FOOTER_LOGO_URL);
 };
 
 export const certificateMessage = async (cert: Buffer) => {
@@ -31,10 +28,7 @@ export const certificateMessage = async (cert: Buffer) => {
       `Thank you for being the star of the webinar. Grab your participation certificate here. We hope you had a great time learning and discovering !`
     )
     .setTimestamp()
-    .setFooter(
-      "Powered by SRMKZILLA and hamster-charged batteries",
-      "https://jack.srmkzilla.net/assets/srmkzilla_logo_white_mono.png"
-    )
+    .setFooter(CONSTANTS.FOOTER, CONSTANTS.FOOTER_LOGO_URL)
     .attachFiles([{ attachment: cert, name: "certificate.jpeg" }]);
 };
 
@@ -101,12 +95,7 @@ export const getHelpMessage = (messageType: incomingMessageSchema) => {
       }
     );
   }
-  message
-    .setTimestamp()
-    .setFooter(
-      "Powered by SRMKZILLA and hamster-charged batteries",
-      "https://jack.srmkzilla.net/assets/srmkzilla_logo_white_mono.png"
-    );
+  message.setTimestamp().setFooter(CONSTANTS.FOOTER, CONSTANTS.FOOTER_LOGO_URL);
   return message;
 };
 
@@ -130,10 +119,7 @@ export const shrinkedURLMessage = (data: any) => {
       }
     )
     .setTimestamp()
-    .setFooter(
-      "Powered by SRMKZILLA and hamster-charged batteries",
-      "https://jack.srmkzilla.net/assets/srmkzilla_logo_white_mono.png"
-    );
+    .setFooter(CONSTANTS.FOOTER, CONSTANTS.FOOTER_LOGO_URL);
 };
 
 export const membersCountMessage = (membersCount: number, botCount: number) => {
@@ -164,10 +150,7 @@ export const membersCountMessage = (membersCount: number, botCount: number) => {
       }
     )
     .setTimestamp()
-    .setFooter(
-      "Powered by SRMKZILLA and hamster-charged batteries",
-      "https://jack.srmkzilla.net/assets/srmkzilla_logo_white_mono.png"
-    );
+    .setFooter(CONSTANTS.FOOTER, CONSTANTS.FOOTER_LOGO_URL);
 };
 
 export const announcementMessage = (title: string, message: string) => {
@@ -176,20 +159,14 @@ export const announcementMessage = (title: string, message: string) => {
       .setColor(COLORS.ANNOUNCEMENT)
       .setDescription(message)
       .setTimestamp()
-      .setFooter(
-        "Powered by SRMKZILLA and hamster-charged batteries",
-        "https://jack.srmkzilla.net/assets/srmkzilla_logo_white_mono.png"
-      );
+      .setFooter(CONSTANTS.FOOTER, CONSTANTS.FOOTER_LOGO_URL);
   } else {
     return new MessageEmbed()
       .setTitle(title)
       .setColor(COLORS.ANNOUNCEMENT)
       .setDescription(message)
       .setTimestamp()
-      .setFooter(
-        "Powered by SRMKZILLA and hamster-charged batteries",
-        "https://jack.srmkzilla.net/assets/srmkzilla_logo_white_mono.png"
-      );
+      .setFooter(CONSTANTS.FOOTER, CONSTANTS.FOOTER_LOGO_URL);
   }
 };
 
@@ -211,10 +188,7 @@ export const createBasicEmbed = (
     .setTitle(msg.title)
     .setDescription(msg.message)
     .setTimestamp()
-    .setFooter(
-      "Powered by SRMKZILLA and hamster-charged batteries",
-      "https://jack.srmkzilla.net/assets/srmkzilla_logo_white_mono.png"
-    );
+    .setFooter(CONSTANTS.FOOTER, CONSTANTS.FOOTER_LOGO_URL);
 };
 
 export const flushSuccessMessage = () => {
@@ -225,10 +199,7 @@ export const flushSuccessMessage = () => {
       "The cache has been updated with the latest data pulled from MongoDB!"
     )
     .setTimestamp()
-    .setFooter(
-      "Powered by SRMKZILLA and hamster-charged batteries",
-      "https://jack.srmkzilla.net/assets/srmkzilla_logo_white_mono.png"
-    );
+    .setFooter(CONSTANTS.FOOTER, CONSTANTS.FOOTER_LOGO_URL);
 };
 
 export const createPollMessage = (poll: pollSchema) => {
@@ -247,8 +218,8 @@ export const createPollMessage = (poll: pollSchema) => {
     )
     .setTimestamp()
     .setFooter(
-      `Poll ID: ${poll.pollID}\nPowered by SRMKZILLA and hamster-charged batteries`,
-      "https://jack.srmkzilla.net/assets/srmkzilla_logo_white_mono.png"
+      `Poll ID: ${poll.pollID}\n${CONSTANTS.FOOTER}`,
+      CONSTANTS.FOOTER_LOGO_URL
     );
 };
 
@@ -273,10 +244,7 @@ export const createPollResult = (poll: pollSchema) => {
       })()
     )
     .setTimestamp()
-    .setFooter(
-      `Powered by SRMKZILLA and hamster-charged batteries`,
-      "https://jack.srmkzilla.net/assets/srmkzilla_logo_white_mono.png"
-    );
+    .setFooter(CONSTANTS.FOOTER, CONSTANTS.FOOTER_LOGO_URL);
 };
 
 export const checkInChannelAnnouncement = (event: eventSchema) =>
@@ -307,10 +275,7 @@ export const checkInChannelAnnouncement = (event: eventSchema) =>
       }
     )
     .setTimestamp()
-    .setFooter(
-      `Powered by SRMKZILLA and hamster-charged batteries`,
-      "https://jack.srmkzilla.net/assets/srmkzilla_logo_white_mono.png"
-    );
+    .setFooter(CONSTANTS.FOOTER, CONSTANTS.FOOTER_LOGO_URL);
 
 export const guildJoinMessage = () => {
   let message = new MessageEmbed()
@@ -371,11 +336,6 @@ export const guildJoinMessage = () => {
       }
     );
 
-  message
-    .setTimestamp()
-    .setFooter(
-      "Powered by SRMKZILLA and hamster-charged batteries",
-      "https://jack.srmkzilla.net/assets/srmkzilla_logo_white_mono.png"
-    );
+  message.setTimestamp().setFooter(CONSTANTS.FOOTER, CONSTANTS.FOOTER_LOGO_URL);
   return message;
 };

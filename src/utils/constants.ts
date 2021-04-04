@@ -311,6 +311,11 @@ export const CONSTANTS = {
     error: "❗",
   },
   jackLogo: "https://jack.srmkzilla.net/assets/jack_logo.png",
+  FOOTER_LOGO_URL:
+    "https://jack.srmkzilla.net/assets/srmkzilla_logo_white_mono.png",
+  FOOTER: "Powered by SRMKZILLA and hamster-charged batteries",
+  SRMKZILLA_WHITE_LOGO:
+    "https://jack.srmkzilla.net/assets/srmkzilla_logo_white_mono.png",
   certificateUserDirectMessage: (eventName: string, username: string) =>
     new MessageEmbed()
       .setTitle(`${eventName} Certificates`)
