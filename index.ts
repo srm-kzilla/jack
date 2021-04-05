@@ -87,7 +87,7 @@ async function createServer() {
             );
           }
         }
-        message.react("😇").catch((err) => {
+        message.react(process.env.CUSTOM_EMOJI_ID!).catch((err) => {
           serverLogger("non-fatal-error", "Could not find custom emoji", err);
         });
       }
@@ -107,51 +107,55 @@ async function createServer() {
   });
 
   client!.on("channelDelete", (channel) => {
-    const channelDelete = (channel as unknown) as Delete;
-    handleChannelDelete(channelDelete, client);
+    handleChannelDelete((channel as unknown) as Delete, client);
   });
+
   client!.on("channelUpdate", (channel) => {
     handleChannelUpdate(channel, client);
   });
+
   client!.on("emojiCreate", (emoji) => {
     handleEmojiCreate(emoji, client);
   });
+
   client!.on("emojiDelete", (event) => {
     handleEmojiDelete((event as unknown) as Delete, client);
   });
+
   client!.on("error", (error) => {
     serverLogger("error", "InternalError", error);
-    client!.on("guildBanAdd", (guild, user) => {
-      handleMemberBan(guild, user);
-    });
+  });
 
-    client!.on("guildBanRemove", (guild, user) => {
-      handleMemberUnban(guild, user);
-    });
+  client!.on("guildBanAdd", (guild, user) => {
+    handleMemberBan(guild, user);
+  });
 
-    client!.on("guildCreate", (guild) => {
-      guildJoin(guild);
-    }); //gets the job done but throws an unknown error
+  client!.on("guildBanRemove", (guild, user) => {
+    handleMemberUnban(guild, user);
+  });
 
-    client!.on("guildMemberUpdate", (oldUser, newUser) => {
-      handleMemberUpdate(oldUser, newUser);
-    });
+  client!.on("guildCreate", (guild) => {
+    guildJoin(guild);
+  }); //gets the job done but throws an unknown error
 
-    client!.on("roleCreate", (role) => {
-      handleRoleCreate(role);
-    });
+  client!.on("guildMemberUpdate", (oldUser, newUser) => {
+    handleMemberUpdate(oldUser, newUser);
+  });
 
-    client!.on("roleDelete", (role) => {
-      handleRoleDelete(role);
-    });
+  client!.on("roleCreate", (role) => {
+    handleRoleCreate(role);
+  });
 
-    client!.on("roleUpdate", (oldRole, newrRole) => {
-      handleRoleUpdate(oldRole, newrRole);
-    });
+  client!.on("roleDelete", (role) => {
+    handleRoleDelete(role);
+  });
 
-    client!.on("voiceStateUpdate", (oldState, newState) => {
-      handleVoiceStatus(oldState, newState);
-    });
+  client!.on("roleUpdate", (oldRole, newrRole) => {
+    handleRoleUpdate(oldRole, newrRole);
+  });
+
+  client!.on("voiceStateUpdate", (oldState, newState) => {
+    handleVoiceStatus(oldState, newState);
   });
 }
 
