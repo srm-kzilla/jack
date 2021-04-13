@@ -29,6 +29,7 @@ import { checkForAccessByRoles } from "./src/helper/roleAuth";
 import { incomingMessageSchema } from "./src/models/incomingMessage";
 import { Delete } from "./src/models/customTypes";
 import { guildJoin } from "./src/controllers/sendMessageHandler";
+import { addReaction, removeReaction } from "./src/helper/reactionRole";
 /******************************************
           Initialize Server
 *******************************************/
@@ -87,7 +88,7 @@ async function createServer() {
             );
           }
         }
-        message.react(process.env.CUSTOM_EMOJI_ID!).catch((err) => {
+        message.react("🤡").catch((err) => {
           serverLogger("non-fatal-error", "Could not find custom emoji", err);
         });
       }
@@ -156,6 +157,14 @@ async function createServer() {
 
   client!.on("voiceStateUpdate", (oldState, newState) => {
     handleVoiceStatus(oldState, newState);
+  });
+
+  client!.on("messageReactionAdd", (reaction, user) => {
+    addReaction(reaction, user);
+  });
+
+  client!.on("messageReactionRemove", (reaction, user) => {
+    removeReaction(reaction, user);
   });
 }
 
