@@ -13,6 +13,7 @@ import { startCheckIn } from "../helper/checkIn";
 import { createBasicEmbed, getHelpMessage } from "../utils/messages";
 import { sendDirectMessageToUser } from "./sendMessageHandler";
 import { incomingMessageSchema } from "../models/incomingMessage";
+import { handleReactionRoles } from "../helper/reactionRole";
 /**
  * Handles all incoming commands in a text channel
  *
@@ -73,6 +74,10 @@ export async function handleIncomingChannelCommand(
       case COMMANDS.help: {
         incomingMessage.channel.send(getHelpMessage(messageType));
         serverLogger("success", incomingMessage.content, "Help Message");
+        break;
+      }
+      case COMMANDS.reactionRole: {
+        handleReactionRoles(incomingMessage, messageType);
         break;
       }
       default:
