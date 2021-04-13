@@ -2,6 +2,7 @@ import nodeCache from "node-cache";
 import { getDbClient } from "./database";
 import { eventSchema } from "../models/event";
 import { pollSchema } from "../models/poll";
+import { roleSchema } from "../models/reactionRole";
 let cache: nodeCache;
 export const initCache = async (): Promise<nodeCache> => {
   try {
@@ -23,6 +24,10 @@ export const refreshKeys = async () => {
     const polls = await db.collection("polls").find<pollSchema>();
     await polls.forEach((poll: pollSchema) => {
       cache.set(`poll-${poll.pollID}`, JSON.stringify(poll));
+    });
+    const roles = await db.collection("roles").find<roleSchema>();
+    await roles.forEach((role: roleSchema) => {
+      cache.set(role.messageID, JSON.stringify(role));
     });
     console.log("✔️   NodeCache Keys Refreshed!");
   } catch (err) {
@@ -56,4 +61,17 @@ export const getPoll = async (id: string): Promise<pollSchema | null> => {
 export const setPoll = async (poll: pollSchema): Promise<boolean> => {
   const result = cache.set(`poll-${poll.pollID}`, JSON.stringify(poll));
   return result;
+};
+
+export const setRole = async (roleData: roleSchema): Promise<boolean> => {
+  const result = cache.set(roleData.messageID, JSON.stringify(roleData));
+  return result;
+};
+
+export const getRole = async (
+  messageID: string
+): Promise<roleSchema | null> => {
+  const roleData = cache.get(messageID) as string;
+  if (roleData) return JSON.parse(roleData);
+  return null;
 };

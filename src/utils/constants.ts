@@ -7,6 +7,7 @@ import {
   PartialGuildMember,
   Role,
   VoiceState,
+  Guild,
 } from "discord.js";
 import { config } from "dotenv";
 import { Delete } from "../models/customTypes";
@@ -98,6 +99,25 @@ export const ERRORS = {
   CHECKIN_CREATE_FAIL: {
     title: "Checkin Collector Creation Failed!",
     message: "There has been some error while creating the check-in collector!",
+  },
+  ROLE_MISSING: {
+    title: "Error!😭",
+    message:
+      "Please recheck and make sure you have entered atleast one role(@role) and a corresponding emoji. Also make sure roles and emojis are in pair.",
+  },
+  INVALID_ROLE: {
+    title: "Error!😭",
+    message:
+      "Invalid Role! please check and enter a valid role. Please tag the role(@role).",
+  },
+  ROLE_SYNTAX_ERROR: {
+    title: "Error!😭",
+    message: `Please follow the proper syntax. Use my help command to access see the proper syntax.`,
+  },
+  ROLE_ERROR: {
+    title: "error!😭",
+    message:
+      "Ooooops something went wrong! I am not quite sure what. Please check the syntax and try again. Also make sure the mentioned roles exist in the guild.",
   },
 };
 
@@ -280,6 +300,24 @@ export const INFO = {
       message: ``,
     };
   },
+  REACTION_ROLE_REMOVE: (
+    role: Role | undefined,
+    userAdd: GuildMember | undefined
+  ) => {
+    return {
+      title: "Role removed ❌",
+      message: `**${role?.name}** was removed from ${userAdd?.displayName}. \n**Tag:** ${userAdd?.user.tag}.`,
+    };
+  },
+  REACTION_ROLE_ADD: (
+    role: Role | undefined,
+    userAdd: GuildMember | undefined
+  ) => {
+    return {
+      title: "Role Alloted ✅",
+      message: `**${role?.name}** was alloted to ${userAdd?.displayName}. \n**Tag:** ${userAdd?.user.tag}`,
+    };
+  },
 };
 
 /**
@@ -297,6 +335,7 @@ export const COMMANDS = {
   cacheflush: "flush",
   createPoll: "poll",
   checkIn: "checkin",
+  reactionRole: "role",
 };
 
 /**
@@ -305,6 +344,7 @@ export const COMMANDS = {
 export const CONSTANTS = {
   thumbsUpEmoji: "👍",
   pollReactions: ["1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣", "7️⃣", "8️⃣", "9️⃣"],
+  roleReactions: ["1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣", "7️⃣", "8️⃣", "9️⃣"],
   checkinReactions: {
     accept: "✅",
     reject: "❌",
@@ -372,6 +412,7 @@ export const COLORS = {
   JOIN_VOICE: "#00ff00",
   LEAVE_VOICE: "#ff0066",
   MOVE_VOICE: "#00ccff",
+  REACTION_ROLE: "#bf00ff",
 };
 
 export const randomMemesEndpoint = () => {
