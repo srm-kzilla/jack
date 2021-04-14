@@ -61,14 +61,18 @@ export function handleChannelCreate(
   newChannel: Channel,
   client: Client | undefined
 ) {
-  try {
-    const channel = client?.channels.cache.find(
-      (ch: any) => ch.id === process.env.LOGGER_CHANNEL_ID
-    ) as TextChannel;
-    if (!channel) return;
-    channel.send(createBasicEmbed(INFO.CHANNEL_CREATED(newChannel), "SUCCESS"));
-  } catch (err) {
-    serverLogger("error", "InternalError", err);
+  if (newChannel.type === "text" || newChannel.type === "voice") {
+    try {
+      const channel = client?.channels.cache.find(
+        (ch: any) => ch.id === process.env.LOGGER_CHANNEL_ID
+      ) as TextChannel;
+      if (!channel) return;
+      channel.send(
+        createBasicEmbed(INFO.CHANNEL_CREATED(newChannel), "SUCCESS")
+      );
+    } catch (err) {
+      serverLogger("error", "InternalError", err);
+    }
   }
 }
 
@@ -88,14 +92,18 @@ export function handleChannelDelete(
   deleteChannel: Delete,
   client: Client | undefined
 ) {
-  try {
-    const channel = client?.channels.cache.find(
-      (ch: any) => ch.id === process.env.LOGGER_CHANNEL_ID
-    ) as TextChannel;
-    if (!channel) return;
-    channel.send(createBasicEmbed(INFO.CHANNEL_DELETE(deleteChannel), "INFO"));
-  } catch (err) {
-    serverLogger("error", "InternalError", err);
+  if (deleteChannel.type === "text" || deleteChannel.type === "voice") {
+    try {
+      const channel = client?.channels.cache.find(
+        (ch: any) => ch.id === process.env.LOGGER_CHANNEL_ID
+      ) as TextChannel;
+      if (!channel) return;
+      channel.send(
+        createBasicEmbed(INFO.CHANNEL_DELETE(deleteChannel), "INFO")
+      );
+    } catch (err) {
+      serverLogger("error", "InternalError", err);
+    }
   }
 }
 export function handleMemberUnban(guild: Guild, user: User) {
@@ -114,16 +122,18 @@ export function handleChannelUpdate(
   updateChannel: Channel,
   client: Client | undefined
 ) {
-  try {
-    const channel = client?.channels.cache.find(
-      (ch: any) => ch.id === process.env.LOGGER_CHANNEL_ID
-    ) as TextChannel;
-    if (!channel) return;
-    channel.send(
-      createBasicEmbed(INFO.CHANNEL_UPDATE(updateChannel), "SUCCESS")
-    );
-  } catch (err) {
-    serverLogger("error", "InternalError", err);
+  if (updateChannel.type === "text" || updateChannel.type === "voice") {
+    try {
+      const channel = client?.channels.cache.find(
+        (ch: any) => ch.id === process.env.LOGGER_CHANNEL_ID
+      ) as TextChannel;
+      if (!channel) return;
+      channel.send(
+        createBasicEmbed(INFO.CHANNEL_UPDATE(updateChannel), "SUCCESS")
+      );
+    } catch (err) {
+      serverLogger("error", "InternalError", err);
+    }
   }
 }
 export function handleMemberUpdate(
