@@ -27,76 +27,70 @@ export const createPoll = async (
   const pollRegex = new RegExp(
     `^${COMMANDS.prefix} ${COMMANDS.createPoll} create (<#.+?>) ({.*?}) (\\[.*\\])$`
   );
-  if (messageType.incomingUser.isMod) {
-    try {
-      if (pollRegex.test(incomingMessage.content)) {
-        const tokens = incomingMessage.content.match(
-          pollRegex
-        ) as Array<string>;
-        const channelID = tokens[1].substring(2, tokens[1].length - 1);
-        const title = tokens[2].substring(1, tokens[2].length - 1);
-        const optionsArray = tokens[3]
-          .substring(2, tokens[3].length - 2)
-          .split("],[");
-        if (optionsArray.length > 9) {
-          return incomingMessage.channel.send(
-            createBasicEmbed(
-              {
-                title: "Invalid arguments!",
-                message:
-                  `
+  if (!messageType.incomingUser.isMod) {
+    serverLogger("user-error", incomingMessage.content, "Unauthorized User");
+    return incomingMessage.channel.send(
+      `<@${messageType.incomingUser.id}>`,
+      createBasicEmbed(ERRORS.UNAUTHORIZED_USER, "ERROR")
+    );
+  }
+  try {
+    if (pollRegex.test(incomingMessage.content)) {
+      const tokens = incomingMessage.content.match(pollRegex) as Array<string>;
+      const channelID = tokens[1].substring(2, tokens[1].length - 1);
+      const title = tokens[2].substring(1, tokens[2].length - 1);
+      const optionsArray = tokens[3]
+        .substring(2, tokens[3].length - 2)
+        .split("],[");
+      if (optionsArray.length > 9) {
+        return incomingMessage.channel.send(
+          createBasicEmbed(
+            {
+              title: "Invalid arguments!",
+              message:
+                `
             Maximum number of options supported: **9**
             **Syntax for Poll Command:**\n
             ` +
-                  "`" +
-                  COMMANDS.prefix +
-                  ` ${COMMANDS.createPoll} create <channel> {<Some Question>} [[<Option 1>],[<Option 2>],[<Option 3>],[<Option 4>]]` +
-                  "`",
-              },
-              "ERROR"
-            )
-          );
-        }
-        const poll: pollSchema = {
-          title: title.trim(),
-          channelID: channelID,
-          pollID: nanoid(8),
-          options: optionsArray.map((option, index) => {
-            return {
-              emoji: CONSTANTS.pollReactions[index],
-              value: option.trim(),
-              reactions: [],
-            };
-          }),
-          timestamp: new Date(),
-        };
-        await addPoll(incomingMessage, poll);
-      } else {
-        serverLogger(
-          "user-error",
-          incomingMessage.content.split(" ").splice(0, 5),
-          "Invalid command"
-        );
-        incomingMessage.channel.send(
-          `<@${messageType.incomingUser.id}>`,
-          createBasicEmbed(ERRORS.INVALID_COMMAND, "ERROR")
+                "`" +
+                COMMANDS.prefix +
+                ` ${COMMANDS.createPoll} create <channel> {<Some Question>} [[<Option 1>],[<Option 2>],[<Option 3>],[<Option 4>]]` +
+                "`",
+            },
+            "ERROR"
+          )
         );
       }
-    } catch (err) {
-      serverLogger("internal-error", "Internal Error", err);
+      const poll: pollSchema = {
+        title: title.trim(),
+        channelID: channelID,
+        pollID: nanoid(8),
+        options: optionsArray.map((option, index) => {
+          return {
+            emoji: CONSTANTS.pollReactions[index],
+            value: option.trim(),
+            reactions: [],
+          };
+        }),
+        timestamp: new Date(),
+      };
+      await addPoll(incomingMessage, poll);
+    } else {
+      serverLogger(
+        "user-error",
+        incomingMessage.content.split(" ").splice(0, 5),
+        "Invalid command"
+      );
       incomingMessage.channel.send(
         `<@${messageType.incomingUser.id}>`,
-        createBasicEmbed(
-          ERRORS.INTERNAL_ERROR(messageType.channelType),
-          "ERROR"
-        )
+        createBasicEmbed(ERRORS.INVALID_COMMAND, "ERROR")
       );
     }
-  } else {
-    serverLogger("user-error", incomingMessage.content, "Unauthorized User");
+  } catch (err) {
+    serverLogger("internal-error", "Internal Error", err);
     incomingMessage.channel.send(
       `<@${messageType.incomingUser.id}>`,
-      createBasicEmbed(ERRORS.UNAUTHORIZED_USER, "ERROR")
+      createBasicEmbed(ERRORS.INTERNAL_ERROR(messageType.channelType), "ERROR")
     );
   }
 };

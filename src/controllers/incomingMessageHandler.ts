@@ -42,11 +42,6 @@ export async function handleIncomingChannelCommand(
       }
       case COMMANDS.announce: {
         handleAnnouncements(incomingMessage, messageType);
-        serverLogger(
-          "success",
-          incomingMessage.content.split(" ").splice(0, 5),
-          "Announcements"
-        );
         break;
       }
       case COMMANDS.joke: {
