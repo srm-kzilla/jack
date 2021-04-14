@@ -126,9 +126,7 @@ const createReactionRoleMessage = async (
     roleData.timestamp = new Date();
     await addRoleData(roleData);
     for (let i = 0; i < roleData.options.length; i++) {
-      message.react(roleData.options[i].emoji).catch((err) => {
-        throw { message: err.message };
-      });
+      await message.react(roleData.options[i].emoji);
     }
     incomingMessage.channel.send("Reaction role message Sent ✅");
   } catch (error) {
@@ -193,7 +191,7 @@ export const addReaction = async (
           return reaction.users.remove(user.id);
         }
         let roles = roleData.options;
-        roles.forEach((data) => {
+        roles.forEach(async (data) => {
           let emoji;
           const emojiRegex = new RegExp(`(\:.*\:)`);
           if (emojiRegex.test(data.emoji)) {
@@ -207,30 +205,24 @@ export const addReaction = async (
             let userAdd = reaction.message.guild?.members.cache.get(user.id);
             if (role && userAdd) {
               if (userAdd.roles.cache.find((r) => r === role)) return;
-              userAdd.roles
-                .add(role)
-                .catch((error) => {
-                  throw { message: error.message };
-                })
-                .then(() => {
-                  roleData.reactions.push({
-                    id: user.id,
-                    tag: user.tag!,
-                    roleID: data.roleID,
-                  });
-                  refreshRoleData(roleData);
-                  serverLogger("success", "role added", ``);
-                  const channel = reaction.message.guild?.channels.cache.find(
-                    (ch: any) => ch.id === process.env.LOGGER_CHANNEL_ID
-                  ) as TextChannel;
-                  if (channel)
-                    channel.send(
-                      createBasicEmbed(
-                        INFO.REACTION_ROLE_ADD(role, userAdd),
-                        "LOG_2"
-                      )
-                    );
-                });
+              await userAdd.roles.add(role);
+              roleData.reactions.push({
+                id: user.id,
+                tag: user.tag!,
+                roleID: data.roleID,
+              });
+              await refreshRoleData(roleData);
+              serverLogger("success", "role added", ``);
+              const channel = reaction.message.guild?.channels.cache.find(
+                (ch: any) => ch.id === process.env.LOGGER_CHANNEL_ID
+              ) as TextChannel;
+              if (channel)
+                channel.send(
+                  createBasicEmbed(
+                    INFO.REACTION_ROLE_ADD(role, userAdd),
+                    "LOG_2"
+                  )
+                );
             }
           }
         });
@@ -251,7 +243,7 @@ export const removeReaction = async (
       if (!roleData) return;
       if (roleData) {
         let roles = roleData.options;
-        roles.forEach((data) => {
+        roles.forEach(async (data) => {
           let emoji: string;
           const emojiRegex = new RegExp(`(\:.*\:)`);
           if (emojiRegex.test(data.emoji)) {
@@ -265,39 +257,29 @@ export const removeReaction = async (
             let userAdd = reaction.message.guild?.members.cache.get(user.id);
             if (role && userAdd) {
               if (userAdd.roles.cache.find((r) => r === role)) {
-                userAdd.roles
-                  .remove(role)
-                  .catch((error) => {
-                    throw { message: error.message };
-                  })
-                  .then(() => {
-                    serverLogger("success", "role removed", ``);
-                    roleData!.reactions = roleData!.reactions
-                      .slice(
-                        0,
-                        roleData!.reactions.findIndex((i) =>
-                          compareReactionsObject(i, user, data)
-                        )
-                      )
-                      .concat(
-                        roleData!.reactions.slice(
-                          roleData!.reactions.findIndex((i) =>
-                            compareReactionsObject(i, user, data)
-                          ) + 1
-                        )
-                      );
-                    refreshRoleData(roleData);
-                    const channel = reaction.message.guild?.channels.cache.find(
-                      (ch: any) => ch.id === process.env.LOGGER_CHANNEL_ID
-                    ) as TextChannel;
-                    if (channel)
-                      channel.send(
-                        createBasicEmbed(
-                          INFO.REACTION_ROLE_REMOVE(role, userAdd),
-                          "LOG_1"
-                        )
-                      );
-                  });
+                await userAdd.roles.remove(role);
+                serverLogger("success", "role removed", ``);
+                roleData!.reactions = roleData!.reactions
+                  .slice(
+                    0,
+                    roleData!.reactions.findIndex((i) => i.id === user.id)
+                  )
+                  .concat(
+                    roleData!.reactions.slice(
+                      roleData!.reactions.findIndex((i) => i.id === user.id) + 1
+                    )
+                  );
+                await refreshRoleData(roleData);
+                const channel = reaction.message.guild?.channels.cache.find(
+                  (ch: any) => ch.id === process.env.LOGGER_CHANNEL_ID
+                ) as TextChannel;
+                if (channel)
+                  channel.send(
+                    createBasicEmbed(
+                      INFO.REACTION_ROLE_REMOVE(role, userAdd),
+                      "LOG_1"
+                    )
+                  );
               }
             }
           }
@@ -307,21 +289,4 @@ export const removeReaction = async (
   } catch (error) {
     serverLogger("internal-error", "unable to remove role", error.message);
   }
-};
-
-const compareReactionsObject = (
-  i: { id: string; tag: string; roleID: string },
-  user: User | PartialUser,
-  data: { roleID: string; emoji: string }
-) => {
-  if (
-    JSON.stringify(i) ===
-    JSON.stringify({
-      id: user.id!,
-      tag: user.tag!,
-      roleID: data.roleID,
-    })
-  )
-    return true;
-  return false;
 };
