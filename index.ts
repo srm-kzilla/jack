@@ -9,6 +9,7 @@ import { COMMANDS } from "./src/utils/constants";
 import { initDbClient, initEventDbClient } from "./src/utils/database";
 import { initCache, refreshKeys } from "./src/utils/nodecache";
 import {
+  handleAvatarUpdate,
   handleChannelCreate,
   handleChannelDelete,
   handleChannelUpdate,
@@ -165,6 +166,10 @@ async function createServer() {
 
   client!.on("messageReactionRemove", (reaction, user) => {
     removeReaction(reaction, user);
+  });
+
+  client!.on("userUpdate", (oldUser, newUser) => {
+    handleAvatarUpdate(oldUser, newUser, client!);
   });
 }
 

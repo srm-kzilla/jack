@@ -5,6 +5,7 @@ import {
   Guild,
   GuildMember,
   PartialGuildMember,
+  PartialUser,
   Role,
   TextChannel,
   User,
@@ -261,6 +262,28 @@ export function handleVoiceStatus(
     else if (oldStatus.channel?.id) embed.setColor(COLORS.LEAVE_VOICE);
     else if (newStatus.channel?.id) embed.setColor(COLORS.JOIN_VOICE);
     channel.send(embed);
+  } catch (err) {
+    serverLogger("error", "InternalError", err);
+  }
+}
+
+export function handleAvatarUpdate(
+  oldUser: User | PartialUser,
+  newUser: User,
+  client: Client
+) {
+  try {
+    const channel = client?.channels.cache.find(
+      (ch: any) => ch.id === process.env.LOGGER_CHANNEL_ID
+    ) as TextChannel;
+    if (!channel) return;
+    if (oldUser.avatar !== newUser.avatar)
+      channel.send(
+        createBasicEmbed(
+          INFO.AVATAR_UPDATED(oldUser, newUser),
+          "LOG_2"
+        ).setThumbnail(newUser.displayAvatarURL()!)
+      );
   } catch (err) {
     serverLogger("error", "InternalError", err);
   }

@@ -7,7 +7,7 @@ import {
   PartialGuildMember,
   Role,
   VoiceState,
-  Guild,
+  PartialUser,
 } from "discord.js";
 import { config } from "dotenv";
 import { Delete } from "../models/customTypes";
@@ -248,11 +248,11 @@ export const INFO = {
   ) => {
     if (!(oldInfo.displayName === newInfo.displayName))
       return {
-        title: `${oldInfo.displayName} 's details were updated!👀`,
+        title: `${oldInfo.displayName}'s details were updated!👀`,
         message: `\n\n**Old name:** ${oldInfo.displayName}\n**new name:** ${newInfo.displayName}\n**user:** <@${oldInfo.user?.id}>\n**Tag:** ${oldInfo.user?.tag}`,
       };
     return {
-      title: `${oldInfo.displayName} 's details were updated!👀`,
+      title: `${oldInfo.displayName}'s details were updated!👀`,
       message: `\n\n**user:** <@${oldInfo.user?.id}>\n**Tag:** ${
         oldInfo.user?.tag
       }\n**Old avatar:** [**Old avatar**](${CONSTANTS.AVATAR_URL(
@@ -338,6 +338,14 @@ export const INFO = {
       message: `\n🕵️‍♂️**User name:** ${newUser.displayName}\n⚒**Role:** ${role.name}\n💻**Tag:** ${newUser.user?.tag}`,
     };
   },
+  AVATAR_UPDATED: (oldUser: User | PartialUser, newUser: User) => {
+    return {
+      title: `${oldUser.tag}'s avatar was updated 👀`,
+      message: `📸 [The old Avatar](${CONSTANTS.AVATAR_UPDATE_URL(
+        oldUser as User
+      )})\n📸 [The new Avatar](${CONSTANTS.AVATAR_UPDATE_URL(newUser)}) `,
+    };
+  },
 };
 
 /**
@@ -364,7 +372,6 @@ export const COMMANDS = {
 export const CONSTANTS = {
   thumbsUpEmoji: "👍",
   pollReactions: ["1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣", "7️⃣", "8️⃣", "9️⃣"],
-  roleReactions: ["1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣", "7️⃣", "8️⃣", "9️⃣"],
   checkinReactions: {
     accept: "✅",
     reject: "❌",
@@ -418,6 +425,11 @@ export const CONSTANTS = {
   AVATAR_URL: (newStatus: VoiceState) => {
     if (newStatus.member?.user.avatar)
       return `https://cdn.discordapp.com/avatars/${newStatus.member?.user.id}/${newStatus.member?.user.avatar}.jpeg`;
+    return `https://cdn.discordapp.com/embed/avatars/0.png`;
+  },
+  AVATAR_UPDATE_URL: (user: User) => {
+    if (user.avatar)
+      return `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.jpeg`;
     return `https://cdn.discordapp.com/embed/avatars/0.png`;
   },
 };
