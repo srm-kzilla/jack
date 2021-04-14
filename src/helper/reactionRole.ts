@@ -207,13 +207,6 @@ export const addReaction = async (
           });
           await refreshRoleData(roleData);
           serverLogger("success", "role added", ``);
-          const channel = reaction.message.guild?.channels.cache.find(
-            (ch: any) => ch.id === process.env.LOGGER_CHANNEL_ID
-          ) as TextChannel;
-          if (channel)
-            channel.send(
-              createBasicEmbed(INFO.REACTION_ROLE_ADD(role, userAdd), "LOG_2")
-            );
         }
       }
     });
@@ -258,16 +251,6 @@ export const removeReaction = async (
                 )
               );
             await refreshRoleData(roleData);
-            const channel = reaction.message.guild?.channels.cache.find(
-              (ch: any) => ch.id === process.env.LOGGER_CHANNEL_ID
-            ) as TextChannel;
-            if (channel)
-              channel.send(
-                createBasicEmbed(
-                  INFO.REACTION_ROLE_REMOVE(role, userAdd),
-                  "LOG_1"
-                )
-              );
           }
         }
       }

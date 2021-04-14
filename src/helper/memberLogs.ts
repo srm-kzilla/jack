@@ -152,6 +152,30 @@ export function handleMemberUpdate(
           "LOG_2"
         ).setThumbnail(CONSTANTS.AVATAR_URL(newUser.voice))
       );
+    if (oldUser.roles.cache.size > newUser.roles.cache.size) {
+      oldUser.roles.cache.forEach((role) => {
+        if (!newUser.roles.cache.has(role.id)) {
+          channel.send(
+            createBasicEmbed(
+              INFO.MEMBED_ROLE_REMOVE(oldUser, role),
+              "LOG_1"
+            ).setThumbnail(CONSTANTS.AVATAR_URL(newUser.voice))
+          );
+        }
+      });
+    }
+    if (oldUser.roles.cache.size < newUser.roles.cache.size) {
+      newUser.roles.cache.forEach((role) => {
+        if (!oldUser.roles.cache.has(role.id)) {
+          channel.send(
+            createBasicEmbed(
+              INFO.MEMBED_ROLE_ADD(newUser, role),
+              "LOG_2"
+            ).setThumbnail(CONSTANTS.AVATAR_URL(newUser.voice))
+          );
+        }
+      });
+    }
   } catch (err) {
     serverLogger("error", "InternalError", err);
   }

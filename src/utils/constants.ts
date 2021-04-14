@@ -310,7 +310,7 @@ export const INFO = {
     userAdd: GuildMember | undefined
   ) => {
     return {
-      title: "Role removed ❌",
+      title: "Role removed by me❌",
       message: `**${role?.name}** was removed from ${userAdd?.displayName}. \n**Tag:** ${userAdd?.user.tag}.`,
     };
   },
@@ -319,8 +319,23 @@ export const INFO = {
     userAdd: GuildMember | undefined
   ) => {
     return {
-      title: "Role Alloted ✅",
+      title: "Role Alloted by me ✅",
       message: `**${role?.name}** was alloted to ${userAdd?.displayName}. \n**Tag:** ${userAdd?.user.tag}`,
+    };
+  },
+  MEMBED_ROLE_REMOVE: (
+    oldUser: GuildMember | PartialGuildMember,
+    role: Role
+  ) => {
+    return {
+      title: `Role removed ❌`,
+      message: `\n🕵️‍♂️**User name:** ${oldUser.displayName}\n⚒**Role:** ${role.name}\n💻**Tag:** ${oldUser.user?.tag}`,
+    };
+  },
+  MEMBED_ROLE_ADD: (newUser: GuildMember, role: Role) => {
+    return {
+      title: `Role Added ✅`,
+      message: `\n🕵️‍♂️**User name:** ${newUser.displayName}\n⚒**Role:** ${role.name}\n💻**Tag:** ${newUser.user?.tag}`,
     };
   },
 };
