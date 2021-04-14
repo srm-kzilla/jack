@@ -144,7 +144,7 @@ const createReactionRoleMessage = async (
 
 const addRoleData = async (roleData: roleSchema) => {
   try {
-    const db = await (await getDbClient()).db().collection("roles");
+    const db = await (await getDbClient()).db().collection("reaction-roles");
     const { insertedCount } = await db.insertOne(roleData);
     if (insertedCount <= 0) throw { message: "MongoDB Poll Insert Error" };
     const result = await setRole(roleData);
@@ -160,7 +160,7 @@ const addRoleData = async (roleData: roleSchema) => {
 
 const refreshRoleData = async (roleData: roleSchema) => {
   try {
-    const db = await (await getDbClient()).db().collection("roles");
+    const db = await (await getDbClient()).db().collection("reaction-roles");
     await db.updateOne(
       { messageID: roleData.messageID },
       { $set: { reactions: roleData.reactions } }
