@@ -25,7 +25,7 @@ export const refreshKeys = async () => {
     await polls.forEach((poll: pollSchema) => {
       cache.set(`poll-${poll.pollID}`, JSON.stringify(poll));
     });
-    const roles = await db.collection("roles").find<roleSchema>();
+    const roles = await db.collection("reaction-roles").find<roleSchema>();
     await roles.forEach((role: roleSchema) => {
       cache.set(role.messageID, JSON.stringify(role));
     });

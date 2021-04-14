@@ -115,9 +115,14 @@ export const ERRORS = {
     message: `Please follow the proper syntax. Use my help command to access see the proper syntax.`,
   },
   ROLE_ERROR: {
-    title: "error!😭",
+    title: "Error!😭",
     message:
-      "Ooooops something went wrong! I am not quite sure what. Please check the syntax and try again. Also make sure the mentioned roles exist in the guild.",
+      "Ooooops! something went wrong and I am not quite sure what. Please check the syntax and try again. Also, make sure the mentioned roles exist in the guild.",
+  },
+  ROLE_EMOJI_PAIR: {
+    title: "Error! 😭",
+    message:
+      "Roles and emojis must exist in pair. Please check the syntax and try and again.",
   },
 };
 
