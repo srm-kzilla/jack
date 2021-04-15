@@ -9,6 +9,7 @@ import { COMMANDS } from "./src/utils/constants";
 import { initDbClient, initEventDbClient } from "./src/utils/database";
 import { initCache, refreshKeys } from "./src/utils/nodecache";
 import {
+  handleAvatarUpdate,
   handleChannelCreate,
   handleChannelDelete,
   handleChannelUpdate,
@@ -29,6 +30,7 @@ import { checkForAccessByRoles } from "./src/helper/roleAuth";
 import { incomingMessageSchema } from "./src/models/incomingMessage";
 import { Delete } from "./src/models/customTypes";
 import { guildJoin } from "./src/controllers/sendMessageHandler";
+import { addReaction, removeReaction } from "./src/helper/reactionRole";
 /******************************************
           Initialize Server
 *******************************************/
@@ -156,6 +158,18 @@ async function createServer() {
 
   client!.on("voiceStateUpdate", (oldState, newState) => {
     handleVoiceStatus(oldState, newState);
+  });
+
+  client!.on("messageReactionAdd", (reaction, user) => {
+    addReaction(reaction, user);
+  });
+
+  client!.on("messageReactionRemove", (reaction, user) => {
+    removeReaction(reaction, user);
+  });
+
+  client!.on("userUpdate", (oldUser, newUser) => {
+    handleAvatarUpdate(oldUser, newUser, client!);
   });
 }
 

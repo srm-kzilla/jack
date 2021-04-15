@@ -17,7 +17,10 @@ export async function initDiscordBot() {
   try {
     let intents = new Intents(Intents.NON_PRIVILEGED);
     intents.add(["GUILD_MEMBERS", "GUILD_PRESENCES"]);
-    bot = new Discord.Client({ ws: { intents: intents } });
+    bot = new Discord.Client({
+      partials: ["MESSAGE", "CHANNEL", "REACTION"],
+      ws: { intents: intents },
+    });
     await bot.login(process.env.DISCORD_TOKEN || "");
     console.log("✔️   Discord Bot Login");
     bot.user!.setActivity("#kzjack help", {

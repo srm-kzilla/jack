@@ -7,6 +7,7 @@ import {
   PartialGuildMember,
   Role,
   VoiceState,
+  PartialUser,
 } from "discord.js";
 import { config } from "dotenv";
 import { Delete } from "../models/customTypes";
@@ -98,6 +99,30 @@ export const ERRORS = {
   CHECKIN_CREATE_FAIL: {
     title: "Checkin Collector Creation Failed!",
     message: "There has been some error while creating the check-in collector!",
+  },
+  ROLE_MISSING: {
+    title: "Error!😭",
+    message:
+      "Please recheck and make sure you have entered atleast one role(@role) and a corresponding emoji. Also make sure roles and emojis are in pair.",
+  },
+  INVALID_ROLE: {
+    title: "Error!😭",
+    message:
+      "Invalid Role! please check and enter a valid role. Please tag the role(@role).",
+  },
+  ROLE_SYNTAX_ERROR: {
+    title: "Error!😭",
+    message: `Please follow the proper syntax. Use my help command to access see the proper syntax.`,
+  },
+  ROLE_ERROR: {
+    title: "Error!😭",
+    message:
+      "Ooooops! something went wrong and I am not quite sure what. Please check the syntax and try again. Also, make sure the mentioned roles exist in the guild.",
+  },
+  ROLE_EMOJI_PAIR: {
+    title: "Error! 😭",
+    message:
+      "Roles and emojis must exist in pair. Please check the syntax and try and again.",
   },
 };
 
@@ -223,11 +248,11 @@ export const INFO = {
   ) => {
     if (!(oldInfo.displayName === newInfo.displayName))
       return {
-        title: `${oldInfo.displayName} 's details were updated!👀`,
+        title: `${oldInfo.displayName}'s details were updated!👀`,
         message: `\n\n**Old name:** ${oldInfo.displayName}\n**new name:** ${newInfo.displayName}\n**user:** <@${oldInfo.user?.id}>\n**Tag:** ${oldInfo.user?.tag}`,
       };
     return {
-      title: `${oldInfo.displayName} 's details were updated!👀`,
+      title: `${oldInfo.displayName}'s details were updated!👀`,
       message: `\n\n**user:** <@${oldInfo.user?.id}>\n**Tag:** ${
         oldInfo.user?.tag
       }\n**Old avatar:** [**Old avatar**](${CONSTANTS.AVATAR_URL(
@@ -280,6 +305,47 @@ export const INFO = {
       message: ``,
     };
   },
+  REACTION_ROLE_REMOVE: (
+    role: Role | undefined,
+    userAdd: GuildMember | undefined
+  ) => {
+    return {
+      title: "Role removed by me❌",
+      message: `**${role?.name}** was removed from ${userAdd?.displayName}. \n**Tag:** ${userAdd?.user.tag}.`,
+    };
+  },
+  REACTION_ROLE_ADD: (
+    role: Role | undefined,
+    userAdd: GuildMember | undefined
+  ) => {
+    return {
+      title: "Role Alloted by me ✅",
+      message: `**${role?.name}** was alloted to ${userAdd?.displayName}. \n**Tag:** ${userAdd?.user.tag}`,
+    };
+  },
+  MEMBED_ROLE_REMOVE: (
+    oldUser: GuildMember | PartialGuildMember,
+    role: Role
+  ) => {
+    return {
+      title: `Role removed ❌`,
+      message: `\n🕵️‍♂️**User name:** ${oldUser.displayName}\n⚒**Role:** ${role.name}\n💻**Tag:** ${oldUser.user?.tag}`,
+    };
+  },
+  MEMBED_ROLE_ADD: (newUser: GuildMember, role: Role) => {
+    return {
+      title: `Role Added ✅`,
+      message: `\n🕵️‍♂️**User name:** ${newUser.displayName}\n⚒**Role:** ${role.name}\n💻**Tag:** ${newUser.user?.tag}`,
+    };
+  },
+  AVATAR_UPDATED: (oldUser: User | PartialUser, newUser: User) => {
+    return {
+      title: `${oldUser.tag}'s avatar was updated 👀`,
+      message: `📸 [The old Avatar](${CONSTANTS.AVATAR_UPDATE_URL(
+        oldUser as User
+      )})\n📸 [The new Avatar](${CONSTANTS.AVATAR_UPDATE_URL(newUser)}) `,
+    };
+  },
 };
 
 /**
@@ -297,6 +363,7 @@ export const COMMANDS = {
   cacheflush: "flush",
   createPoll: "poll",
   checkIn: "checkin",
+  reactionRole: "role",
 };
 
 /**
@@ -360,6 +427,11 @@ export const CONSTANTS = {
       return `https://cdn.discordapp.com/avatars/${newStatus.member?.user.id}/${newStatus.member?.user.avatar}.jpeg`;
     return `https://cdn.discordapp.com/embed/avatars/0.png`;
   },
+  AVATAR_UPDATE_URL: (user: User) => {
+    if (user.avatar)
+      return `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.jpeg`;
+    return `https://cdn.discordapp.com/embed/avatars/0.png`;
+  },
 };
 
 export const COLORS = {
@@ -372,6 +444,7 @@ export const COLORS = {
   JOIN_VOICE: "#00ff00",
   LEAVE_VOICE: "#ff0066",
   MOVE_VOICE: "#00ccff",
+  REACTION_ROLE: "#bf00ff",
 };
 
 export const randomMemesEndpoint = () => {

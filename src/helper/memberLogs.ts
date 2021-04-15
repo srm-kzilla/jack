@@ -5,6 +5,7 @@ import {
   Guild,
   GuildMember,
   PartialGuildMember,
+  PartialUser,
   Role,
   TextChannel,
   User,
@@ -61,14 +62,18 @@ export function handleChannelCreate(
   newChannel: Channel,
   client: Client | undefined
 ) {
-  try {
-    const channel = client?.channels.cache.find(
-      (ch: any) => ch.id === process.env.LOGGER_CHANNEL_ID
-    ) as TextChannel;
-    if (!channel) return;
-    channel.send(createBasicEmbed(INFO.CHANNEL_CREATED(newChannel), "SUCCESS"));
-  } catch (err) {
-    serverLogger("error", "InternalError", err);
+  if (newChannel.type === "text" || newChannel.type === "voice") {
+    try {
+      const channel = client?.channels.cache.find(
+        (ch: any) => ch.id === process.env.LOGGER_CHANNEL_ID
+      ) as TextChannel;
+      if (!channel) return;
+      channel.send(
+        createBasicEmbed(INFO.CHANNEL_CREATED(newChannel), "SUCCESS")
+      );
+    } catch (err) {
+      serverLogger("error", "InternalError", err);
+    }
   }
 }
 
@@ -88,14 +93,18 @@ export function handleChannelDelete(
   deleteChannel: Delete,
   client: Client | undefined
 ) {
-  try {
-    const channel = client?.channels.cache.find(
-      (ch: any) => ch.id === process.env.LOGGER_CHANNEL_ID
-    ) as TextChannel;
-    if (!channel) return;
-    channel.send(createBasicEmbed(INFO.CHANNEL_DELETE(deleteChannel), "INFO"));
-  } catch (err) {
-    serverLogger("error", "InternalError", err);
+  if (deleteChannel.type === "text" || deleteChannel.type === "voice") {
+    try {
+      const channel = client?.channels.cache.find(
+        (ch: any) => ch.id === process.env.LOGGER_CHANNEL_ID
+      ) as TextChannel;
+      if (!channel) return;
+      channel.send(
+        createBasicEmbed(INFO.CHANNEL_DELETE(deleteChannel), "INFO")
+      );
+    } catch (err) {
+      serverLogger("error", "InternalError", err);
+    }
   }
 }
 export function handleMemberUnban(guild: Guild, user: User) {
@@ -114,16 +123,18 @@ export function handleChannelUpdate(
   updateChannel: Channel,
   client: Client | undefined
 ) {
-  try {
-    const channel = client?.channels.cache.find(
-      (ch: any) => ch.id === process.env.LOGGER_CHANNEL_ID
-    ) as TextChannel;
-    if (!channel) return;
-    channel.send(
-      createBasicEmbed(INFO.CHANNEL_UPDATE(updateChannel), "SUCCESS")
-    );
-  } catch (err) {
-    serverLogger("error", "InternalError", err);
+  if (updateChannel.type === "text" || updateChannel.type === "voice") {
+    try {
+      const channel = client?.channels.cache.find(
+        (ch: any) => ch.id === process.env.LOGGER_CHANNEL_ID
+      ) as TextChannel;
+      if (!channel) return;
+      channel.send(
+        createBasicEmbed(INFO.CHANNEL_UPDATE(updateChannel), "SUCCESS")
+      );
+    } catch (err) {
+      serverLogger("error", "InternalError", err);
+    }
   }
 }
 export function handleMemberUpdate(
@@ -142,6 +153,30 @@ export function handleMemberUpdate(
           "LOG_2"
         ).setThumbnail(CONSTANTS.AVATAR_URL(newUser.voice))
       );
+    if (oldUser.roles.cache.size > newUser.roles.cache.size) {
+      oldUser.roles.cache.forEach((role) => {
+        if (!newUser.roles.cache.has(role.id)) {
+          channel.send(
+            createBasicEmbed(
+              INFO.MEMBED_ROLE_REMOVE(oldUser, role),
+              "LOG_1"
+            ).setThumbnail(CONSTANTS.AVATAR_URL(newUser.voice))
+          );
+        }
+      });
+    }
+    if (oldUser.roles.cache.size < newUser.roles.cache.size) {
+      newUser.roles.cache.forEach((role) => {
+        if (!oldUser.roles.cache.has(role.id)) {
+          channel.send(
+            createBasicEmbed(
+              INFO.MEMBED_ROLE_ADD(newUser, role),
+              "LOG_2"
+            ).setThumbnail(CONSTANTS.AVATAR_URL(newUser.voice))
+          );
+        }
+      });
+    }
   } catch (err) {
     serverLogger("error", "InternalError", err);
   }
@@ -227,6 +262,28 @@ export function handleVoiceStatus(
     else if (oldStatus.channel?.id) embed.setColor(COLORS.LEAVE_VOICE);
     else if (newStatus.channel?.id) embed.setColor(COLORS.JOIN_VOICE);
     channel.send(embed);
+  } catch (err) {
+    serverLogger("error", "InternalError", err);
+  }
+}
+
+export function handleAvatarUpdate(
+  oldUser: User | PartialUser,
+  newUser: User,
+  client: Client
+) {
+  try {
+    const channel = client?.channels.cache.find(
+      (ch: any) => ch.id === process.env.LOGGER_CHANNEL_ID
+    ) as TextChannel;
+    if (!channel) return;
+    if (oldUser.avatar !== newUser.avatar)
+      channel.send(
+        createBasicEmbed(
+          INFO.AVATAR_UPDATED(oldUser, newUser),
+          "LOG_2"
+        ).setThumbnail(newUser.displayAvatarURL()!)
+      );
   } catch (err) {
     serverLogger("error", "InternalError", err);
   }

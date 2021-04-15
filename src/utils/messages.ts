@@ -91,7 +91,12 @@ export const getHelpMessage = (messageType: incomingMessageSchema) => {
       },
       {
         name: "Start a check-in Channel [Only Mods]",
-        value: "`kzjack checkin <Event Slug>`",
+        value: "`#kzjack checkin <Event Slug>`",
+      },
+      {
+        name: "Start a Role assigner [Only Mods]",
+        value:
+          "`#kzjack role <#channel> {<description>} [[<@role1>],[<emoji to assign role1>],[<@role2>],[<emoji to assign role2>]]`",
       }
     );
   }
@@ -182,6 +187,7 @@ export const createBasicEmbed = (
     | "JOIN_VOICE"
     | "MOVE_VOICE"
     | "LEAVE_VOICE"
+    | "REACTION_ROLE"
 ) => {
   return new MessageEmbed()
     .setColor(COLORS[level])
