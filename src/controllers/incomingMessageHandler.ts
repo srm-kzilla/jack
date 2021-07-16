@@ -1,5 +1,8 @@
 import { Message, MessageReaction, User } from "discord.js";
-import { handleAnnouncements } from "../helper/announcement";
+import {
+  handleAnnouncements,
+  handleImageAnnouncements,
+} from "../helper/announcement";
 import { getCertificateChannelMessage } from "../helper/certificate";
 import { handleJokes, handleMemes } from "../helper/jokes";
 import { handleShrinkURLMessage } from "../helper/kzillaXYZ";
@@ -73,6 +76,10 @@ export async function handleIncomingChannelCommand(
       }
       case COMMANDS.reactionRole: {
         handleReactionRoles(incomingMessage, messageType);
+        break;
+      }
+      case COMMANDS.announceImage: {
+        handleImageAnnouncements(incomingMessage, messageType);
         break;
       }
       default:
