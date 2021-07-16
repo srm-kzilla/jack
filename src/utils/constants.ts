@@ -364,6 +364,7 @@ export const COMMANDS = {
   createPoll: "poll",
   checkIn: "checkin",
   reactionRole: "role",
+  announceImage:"announceimage"
 };
 
 /**
