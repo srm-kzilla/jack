@@ -73,6 +73,10 @@ export const getHelpMessage = (messageType: incomingMessageSchema) => {
           "`#kzjack announce <? here|everyone|@role > <#channel> {<?title>} <description>`",
       },
       {
+        name: "Image announcements [Only Mods]",
+        value: "`#kzjack announceimage <#channel> <Image Url>`",
+      },
+      {
         name: "Start Certificates Thread [Only Mods]",
         value: "`#kzjack certificate <event-slug>`",
       },

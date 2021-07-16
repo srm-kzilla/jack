@@ -109,3 +109,64 @@ export async function handleAnnouncements(
     );
   }
 }
+
+/**
+ *
+ * Handles all image announcements
+ *
+ * @param {Message} incomingMessage
+ * @param {incomingMessageSchema} messageType
+ * @returns {Message|undefined}
+ */
+
+export const handleImageAnnouncements = async (
+  incomingMessage: Message,
+  messageType: incomingMessageSchema
+): Promise<Message | undefined> => {
+  if (!messageType.incomingUser.isMod) {
+    serverLogger("user-error", incomingMessage.content, "Unauthorized User");
+    return incomingMessage.channel.send(
+      `<@${messageType.incomingUser.id}>`,
+      createBasicEmbed(ERRORS.UNAUTHORIZED_USER, "ERROR")
+    );
+  }
+  try {
+    const messageContentSplit = incomingMessage.content.split(" ");
+    if (messageContentSplit.length < 3) {
+      incomingMessage.channel.send(
+        `<@${messageType.incomingUser.id}>`,
+        createBasicEmbed(ERRORS.INVALID_COMMAND, "ERROR")
+      );
+      serverLogger(
+        "user-error",
+        incomingMessage.content.split(" ").splice(0, 5),
+        "Announcement to invalid channel"
+      );
+    }
+    let channelId = incomingMessage.content.match(/<#.+?>/)![0];
+    channelId = channelId.substring(2, channelId.length - 1);
+    const imageUrl = messageContentSplit[3];
+    const channel = incomingMessage.guild?.channels.cache.find(
+      (ch) => ch.id == channelId
+    );
+    if (channel && (channel?.type === "text" || channel?.type === "news")) {
+      (channel as TextChannel).send(imageUrl);
+      incomingMessage.channel.send("Sent! :white_check_mark: ");
+      serverLogger(
+        "success",
+        incomingMessage.content.split(" ").splice(0, 5),
+        "Announcements"
+      );
+    } else throw Error;
+  } catch (err) {
+    incomingMessage.channel.send(
+      `<@${messageType.incomingUser.id}>`,
+      createBasicEmbed(ERRORS.INVALID_CHANNEL, "ERROR")
+    );
+    serverLogger(
+      "user-error",
+      incomingMessage.content.split(" ").splice(0, 5),
+      "Announcement to invalid channel"
+    );
+  }
+};
