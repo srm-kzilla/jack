@@ -110,10 +110,19 @@ export async function handleAnnouncements(
   }
 }
 
+/**
+ *
+ * Handles all image announcements
+ *
+ * @param {Message} incomingMessage
+ * @param {incomingMessageSchema} messageType
+ * @returns {Message|undefined}
+ */
+
 export const handleImageAnnouncements = async (
   incomingMessage: Message,
   messageType: incomingMessageSchema
-) => {
+): Promise<Message | undefined> => {
   if (!messageType.incomingUser.isMod) {
     serverLogger("user-error", incomingMessage.content, "Unauthorized User");
     return incomingMessage.channel.send(
