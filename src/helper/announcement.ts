@@ -24,7 +24,7 @@ export async function handleAnnouncements(
   }
   try {
     const regex = new RegExp(
-      `^${COMMANDS.prefix} ${COMMANDS.announce}( here | everyone | | <@&.+> )<#.+> \{.*\} (.|\n)+$`,
+      `^${COMMANDS.prefix} ${COMMANDS.announce}( here | everyone | norole | | <@&.+> )<#.+> \{.*\} (.|\n)+$`,
       "g"
     );
     if (regex.test(incomingMessage.content)) {
@@ -45,6 +45,9 @@ export async function handleAnnouncements(
         const hereRegex = new RegExp(
           `^${COMMANDS.prefix} ${COMMANDS.announce} here`
         );
+        const norole = new RegExp(
+          `^${COMMANDS.prefix} ${COMMANDS.announce} norole`
+        );
         const roleMentionRegex = new RegExp(
           `^${COMMANDS.prefix} ${COMMANDS.announce} <@&.+>`
         );
@@ -55,6 +58,10 @@ export async function handleAnnouncements(
               embed: announcementMessage(title, announcement),
             }
           );
+        } else if (norole.test(incomingMessage.content)) {
+          (channel as TextChannel | NewsChannel).send("**📢 Announcement!!**", {
+            embed: announcementMessage(title, announcement),
+          });
         } else if (hereRegex.test(incomingMessage.content)) {
           (channel as TextChannel | NewsChannel).send(
             "**📢 Announcement @here!**",
