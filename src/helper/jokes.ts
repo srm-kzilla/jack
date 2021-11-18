@@ -21,13 +21,19 @@ export async function handleJokes(
   messageType: incomingMessageSchema
 ) {
   try {
-    const { data } = await axios.get(CONSTANTS.JOKES_URL_ENDPOINT);
-    console.log(data);
+    const { data } = await axios.get(CONSTANTS.JOKE_API);
+    if (!data.error)
+      return incomingMessage.channel.send(
+        new MessageEmbed()
+          .setDescription(`**${data.joke}**`)
+          .setColor(COLORS.INFO)
+          .setTimestamp()
+          .setFooter(CONSTANTS.FOOTER, CONSTANTS.FOOTER_LOGO_URL)
+      );
     incomingMessage.channel.send(
       new MessageEmbed()
-        .setTitle(data[0].setup)
-        .setDescription(`*${data[0].punchline}*`)
-        .setColor(COLORS.INFO)
+        .setTitle(ERRORS.JOKE_API_NOT_WORKING)
+        .setColor(COLORS.ERROR)
         .setTimestamp()
         .setFooter(CONSTANTS.FOOTER, CONSTANTS.FOOTER_LOGO_URL)
     );

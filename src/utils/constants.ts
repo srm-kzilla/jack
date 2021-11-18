@@ -19,6 +19,8 @@ config();
  * Error Messages
  */
 export const ERRORS = {
+  JOKE_API_NOT_WORKING:
+    "It seems that the Joke api is down, we will be back shortly, please try the meme command in the meanwhile!",
   DM_BLOCKED: {
     title: "DM Blocked!",
     message: (user: User) => {
@@ -364,7 +366,7 @@ export const COMMANDS = {
   createPoll: "poll",
   checkIn: "checkin",
   reactionRole: "role",
-  announceImage:"announceimage"
+  announceImage: "announceimage",
 };
 
 /**
@@ -379,6 +381,8 @@ export const CONSTANTS = {
     error: "❗",
   },
   jackLogo: "https://jack.srmkzilla.net/assets/jack_logo.png",
+  JOKE_API:
+    "https://v2.jokeapi.dev/joke/Programming?blacklistFlags=nsfw,religious,political,racist,sexist,explicit&type=single",
   FOOTER_LOGO_URL:
     "https://jack.srmkzilla.net/assets/srmkzilla_logo_white_mono.png",
   FOOTER: "Powered by SRMKZILLA and hamster-charged batteries",
