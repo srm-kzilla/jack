@@ -10,7 +10,7 @@ import {
   checkInChannelAnnouncement,
   createBasicEmbed,
 } from "../utils/messages";
-import { getEvent } from "../utils/nodecache";
+import { getEvent, setEvent } from "../utils/nodecache";
 import { channelDBSchema } from "../api/channels/channels.schema";
 
 export const startCheckInCollector = async (
@@ -85,6 +85,7 @@ const checkInEmails = async (
     if (!event) throw "eventKey Not Found in NodeCache!";
     if (event.enabled) {
       const db = await (await getDbClient()).db().collection(event.slug);
+      const eventDb = await (await getDbClient()).db().collection("events");
       const registrant = await db.findOne<registrantSchema>({
         email: incomingMessage.content,
       });
@@ -101,6 +102,11 @@ const checkInEmails = async (
             },
           }
         );
+        await eventDb.updateOne(
+          {slug:"test"}, 
+          {$inc:{teamCounter:1}
+        });
+        setEvent(event);
         if (event.checkin?.roleId) {
           await giveCheckinRole(incomingMessage, event.checkin!.roleId);
         }
