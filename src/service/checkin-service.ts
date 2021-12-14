@@ -179,7 +179,7 @@ const createTeamChannel = async (
   const channelsCreated = await addChannel({
     channelName,
     userIds: [incomingMessage.author.id],
-    categoryId: event.checkin!.categoryId,
+    categoryId: event.checkin!.categoryId[(Math.floor(event.teamCounter/12))],
   });
   if (!channelsCreated.text || !channelsCreated.voice)
     throw "Channel Creation Failed!";

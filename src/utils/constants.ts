@@ -354,7 +354,7 @@ export const INFO = {
  * Commands
  */
 export const COMMANDS = {
-  prefix: "#kzjack",
+  prefix: "#zaidbt",
   shrinkURL: "shrink",
   help: "help",
   certificate: "certificate",
