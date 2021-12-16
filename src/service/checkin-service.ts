@@ -103,13 +103,11 @@ const checkInEmails = async (
           }
         );
 
-        //increment teamCounter in database
         await eventDb.updateOne(
-          {slug:"test"}, 
+          {slug:event.slug}, 
           {$inc:{teamCounter:1}
         });
 
-        //increment teamCounter in cache
         ++event.teamCounter;
         setEvent(event);
 
