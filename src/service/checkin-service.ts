@@ -102,11 +102,17 @@ const checkInEmails = async (
             },
           }
         );
+
+        //increment teamCounter in database
         await eventDb.updateOne(
           {slug:"test"}, 
           {$inc:{teamCounter:1}
         });
+
+        //increment teamCounter in cache
+        ++event.teamCounter;
         setEvent(event);
+
         if (event.checkin?.roleId) {
           await giveCheckinRole(incomingMessage, event.checkin!.roleId);
         }
