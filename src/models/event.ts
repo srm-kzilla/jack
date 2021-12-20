@@ -20,10 +20,11 @@ export interface eventSchema {
   checkin?: {
     //checkin configuration
     roleId: string;
-    categoryId: string;
+    categoryId: string[];
     teamEvent: boolean;
     channelId: string;
   };
+  teamCounter: number; //Counts number of team
   ledgerChannel: string; // channel id for logging certificate collection / checkin confirmation
 }
 
