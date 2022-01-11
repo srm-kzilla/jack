@@ -70,7 +70,7 @@ export async function handleAnnouncements(
             }
           );
         } else if (roleMentionRegex.test(incomingMessage.content)) {
-          let roleId = incomingMessage.content.split(" ")[2];
+          let roleId = incomingMessage.content.split(/\s+/)[2];
           roleId = roleId.substring(3, roleId.length - 1);
           console.log(roleId);
           (channel as TextChannel | NewsChannel).send(
@@ -87,7 +87,7 @@ export async function handleAnnouncements(
         incomingMessage.channel.send("Sent! :white_check_mark: ");
         serverLogger(
           "success",
-          incomingMessage.content.split(" ").splice(0, 5),
+          incomingMessage.content.split(/\s+/).splice(0, 5),
           "Announcements"
         );
       } else {
@@ -111,7 +111,7 @@ export async function handleAnnouncements(
     );
     serverLogger(
       "user-error",
-      incomingMessage.content.split(" ").splice(0, 5),
+      incomingMessage.content.split(/\s+/).splice(0, 5),
       "Announcement to invalid channel"
     );
   }
@@ -138,7 +138,7 @@ export const handleImageAnnouncements = async (
     );
   }
   try {
-    const messageContentSplit = incomingMessage.content.split(" ");
+    const messageContentSplit = incomingMessage.content.split(/\s+/);
     if (messageContentSplit.length < 3) {
       incomingMessage.channel.send(
         `<@${messageType.incomingUser.id}>`,
@@ -146,7 +146,7 @@ export const handleImageAnnouncements = async (
       );
       serverLogger(
         "user-error",
-        incomingMessage.content.split(" ").splice(0, 5),
+        incomingMessage.content.split(/\s+/).splice(0, 5),
         "Announcement to invalid channel"
       );
     }
@@ -161,7 +161,7 @@ export const handleImageAnnouncements = async (
       incomingMessage.channel.send("Sent! :white_check_mark: ");
       serverLogger(
         "success",
-        incomingMessage.content.split(" ").splice(0, 5),
+        incomingMessage.content.split(/\s+/).splice(0, 5),
         "Announcements"
       );
     } else throw Error;
@@ -172,7 +172,7 @@ export const handleImageAnnouncements = async (
     );
     serverLogger(
       "user-error",
-      incomingMessage.content.split(" ").splice(0, 5),
+      incomingMessage.content.split(/\s+/).splice(0, 5),
       "Announcement to invalid channel"
     );
   }

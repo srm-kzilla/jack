@@ -78,7 +78,7 @@ export const createPoll = async (
     } else {
       serverLogger(
         "user-error",
-        incomingMessage.content.split(" ").splice(0, 5),
+        incomingMessage.content.split(/\s+/).splice(0, 5),
         "Invalid command"
       );
       incomingMessage.channel.send(
@@ -186,7 +186,7 @@ export const getResult = async (
       } else {
         serverLogger(
           "user-error",
-          incomingMessage.content.split(" ").splice(0, 5),
+          incomingMessage.content.split(/\s+/).splice(0, 5),
           "Invalid command"
         );
         incomingMessage.channel.send(

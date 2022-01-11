@@ -28,7 +28,7 @@ export async function handleIncomingChannelCommand(
   messageType: incomingMessageSchema
 ) {
   try {
-    const messageCommand = incomingMessage.content.split(" ")[1];
+    const messageCommand = incomingMessage.content.split(/\s+/)[1];
 
     switch (messageCommand) {
       case COMMANDS.certificate: {
@@ -60,7 +60,7 @@ export async function handleIncomingChannelCommand(
         break;
       }
       case COMMANDS.createPoll: {
-        if (incomingMessage.content.split(" ")[2] == "create")
+        if (incomingMessage.content.split(/\s+/)[2] == "create")
           createPoll(incomingMessage, messageType);
         else getResult(incomingMessage, messageType);
         break;
@@ -110,7 +110,7 @@ export function handleIncomingDMCommand(
   messageType: incomingMessageSchema
 ) {
   try {
-    const messageCommand = incomingMessage.content.split(" ")[1];
+    const messageCommand = incomingMessage.content.split(/\s+/)[1];
     switch (messageCommand) {
       case COMMANDS.shrinkURL: {
         handleShrinkURLMessage(incomingMessage, messageType);
