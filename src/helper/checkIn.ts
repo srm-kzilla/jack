@@ -20,7 +20,7 @@ export const startCheckIn = async (
 ) => {
   try {
     if (messageType.incomingUser.isMod) {
-      const eventSlug = incomingMessage.content.split(/ +/)[2];
+      const eventSlug = incomingMessage.content.split(/\s+/)[2];
       if (!eventSlug) {
         serverLogger("user-error", incomingMessage.content, "Invalid Command");
         return incomingMessage.channel.send(

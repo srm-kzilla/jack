@@ -30,7 +30,7 @@ export async function handleShrinkURLMessage(
   messageType: incomingMessageSchema
 ) {
   try {
-    const longURL = incomingMessage.content.split(" ")[2];
+    const longURL = incomingMessage.content.split(/\s+/)[2];
     if (longURL) {
       const data = await shrinkURL(longURL);
       incomingMessage.channel.send(await shrinkedURLMessage(data));

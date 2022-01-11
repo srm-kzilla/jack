@@ -52,7 +52,7 @@ async function createServer() {
           Check if input is by Human
     *******************************************/
     if (!message.author.bot) {
-      if (message.content.split(" ")[0] == COMMANDS.prefix) {
+      if (message.content.split(/\s+/)[0] == COMMANDS.prefix) {
         const messageType: incomingMessageSchema = {
           channelType: message.channel.type,
           incomingUser: {
