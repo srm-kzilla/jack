@@ -178,7 +178,7 @@ const findAndJoinTeams = async (
             await joinTeamChannel(incomingMessage, event, teamName, "team");
             mqMessage.type = "memberAddedToTeam";
         }
-        publishToMQ(process.env.RABBIT_MQ_QUEUESLUG!, mqMessage);
+        await publishToMQ(process.env.RABBIT_MQ_QUEUESLUG!, mqMessage);
     } catch (err) {
         serverLogger("error", incomingMessage.content, err);
         throw "Team Channel Creation Failed!";

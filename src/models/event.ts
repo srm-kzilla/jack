@@ -45,5 +45,5 @@ export interface mqSchema {
   userID: string;
   userEmail: string;
   userName: string;
-  teamName?: string;
+  teamName: string;
 }
