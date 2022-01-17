@@ -140,9 +140,9 @@ const findAndJoinTeams = async (
         let mqMessage = <mqSchema>{
             type: "channelCreatedForTeam",
             userID: incomingMessage.author.id.toString(),
-            userEmail:registrant.email,
-            userName:registrant.name,
-            teamName:registrant.teamName
+            userEmail: registrant.email,
+            userName: registrant.name,
+            teamName: registrant.teamName,
         };
         const db = await (await getDbClient())
             .db()
@@ -174,10 +174,9 @@ const findAndJoinTeams = async (
                     "SUCCESS"
                 )
             );
-            
         } else {
             await joinTeamChannel(incomingMessage, event, teamName, "team");
-            mqMessage.type="memberAddedToTeam";
+            mqMessage.type = "memberAddedToTeam";
         }
         publishToMQ(process.env.RABBIT_MQ_QUEUESLUG!, mqMessage);
     } catch (err) {
@@ -208,17 +207,11 @@ const createTeamChannel = async (
             event.checkin!.categoryId[Math.floor(event.teamCounter / 12)],
     });
 
-    const eventDb = (await getDbClient())
-                .db()
-                .collection("events");
-    await eventDb.updateOne(
-        { slug: event.slug },
-        { $inc: { teamCounter: 1 } }
-    );
+    const eventDb = (await getDbClient()).db().collection("events");
+    await eventDb.updateOne({ slug: event.slug }, { $inc: { teamCounter: 1 } });
 
     ++event.teamCounter;
     await setEvent(event);
-
 
     if (!channelsCreated.text || !channelsCreated.voice)
         throw "Channel Creation Failed!";
@@ -236,7 +229,7 @@ const createTeamChannel = async (
             "SUCCESS"
         )
     );
-    
+
     return { text: channelsCreated.text!, voice: channelsCreated.voice! };
 };
 
