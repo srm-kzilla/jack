@@ -41,7 +41,7 @@ export interface registrantSchema {
 }
 
 export interface mqSchema {
-  type: "memberAddedToTeam" | "channelCreatedForTeam"; //True:channelCreatedForTeam False:memberAddedToTeam
+  type: "memberAddedToTeam" | "channelCreatedForTeam";
   userID: string;
   userEmail: string;
   userName: string;
