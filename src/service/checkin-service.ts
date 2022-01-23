@@ -1,6 +1,6 @@
 import { Message, MessageCollector, TextChannel } from "discord.js";
 import { emailSchema } from "../models/email";
-import { eventSchema, registrantSchema } from "../models/event";
+import { eventSchema, registrantSchema, mqSchema } from "../models/event";
 import { CONSTANTS, ERRORS, INFO } from "../utils/constants";
 import { getDbClient } from "../utils/database";
 import { serverLogger } from "../utils/logger";
@@ -12,6 +12,7 @@ import {
 } from "../utils/messages";
 import { getEvent, setEvent } from "../utils/nodecache";
 import { channelDBSchema } from "../api/channels/channels.schema";
+import { publishToMQ } from "../utils/rabbitMQ";
 
 export const startCheckInCollector = async (
     incomingMessage: Message,
@@ -94,9 +95,6 @@ const checkInEmails = async (
         if (!event) throw "eventKey Not Found in NodeCache!";
         if (event.enabled) {
             const db = await (await getDbClient()).db().collection(event.slug);
-            const eventDb = await (await getDbClient())
-                .db()
-                .collection("events");
             const registrant = await db.findOne<registrantSchema>({
                 email: incomingMessage.content,
             });
@@ -113,15 +111,6 @@ const checkInEmails = async (
                         },
                     }
                 );
-
-                await eventDb.updateOne(
-                    { slug: event.slug },
-                    { $inc: { teamCounter: 1 } }
-                );
-
-                ++event.teamCounter;
-                await setEvent(event);
-
                 if (event.checkin?.roleId) {
                     await giveCheckinRole(
                         incomingMessage,
@@ -148,6 +137,13 @@ const findAndJoinTeams = async (
     event: eventSchema
 ) => {
     try {
+        let mqMessage = <mqSchema>{
+            type: "channelCreatedForTeam",
+            userID: incomingMessage.author.id.toString(),
+            userEmail: registrant.email,
+            userName: registrant.name,
+            teamName: registrant.teamName,
+        };
         const db = await (await getDbClient())
             .db()
             .collection("private-channels");
@@ -180,7 +176,9 @@ const findAndJoinTeams = async (
             );
         } else {
             await joinTeamChannel(incomingMessage, event, teamName, "team");
+            mqMessage.type = "memberAddedToTeam";
         }
+        await publishToMQ(process.env.RABBIT_MQ_QUEUESLUG!, mqMessage);
     } catch (err) {
         serverLogger("error", incomingMessage.content, err);
         throw "Team Channel Creation Failed!";
@@ -208,6 +206,13 @@ const createTeamChannel = async (
         categoryId:
             event.checkin!.categoryId[Math.floor(event.teamCounter / 12)],
     });
+
+    const eventDb = (await getDbClient()).db().collection("events");
+    await eventDb.updateOne({ slug: event.slug }, { $inc: { teamCounter: 1 } });
+
+    ++event.teamCounter;
+    await setEvent(event);
+
     if (!channelsCreated.text || !channelsCreated.voice)
         throw "Channel Creation Failed!";
     const channel = (await incomingMessage.client.channels.fetch(
@@ -224,6 +229,7 @@ const createTeamChannel = async (
             "SUCCESS"
         )
     );
+
     return { text: channelsCreated.text!, voice: channelsCreated.voice! };
 };
 

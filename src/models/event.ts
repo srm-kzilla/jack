@@ -39,3 +39,11 @@ export interface registrantSchema {
   teamName?: string;
   checkedIn?: boolean;
 }
+
+export interface mqSchema {
+  type: "memberAddedToTeam" | "channelCreatedForTeam";
+  userID: string;
+  userEmail: string;
+  userName: string;
+  teamName: string;
+}
