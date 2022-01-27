@@ -19,6 +19,13 @@ export async function getRabbitMQChannel() {
 export async function publishToMQ(queueSlug: string, msg: mqSchema) {
     const stringMsg = JSON.stringify(msg);
     const rabbitMQChannel = await getRabbitMQChannel();
-    await rabbitMQChannel.assertQueue(queueSlug);
-    rabbitMQChannel.sendToQueue(queueSlug, Buffer.from(stringMsg));
+    await rabbitMQChannel.assertExchange(
+        process.env.RABBIT_MQ_EXCHANGE!,
+        "topic",
+        {}
+    );
+    await channel.assertQueue(queueSlug, { exclusive: false, durable: true });
+    const sent = await channel.sendToQueue(queueSlug, Buffer.from(stringMsg), {
+        headers: { "content-type": "json" },
+    });
 }
