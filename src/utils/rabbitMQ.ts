@@ -28,4 +28,5 @@ export async function publishToMQ(queueSlug: string, msg: mqSchema) {
     const sent = await channel.sendToQueue(queueSlug, Buffer.from(stringMsg), {
         headers: { "content-type": "json" },
     });
+    console.log(sent);
 }
