@@ -93,15 +93,29 @@ const checkInEmails = async (
     try {
         const event = await getEvent(eventSlug, "checkin");
         if (!event) throw "eventKey Not Found in NodeCache!";
+        const ledgerChannel = (await incomingMessage.client.channels.fetch(
+            event.ledgerChannel
+        )) as TextChannel;
         if (event.enabled) {
             const db = await (await getDbClient()).db().collection(event.slug);
             const registrant = await db.findOne<registrantSchema>({
                 email: incomingMessage.content,
             });
             if (!registrant) {
-                return incomingMessage.react(CONSTANTS.checkinReactions.reject);
+                await incomingMessage.delete();
+                return ledgerChannel.send(
+                    `<@${incomingMessage.author.id}>`,
+                    createBasicEmbed(ERRORS.USER_CHECKIN_FAIL(), "ERROR")
+                );
             } else if (registrant.checkedIn) {
-                return incomingMessage.react(CONSTANTS.checkinReactions.accept);
+                await incomingMessage.delete();
+                return ledgerChannel.send(
+                    `<@${incomingMessage.author.id}>`,
+                    createBasicEmbed(
+                        INFO.USER_RE_CHECKIN(registrant.teamName),
+                        "INFO"
+                    )
+                );
             } else {
                 await db.updateOne(
                     { email: incomingMessage.content },
@@ -120,7 +134,14 @@ const checkInEmails = async (
                 if (event.checkin?.teamEvent) {
                     await findAndJoinTeams(incomingMessage, registrant, event);
                 }
-                incomingMessage.react(CONSTANTS.checkinReactions.accept);
+                await incomingMessage.delete();
+                return ledgerChannel.send(
+                    `<@${incomingMessage.author.id}>`,
+                    createBasicEmbed(
+                        INFO.USER_CHECKIN(registrant.teamName),
+                        "SUCCESS"
+                    )
+                );
             }
         } else {
             collector.stop("Event Ended");
