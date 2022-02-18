@@ -40,6 +40,12 @@ export interface registrantSchema {
   checkedIn?: boolean;
 }
 
+export interface checkInDBSchema{
+  name:string;
+  discordID:number;
+  email:string;
+}
+
 export interface mqSchema {
   type: "memberAddedToTeam" | "channelCreatedForTeam";
   userID: string;

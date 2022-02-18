@@ -1,6 +1,11 @@
 import { Message, MessageCollector, TextChannel } from "discord.js";
 import { emailSchema } from "../models/email";
-import { eventSchema, registrantSchema, mqSchema } from "../models/event";
+import {
+    eventSchema,
+    registrantSchema,
+    mqSchema,
+    checkInDBSchema,
+} from "../models/event";
 import { CONSTANTS, ERRORS, INFO } from "../utils/constants";
 import { getDbClient } from "../utils/database";
 import { serverLogger } from "../utils/logger";
@@ -98,6 +103,9 @@ const checkInEmails = async (
         )) as TextChannel;
         if (event.enabled) {
             const db = await (await getDbClient()).db().collection(event.slug);
+            const dbCheckin = (await getDbClient())
+                .db()
+                .collection("mozohack22-checkin");
             const registrant = await db.findOne<registrantSchema>({
                 email: incomingMessage.content,
             });
@@ -125,6 +133,7 @@ const checkInEmails = async (
                         },
                     }
                 );
+
                 if (event.checkin?.roleId) {
                     await giveCheckinRole(
                         incomingMessage,
@@ -135,6 +144,11 @@ const checkInEmails = async (
                     await findAndJoinTeams(incomingMessage, registrant, event);
                 }
                 await incomingMessage.delete();
+                await dbCheckin.insertOne(<checkInDBSchema>{
+                    name: registrant.name,
+                    discordID: parseInt(incomingMessage.author.id),
+                    email: registrant.email,
+                });
                 return ledgerChannel.send(
                     `<@${incomingMessage.author.id}>`,
                     createBasicEmbed(
