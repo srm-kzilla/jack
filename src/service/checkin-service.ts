@@ -146,7 +146,7 @@ const checkInEmails = async (
                 await incomingMessage.delete();
                 await dbCheckin.insertOne(<checkInDBSchema>{
                     name: registrant.name,
-                    discordID: parseInt(incomingMessage.author.id),
+                    discordID: incomingMessage.author.id.toString(),
                     email: registrant.email,
                 });
                 return ledgerChannel.send(

@@ -42,7 +42,7 @@ export interface registrantSchema {
 
 export interface checkInDBSchema{
   name:string;
-  discordID:number;
+  discordID:string;
   email:string;
 }
 
