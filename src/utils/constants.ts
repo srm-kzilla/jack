@@ -158,14 +158,14 @@ export const INFO = {
       message: `**Event Slug:** ${event.slug}\n**Event Name:** ${event.name}\n**Channel Started:** <#${event.checkin?.channelId}>`,
     };
   },
-  USER_CHECKIN: (teamName?: string | null) => {
+  USER_CHECKIN: (teamName?: string) => {
     return {
       title:
         "You are successfully checked in, kindly check your team channel. 🥳",
       message: `Team Name: **${teamName}**`,
     };
   },
-  USER_RE_CHECKIN: (teamName?: string | null) => {
+  USER_RE_CHECKIN: (teamName?: string) => {
     return {
       title: "You have already checked in, kindly check your team channel. 🥳",
       message: `Team Name: **${teamName}**`,
