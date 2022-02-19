@@ -102,6 +102,12 @@ export const ERRORS = {
     title: "Checkin Collector Creation Failed!",
     message: "There has been some error while creating the check-in collector!",
   },
+  USER_CHECKIN_FAIL: () => {
+    return {
+      title: "Check-In Failed! 🥺",
+      message: `We were unable to add you to your team channel. Make sure you are using the correct email, if the problem still persists contact the mods.`,
+    };
+  },
   ROLE_MISSING: {
     title: "Error!😭",
     message:
@@ -150,6 +156,19 @@ export const INFO = {
     return {
       title: "Check-in Collector Started! 🥳",
       message: `**Event Slug:** ${event.slug}\n**Event Name:** ${event.name}\n**Channel Started:** <#${event.checkin?.channelId}>`,
+    };
+  },
+  USER_CHECKIN: (teamName?: string | null) => {
+    return {
+      title:
+        "You are successfully checked in, kindly check your team channel. 🥳",
+      message: `Team Name: **${teamName}**`,
+    };
+  },
+  USER_RE_CHECKIN: (teamName?: string | null) => {
+    return {
+      title: "You have already checked in, kindly check your team channel. 🥳",
+      message: `Team Name: **${teamName}**`,
     };
   },
   TEAM_CHANNEL_INTRO: (
