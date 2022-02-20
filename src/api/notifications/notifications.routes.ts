@@ -8,18 +8,18 @@ import {
 } from "./notifications.schema";
 const router = Router();
 
-const handleNotifications = (
+const handleNotifications = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
   try {
     //TODO: call function from services
-    notificationsService(req.body as notificationsRequest, res as Response);
-    res.status(200).json({
-      success: true,
-      message: "Notifications Sent",
-    });
+    await notificationsService(
+      req.body as notificationsRequest,
+      res as Response
+    );
+    
   } catch (err) {
     next(err);
   }
