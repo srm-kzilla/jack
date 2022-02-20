@@ -3,6 +3,7 @@ import { getDbClient } from "../../utils/database";
 import { getDiscordBot } from "../../utils/discord";
 import { notificationsRequest } from "./notifications.schema";
 import { createBasicEmbed } from "../../utils/messages";
+import { Response } from "express";
 
 export const getDiscordID = async (emailArray: Array<string>) => {
   const db = (await getDbClient()).db().collection("notification-mozohack22");
@@ -21,7 +22,10 @@ export const getDiscordID = async (emailArray: Array<string>) => {
   }
 };
 
-export const notificationsService = async (data: notificationsRequest) => {
+export const notificationsService = async (
+  data: notificationsRequest,
+  res: Response
+) => {
   try {
     const client = await getDiscordBot();
     const ids = await getDiscordID(data.emails);
@@ -30,15 +34,25 @@ export const notificationsService = async (data: notificationsRequest) => {
       ids.userIDArray.map((id) => {
         const embed = createBasicEmbed(msg, "ANNOUNCEMENT");
         client.users
-          .fetch(id.toString(), false)
+          .fetch(id, false)
           .then((user) => {
             user.send(embed);
+            res
+              .status(200)
+              .json({ success: true, message: "Notifications sent" });
           })
           .catch((err) => {
             console.log("Error Occured");
           });
       });
     }
-    throw { code: 500, error: "Internal Server Error" };
-  } catch (error) {}
+    throw { code: 500, message: "Internal Server Error" };
+  } catch (error: any) {
+    res
+      .status(error.code || 500)
+      .json({
+        success: false,
+        message: error.message || "Internal Server Error",
+      });
+  }
 };

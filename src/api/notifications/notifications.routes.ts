@@ -15,7 +15,7 @@ const handleNotifications = (
 ) => {
   try {
     //TODO: call function from services
-    notificationsService(req.body as notificationsRequest);
+    notificationsService(req.body as notificationsRequest, res as Response);
     res.status(200).json({
       success: true,
       message: "Notifications Sent",
