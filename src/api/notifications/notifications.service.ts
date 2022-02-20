@@ -11,8 +11,8 @@ export interface getDiscordIDSchema {
   noIDUsers: Array<string>;
 }
 
-export const getDiscordID = async (emailArray: Array<string>, slug: string) => {
-  const db = (await getDbClient()).db().collection(`notification-${slug}`);
+export const getDiscordID = async (emailArray: Array<string>) => {
+  const db = (await getDbClient()).db().collection(`jack-notifications`);
   let noIDUsers: string[] = [];
   let userIDArray: string[] = [];
   try {
@@ -39,10 +39,7 @@ export const notificationsService = async (
 ) => {
   try {
     const client: Client | undefined = await getDiscordBot();
-    const ids: getDiscordIDSchema | undefined = await getDiscordID(
-      data.emails,
-      data.slug
-    );
+    const ids: getDiscordIDSchema | undefined = await getDiscordID(data.emails);
     const msg = { title: data.title, message: data.body };
     if (ids && client) {
       ids.userIDArray.map(async (id: string) => {
