@@ -11,8 +11,8 @@ export interface getDiscordIDSchema {
   noIDUsers: Array<string>;
 }
 
-export const getDiscordID = async (emailArray: Array<string>) => {
-  const db = (await getDbClient()).db().collection(`notification-mozohack22`);
+export const getDiscordID = async (emailArray: Array<string>, slug: string) => {
+  const db = (await getDbClient()).db().collection(`notification-${slug}`);
   let noIDUsers: string[] = [];
   let userIDArray: string[] = [];
   try {
@@ -39,7 +39,10 @@ export const notificationsService = async (
 ) => {
   try {
     const client: Client | undefined = await getDiscordBot();
-    const ids: getDiscordIDSchema | undefined = await getDiscordID(data.emails);
+    const ids: getDiscordIDSchema | undefined = await getDiscordID(
+      data.emails,
+      data.slug
+    );
     const msg = { title: data.subject, message: data.body };
     if (ids && client) {
       ids.userIDArray.map(async (id: string) => {
@@ -48,7 +51,7 @@ export const notificationsService = async (
         user.send(embed);
       });
       res.status(200).json({
-        status:true,
+        status: true,
         success: ids.userIDArray,
         failed: ids.noIDUsers,
       });
