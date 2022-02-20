@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response, Router } from "express";
 import validateQuery from "../middlewares/validate-query";
 import { validateWebhook } from "../middlewares/validate-webhook";
+import { notificationsService } from "./notifications.service";
 import {
   notificationsRequestSchema,
   notificationsRequest,
@@ -13,8 +14,8 @@ const handleNotifications = (
   next: NextFunction
 ) => {
   try {
-    const { emails, slug, subject, body } = req.body as notificationsRequest;
     //TODO: call function from services
+    notificationsService(req.body as notificationsRequest);
     res.status(200).json({
       success: true,
       message: "Notifications Sent",
