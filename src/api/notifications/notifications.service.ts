@@ -2,9 +2,9 @@ import { checkInDBSchema } from "../../models/event";
 import { getDbClient } from "../../utils/database";
 import { getDiscordBot } from "../../utils/discord";
 import { notificationsRequest } from "./notifications.schema";
-import { createBasicEmbed } from "../../utils/messages";
 import { Response } from "express";
-import { Client } from "discord.js";
+import { Client, MessageEmbed } from "discord.js";
+import { CONSTANTS } from "../../utils/constants";
 
 export interface getDiscordIDSchema {
   userIDArray: Array<string>;
@@ -30,7 +30,7 @@ export const getDiscordID = async (emailArray: Array<string>) => {
         successEmails.push(emailArray[index]);
       }
     }
-    return { userIDArray, failedEmails , successEmails};
+    return { userIDArray, failedEmails, successEmails };
   } catch (err) {
     console.log(err);
   }
@@ -43,10 +43,17 @@ export const notificationsService = async (
   try {
     const client: Client | undefined = await getDiscordBot();
     const ids: getDiscordIDSchema | undefined = await getDiscordID(data.emails);
-    const msg = { title: data.title, message: data.body };
     if (ids && client) {
       ids.userIDArray.map(async (id: string) => {
-        const embed = createBasicEmbed(msg, "ANNOUNCEMENT");
+        const embed = new MessageEmbed()
+          .setColor("#7289da")
+          .setTitle(data.title)
+          .setDescription(data.body)
+          .setThumbnail(
+            "https://mozohack-mozofest-2022.s3.ap-south-1.amazonaws.com/mozohack/srmkzlla_logo.png"
+          )
+          .setTimestamp()
+          .setFooter(CONSTANTS.FOOTER, CONSTANTS.FOOTER_LOGO_URL);
         const user = await client.users.fetch(id, false);
         user.send(embed);
       });
