@@ -57,11 +57,12 @@ export const notificationsService = async (
         const user = await client.users.fetch(id, false);
         user.send(embed);
       });
-      res.status(200).json({
+      return {
         status: true,
         success: ids.successEmails,
         failed: ids.failedEmails,
-      });
+      }
+      
     }
   } catch (error: any) {
     res.status(error.code || 500).json({

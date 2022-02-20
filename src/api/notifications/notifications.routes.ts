@@ -15,11 +15,11 @@ const handleNotifications = async (
 ) => {
   try {
     //TODO: call function from services
-    await notificationsService(
+    const response = await notificationsService(
       req.body as notificationsRequest,
       res as Response
     );
-    
+    res.status(200).json(response);
   } catch (err) {
     next(err);
   }
