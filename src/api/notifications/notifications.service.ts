@@ -39,34 +39,23 @@ export const notificationsService = async (
 ) => {
   try {
     const client: Client | undefined = await getDiscordBot();
-    const ids:getDiscordIDSchema | undefined = await getDiscordID(data.emails);
+    const ids: getDiscordIDSchema | undefined = await getDiscordID(data.emails);
     const msg = { title: data.subject, message: data.body };
-    if (ids&& client) {
-      console.log(ids.userIDArray);
-      console.log(ids.userIDArray);
-      ids.userIDArray.map((id : string) => {
+    if (ids && client) {
+      ids.userIDArray.map(async (id: string) => {
         const embed = createBasicEmbed(msg, "ANNOUNCEMENT");
-        client.users
-          .fetch(id, false)
-          .then((user) => {
-            user.send(embed);
-            // return res
-            //   .status(200)
-            //   .json({ success: true, message: "Notifications sent" });
-          })
-          .catch((err) => {
-            console.log("Error Occured");
-          });
+        const user = await client.users.fetch(id, false);
+        user.send(embed);
       });
       res.status(200).json({
-        success: true,
-        message: "Notifications Sent",
+        status:true,
+        success: ids.userIDArray,
+        failed: ids.noIDUsers,
       });
     }
-    // throw { code: 500, message: "Internal Server Error :(" };
   } catch (error: any) {
     res.status(error.code || 500).json({
-      success: false,
+      status: false,
       message: error.message || "Internal Server Error",
     });
   }
