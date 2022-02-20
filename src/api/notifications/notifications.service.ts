@@ -43,7 +43,7 @@ export const notificationsService = async (
       data.emails,
       data.slug
     );
-    const msg = { title: data.subject, message: data.body };
+    const msg = { title: data.title, message: data.body };
     if (ids && client) {
       ids.userIDArray.map(async (id: string) => {
         const embed = createBasicEmbed(msg, "ANNOUNCEMENT");
