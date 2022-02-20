@@ -8,26 +8,29 @@ import { Client } from "discord.js";
 
 export interface getDiscordIDSchema {
   userIDArray: Array<string>;
-  noIDUsers: Array<string>;
+  failedEmails: Array<string>;
+  successEmails: Array<string>;
 }
 
 export const getDiscordID = async (emailArray: Array<string>) => {
   const db = (await getDbClient()).db().collection(`jack-notifications`);
-  let noIDUsers: string[] = [];
   let userIDArray: string[] = [];
+  let failedEmails: string[] = [];
+  let successEmails: string[] = [];
   try {
     for (let index = 0; index < emailArray.length; index++) {
       const user = await db.findOne<checkInDBSchema>({
         email: emailArray[index],
       });
       if (!user) {
-        noIDUsers.push(emailArray[index]);
+        failedEmails.push(emailArray[index]);
       } else {
         const userId = user.discordID;
         userIDArray.push(userId);
+        successEmails.push(emailArray[index]);
       }
     }
-    return { userIDArray, noIDUsers };
+    return { userIDArray, failedEmails , successEmails};
   } catch (err) {
     console.log(err);
   }
@@ -49,8 +52,8 @@ export const notificationsService = async (
       });
       res.status(200).json({
         status: true,
-        success: ids.userIDArray,
-        failed: ids.noIDUsers,
+        success: ids.successEmails,
+        failed: ids.failedEmails,
       });
     }
   } catch (error: any) {
