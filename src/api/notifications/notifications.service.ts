@@ -46,9 +46,7 @@ export const notificationsService = async (data: notificationsRequest) => {
             const user = await client.users.fetch(userDetails.discordID, false);
             await user.send(embed);
           } catch (err) {
-            console.log(err);
             failedUsers.push(userDetails.email);
-            console.log(userDetails.email, failedUsers);
           }
         })
       );
