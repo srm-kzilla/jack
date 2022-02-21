@@ -4,7 +4,7 @@ import { getDiscordBot } from "../../utils/discord";
 import { notificationsRequest } from "./notifications.schema";
 import { Response } from "express";
 import { Client, MessageEmbed } from "discord.js";
-import { CONSTANTS } from "../../utils/constants";
+import { CONSTANTS } from '../../utils/constants';
 
 export interface getDiscordIDSchema {
   userIDArray: Array<string>;
@@ -14,9 +14,9 @@ export interface getDiscordIDSchema {
 
 export const getDiscordID = async (emailArray: Array<string>) => {
   const db = (await getDbClient()).db().collection(`jack-notifications`);
-  let userIDArray: string[] = [];
-  let failedEmails: string[] = [];
-  let successEmails: string[] = [];
+  const userIDArray: string[] = [];
+  const failedEmails: string[] = [];
+  const successEmails: string[] = [];
   try {
     for (let index = 0; index < emailArray.length; index++) {
       const user = await db.findOne<checkInDBSchema>({
@@ -46,11 +46,11 @@ export const notificationsService = async (
     if (ids && client) {
       ids.userIDArray.map(async (id: string) => {
         const embed = new MessageEmbed()
-          .setColor("#7289da")
+          .setColor(CONSTANTS.PURPLE_COLOR_HEX)
           .setTitle(data.title)
           .setDescription(data.body)
           .setThumbnail(
-            "https://mozohack-mozofest-2022.s3.ap-south-1.amazonaws.com/mozohack/srmkzlla_logo.png"
+            CONSTANTS.SRMKZILLA_GRADIENT_LOGO
           )
           .setTimestamp()
           .setFooter(CONSTANTS.FOOTER, CONSTANTS.FOOTER_LOGO_URL);

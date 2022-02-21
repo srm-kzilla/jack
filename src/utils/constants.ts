@@ -407,6 +407,9 @@ export const CONSTANTS = {
   FOOTER: "Powered by SRMKZILLA and hamster-charged batteries",
   SRMKZILLA_WHITE_LOGO:
     "https://jack.srmkzilla.net/assets/srmkzilla_logo_white_mono.png",
+  SRMKZILLA_GRADIENT_LOGO:
+    "https://mozohack-mozofest-2022.s3.ap-south-1.amazonaws.com/mozohack/srmkzlla_logo.png",
+  PURPLE_COLOR_HEX: "#7289da",
   certificateUserDirectMessage: (eventName: string, username: string) =>
     new MessageEmbed()
       .setTitle(`${eventName} Certificates`)

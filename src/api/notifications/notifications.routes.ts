@@ -14,7 +14,6 @@ const handleNotifications = async (
   next: NextFunction
 ) => {
   try {
-    //TODO: call function from services
     const response = await notificationsService(
       req.body as notificationsRequest,
       res as Response
