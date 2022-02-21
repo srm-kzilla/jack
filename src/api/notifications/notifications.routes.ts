@@ -15,10 +15,9 @@ const handleNotifications = async (
 ) => {
   try {
     const response = await notificationsService(
-      req.body as notificationsRequest,
-      res as Response
+      req.body as notificationsRequest
     );
-    res.status(200).json(response);
+    res.status(201).json(response);
   } catch (err) {
     next(err);
   }
