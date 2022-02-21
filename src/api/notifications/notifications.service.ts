@@ -1,36 +1,32 @@
 import { checkInDBSchema } from "../../models/event";
 import { getDbClient } from "../../utils/database";
 import { getDiscordBot } from "../../utils/discord";
-import { notificationsRequest } from "./notifications.schema";
+import {
+  notificationsRequest,
+  notificationUserSchema,
+} from "./notifications.schema";
 import { Response } from "express";
 import { Client, MessageEmbed } from "discord.js";
-import { CONSTANTS } from '../../utils/constants';
-
-export interface getDiscordIDSchema {
-  userIDArray: Array<string>;
-  failedEmails: Array<string>;
-  successEmails: Array<string>;
-}
+import { CONSTANTS } from "../../utils/constants";
 
 export const getDiscordID = async (emailArray: Array<string>) => {
   const db = (await getDbClient()).db().collection(`jack-notifications`);
-  const userIDArray: string[] = [];
+  const userIDArray: notificationUserSchema[] = [];
   const failedEmails: string[] = [];
-  const successEmails: string[] = [];
   try {
     for (let index = 0; index < emailArray.length; index++) {
+      const userEmail = emailArray[index];
       const user = await db.findOne<checkInDBSchema>({
-        email: emailArray[index],
+        email: userEmail,
       });
       if (!user) {
-        failedEmails.push(emailArray[index]);
+        failedEmails.push(userEmail);
       } else {
-        const userId = user.discordID;
-        userIDArray.push(userId);
-        successEmails.push(emailArray[index]);
+        const userID = user.discordID;
+        userIDArray.push({ email: userEmail, discordID: userID });
       }
     }
-    return { userIDArray, failedEmails, successEmails };
+    return { userIDArray, failedEmails };
   } catch (err) {
     console.log(err);
   }
@@ -41,33 +37,33 @@ export const notificationsService = async (
   res: Response
 ) => {
   try {
-    const client: Client | undefined = await getDiscordBot();
-    const ids: getDiscordIDSchema | undefined = await getDiscordID(data.emails);
-    if (ids && client) {
-      ids.userIDArray.map(async (id: string) => {
-        const embed = new MessageEmbed()
-          .setColor(CONSTANTS.PURPLE_COLOR_HEX)
-          .setTitle(data.title)
-          .setDescription(data.body)
-          .setThumbnail(
-            CONSTANTS.SRMKZILLA_GRADIENT_LOGO
-          )
-          .setTimestamp()
-          .setFooter(CONSTANTS.FOOTER, CONSTANTS.FOOTER_LOGO_URL);
-        const user = await client.users.fetch(id, false);
-        user.send(embed);
+    const client = await getDiscordBot();
+    const notificationArray = await getDiscordID(data.emails);
+    if (notificationArray?.userIDArray.length && client) {
+      notificationArray.userIDArray.map(async (userDetails) => {
+        try {
+          const embed = new MessageEmbed()
+            .setColor(CONSTANTS.PURPLE_COLOR_HEX)
+            .setTitle(data.title)
+            .setDescription(data.body)
+            .setThumbnail(CONSTANTS.SRMKZILLA_GRADIENT_LOGO)
+            .setTimestamp()
+            .setFooter(CONSTANTS.FOOTER, CONSTANTS.FOOTER_LOGO_URL);
+          const user = await client.users.fetch(userDetails.discordID, false);
+          await user.send(embed);
+        } catch (err) {
+          notificationArray.failedEmails.push(userDetails.email);
+        }
       });
       return {
         status: true,
-        success: ids.successEmails,
-        failed: ids.failedEmails,
-      }
-      
+        failed: notificationArray.failedEmails,
+      };
     }
   } catch (error: any) {
-    res.status(error.code || 500).json({
-      status: false,
+    throw {
+      code: error.code || 500,
       message: error.message || "Internal Server Error",
-    });
+    };
   }
 };

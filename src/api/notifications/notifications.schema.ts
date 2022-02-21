@@ -7,4 +7,17 @@ export const notificationsRequestSchema = yup.object({
   body: yup.string().required(),
 });
 
-export type notificationsRequest = yup.InferType<typeof notificationsRequestSchema>;
+export type notificationsRequest = yup.InferType<
+  typeof notificationsRequestSchema
+>;
+
+export interface notificationUserSchema {
+  email: string;
+  discordID: string;
+}
+
+export interface getDiscordUserDetailSchema {
+  userIDArray: Array<notificationUserSchema>;
+  failedEmails: Array<string>;
+  successEmails: Array<string>;
+}
