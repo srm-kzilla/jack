@@ -9,6 +9,7 @@ import { initDbClient } from "../utils/database";
 import { initDiscordBot } from "../utils/discord";
 import { ERRORS } from "./error/error.constant";
 import { join } from "path";
+import notificationsRoutes from "./notifications/notifications.routes";
 
 /**
  * Initialize Webhook API Server
@@ -36,6 +37,7 @@ app.get("/", (req: Request, res: Response, next: NextFunction) => {
   }
 });
 app.use("/api/v1", rolesRoutes);
+app.use("/api/v1", notificationsRoutes);
 app.use("/api/v1", channelRoutes);
 app.use("/healthcheck", (req: Request, res: Response, next: NextFunction) => {
   try {
