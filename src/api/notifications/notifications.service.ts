@@ -6,7 +6,7 @@ import {
   notificationUserSchema,
 } from "./notifications.schema";
 import { MessageEmbed } from "discord.js";
-import { CONSTANTS } from "../../utils/constants";
+import { COLORS, CONSTANTS } from "../../utils/constants";
 
 export const getDiscordID = async (emailArray: Array<string>) => {
   const db = (await getDbClient()).db().collection(`jack-notifications`);
@@ -37,7 +37,7 @@ export const notificationsService = async (data: notificationsRequest) => {
         notificationArray.userIDArray.map(async (userDetails) => {
           try {
             const embed = new MessageEmbed()
-              .setColor(CONSTANTS.PURPLE_COLOR_HEX)
+              .setColor(COLORS.PURPLE_HEX)
               .setTitle(data.title)
               .setDescription(data.body)
               .setThumbnail(CONSTANTS.SRMKZILLA_GRADIENT_LOGO)

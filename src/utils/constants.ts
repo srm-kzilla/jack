@@ -409,7 +409,6 @@ export const CONSTANTS = {
     "https://jack.srmkzilla.net/assets/srmkzilla_logo_white_mono.png",
   SRMKZILLA_GRADIENT_LOGO:
     "https://mozohack-mozofest-2022.s3.ap-south-1.amazonaws.com/mozohack/srmkzlla_logo.png",
-  PURPLE_COLOR_HEX: "#7289da",
   certificateUserDirectMessage: (eventName: string, username: string) =>
     new MessageEmbed()
       .setTitle(`${eventName} Certificates`)
@@ -472,6 +471,7 @@ export const COLORS = {
   LEAVE_VOICE: "#ff0066",
   MOVE_VOICE: "#00ccff",
   REACTION_ROLE: "#bf00ff",
+  PURPLE_HEX: "#7289da",
 };
 
 export const randomMemesEndpoint = () => {
