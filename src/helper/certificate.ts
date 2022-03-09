@@ -76,7 +76,7 @@ export async function getCertificateChannelMessage(
           createBasicEmbed(ERRORS.EVENT_DNE, "ERROR")
         );
       }
-      if(!event.enabled){
+      if (!event.enabled) {
         serverLogger(
           "user-error",
           incomingMessage.content,
@@ -139,7 +139,10 @@ export async function generateCertificate(
     certParams!.y,
     {
       text: name,
-      alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER,
+      alignmentX:
+        event.slug === "mozofest2022-parti"
+          ? Jimp.HORIZONTAL_ALIGN_CENTER
+          : Jimp.HORIZONTAL_ALIGN_LEFT,
       alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE,
     },
     certParams!.maxWidth,
