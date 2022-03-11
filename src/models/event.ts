@@ -6,6 +6,7 @@ export interface eventSchema {
   certificate?: {
     //certificate configuration
     //NOTE: Recommended Certificate Image Resolution: 2667 x 1886
+    alignment: string; // alignment property
     x: number;
     y: number;
     maxWidth: number;

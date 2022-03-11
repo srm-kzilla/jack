@@ -133,6 +133,8 @@ export async function generateCertificate(
     "font.fnt"
   );
   console.log(fontPath);
+  const alignment = event.certificate?.alignment;
+
   imgObject = await imgObject.print(
     await Jimp.loadFont(fontPath),
     certParams!.x,
@@ -140,10 +142,15 @@ export async function generateCertificate(
     {
       text: name,
       alignmentX:
-        event.slug === "mozofest2022-parti"
-          ? Jimp.HORIZONTAL_ALIGN_CENTER
-          : Jimp.HORIZONTAL_ALIGN_LEFT,
-      alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE,
+        
+      alignment === "right"
+      ? Jimp.HORIZONTAL_ALIGN_RIGHT
+      : alignment === "left"
+         ? Jimp.HORIZONTAL_ALIGN_LEFT
+         : alignment === "center"
+           ? Jimp.HORIZONTAL_ALIGN_CENTER
+           : Jimp.HORIZONTAL_ALIGN_LEFT,
+       alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE,
     },
     certParams!.maxWidth,
     certParams!.maxHeight
