@@ -133,7 +133,10 @@ export async function generateCertificate(
     "font.fnt"
   );
   console.log(fontPath);
-  const alignment = event.certificate?.alignment;
+  const xAlignment = event.certificate?.alignmentX;
+  const yAlignment = event.certificate?.alignmentY;
+
+  if(!xAlignment || !yAlignment) throw { success:false, message:"ALIGN-PARAMS NOT FOUND" }
 
   imgObject = await imgObject.print(
     await Jimp.loadFont(fontPath),
@@ -142,15 +145,21 @@ export async function generateCertificate(
     {
       text: name,
       alignmentX:
-        
-      alignment === "right"
-      ? Jimp.HORIZONTAL_ALIGN_RIGHT
-      : alignment === "left"
-         ? Jimp.HORIZONTAL_ALIGN_LEFT
-         : alignment === "center"
-           ? Jimp.HORIZONTAL_ALIGN_CENTER
-           : Jimp.HORIZONTAL_ALIGN_LEFT,
-       alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE,
+
+        xAlignment === "RIGHT"
+        ? Jimp.HORIZONTAL_ALIGN_RIGHT
+        : xAlignment === "LEFT"
+          ? Jimp.HORIZONTAL_ALIGN_LEFT
+          : Jimp.HORIZONTAL_ALIGN_CENTER,
+       
+      alignmentY:
+
+        yAlignment === "TOP"
+        ? Jimp.VERTICAL_ALIGN_TOP
+        : yAlignment === "BOTTOM"
+           ? Jimp.VERTICAL_ALIGN_BOTTOM
+           : Jimp.VERTICAL_ALIGN_MIDDLE,
+
     },
     certParams!.maxWidth,
     certParams!.maxHeight
