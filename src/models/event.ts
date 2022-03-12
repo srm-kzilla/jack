@@ -6,11 +6,13 @@ export interface eventSchema {
   certificate?: {
     //certificate configuration
     //NOTE: Recommended Certificate Image Resolution: 2667 x 1886
-    alignment: string; // alignment property
+    alignmentX: string; // Horizontal alignment property 
+    alignmentY: string; //Vertical alignment property
     x: number;
     y: number;
     maxWidth: number;
     maxHeight: number;
+     
     url: string;
     channelId: string;
     font: {
