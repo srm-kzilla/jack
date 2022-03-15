@@ -135,8 +135,6 @@ export async function generateCertificate(
   console.log(fontPath);
   const xAlignment = event.certificate?.alignment.alignmentX;
   const yAlignment = event.certificate?.alignment.alignmentY;
-  console.log(xAlignment);
-  console.log(yAlignment);
   if(!xAlignment || !yAlignment) throw { success:false, message:"ALIGN-PARAMS NOT FOUND" }
   if(!(xAlignment === "CENTER" || xAlignment === "LEFT" || xAlignment === "RIGHT" && yAlignment === "TOP" || yAlignment === "BOTTOM" || yAlignment === "MIDDLE")) throw {success:false, message:"ALIGN-PARAMS INCORRECT"}
 
