@@ -133,6 +133,11 @@ export async function generateCertificate(
     "font.fnt"
   );
   console.log(fontPath);
+  const xAlignment = event.certificate?.alignment.alignmentX;
+  const yAlignment = event.certificate?.alignment.alignmentY;
+  if(!xAlignment || !yAlignment) throw { success:false, message:"ALIGN-PARAMS NOT FOUND" }
+  if(!(xAlignment === "CENTER" || xAlignment === "LEFT" || xAlignment === "RIGHT" && yAlignment === "TOP" || yAlignment === "BOTTOM" || yAlignment === "MIDDLE")) throw {success:false, message:"ALIGN-PARAMS INCORRECT"}
+
   imgObject = await imgObject.print(
     await Jimp.loadFont(fontPath),
     certParams!.x,
@@ -140,10 +145,17 @@ export async function generateCertificate(
     {
       text: name,
       alignmentX:
-        event.slug === "mozofest2022-parti"
-          ? Jimp.HORIZONTAL_ALIGN_CENTER
-          : Jimp.HORIZONTAL_ALIGN_LEFT,
-      alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE,
+        xAlignment === "RIGHT"
+        ? Jimp.HORIZONTAL_ALIGN_RIGHT
+        : xAlignment === "LEFT"
+          ? Jimp.HORIZONTAL_ALIGN_LEFT
+          : Jimp.HORIZONTAL_ALIGN_CENTER,
+      alignmentY:
+        yAlignment === "TOP"
+        ? Jimp.VERTICAL_ALIGN_TOP
+        : yAlignment === "BOTTOM"
+           ? Jimp.VERTICAL_ALIGN_BOTTOM
+           : Jimp.VERTICAL_ALIGN_MIDDLE,
     },
     certParams!.maxWidth,
     certParams!.maxHeight
