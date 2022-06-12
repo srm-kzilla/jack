@@ -17,7 +17,7 @@ import {
 } from "../utils/messages";
 import { getEvent, setEvent } from "../utils/nodecache";
 import { channelDBSchema } from "../api/channels/channels.schema";
-import { publishToMQ } from "../utils/rabbitMQ";
+// import { publishToMQ } from "../utils/rabbitMQ";
 
 export const startCheckInCollector = async (
   incomingMessage: Message,
@@ -189,7 +189,7 @@ const findAndJoinTeams = async (
       await joinTeamChannel(incomingMessage, event, teamName, "team");
       mqMessage.type = "memberAddedToTeam";
     }
-    await publishToMQ(process.env.RABBIT_MQ_QUEUESLUG!, mqMessage);
+    // await publishToMQ(process.env.RABBIT_MQ_QUEUESLUG!, mqMessage);
   } catch (err) {
     serverLogger("error", incomingMessage.content, err);
     throw "Team Channel Creation Failed!";
