@@ -16,7 +16,7 @@ export async function getUserCertificate(
     const event = await getEvent(eventSlug, "certificate");
     if (!event) throw "eventKey Not Found in NodeCache!";
     if (event.enabled) {
-      incomingMessage.channel.send(createBasicEmbed(INFO.WAIT, "INFO"));
+      await incomingMessage.channel.send(createBasicEmbed(INFO.WAIT, "INFO"));
       const dbClient = await getDbClient();
       const found = await dbClient
         .db()
@@ -30,7 +30,7 @@ export async function getUserCertificate(
         const message = await certificateMessage(
           await generateCertificate(registrant!.name, event)
         );
-        incomingMessage.channel.send(message);
+        await incomingMessage.channel.send(message);
         const ledgerChannel = incomingMessage.client.channels.cache.find(
           (c) => c.id === event.ledgerChannel
         ) as TextChannel;
@@ -56,13 +56,13 @@ export async function getUserCertificate(
           incomingMessage.content,
           "Certificate Not Found"
         );
-        incomingMessage.channel.send(
+        await incomingMessage.channel.send(
           createBasicEmbed(ERRORS.CERTIFICATE_NOT_FOUND, "ERROR")
         );
         return false;
       }
     } else {
-      incomingMessage.channel.send(
+      await incomingMessage.channel.send(
         createBasicEmbed(ERRORS.CERT_NOT_ACCESS, "ERROR")
       );
       serverLogger("user-error", incomingMessage.content, `Certificate N/A`);
@@ -70,7 +70,7 @@ export async function getUserCertificate(
     }
   } catch (err) {
     serverLogger("error", incomingMessage.content, err);
-    incomingMessage.channel.send(
+    await incomingMessage.channel.send(
       createBasicEmbed(ERRORS.INTERNAL_ERROR("dm"), "ERROR")
     );
     return true;

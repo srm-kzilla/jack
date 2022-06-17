@@ -14,7 +14,6 @@
   "author": "Harsh Goel <harshgoel05@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "amqplib": "^0.8.0",
     "axios": "^0.21.1",
     "concurrently": "^5.3.0",
     "cors": "^2.8.5",
@@ -29,7 +28,6 @@
     "yup": "^0.32.8"
   },
   "devDependencies": {
-    "@types/amqplib": "^0.8.2",
     "@types/axios": "^0.14.0",
     "@types/cors": "^2.8.10",
     "@types/dotenv": "^8.2.0",

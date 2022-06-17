@@ -3,7 +3,6 @@ import { emailSchema } from "../models/email";
 import {
   eventSchema,
   registrantSchema,
-  mqSchema,
   checkInDBSchema,
 } from "../models/event";
 import { CONSTANTS, ERRORS, INFO } from "../utils/constants";
@@ -17,7 +16,6 @@ import {
 } from "../utils/messages";
 import { getEvent, setEvent } from "../utils/nodecache";
 import { channelDBSchema } from "../api/channels/channels.schema";
-import { publishToMQ } from "../utils/rabbitMQ";
 
 export const startCheckInCollector = async (
   incomingMessage: Message,
@@ -150,13 +148,6 @@ const findAndJoinTeams = async (
   event: eventSchema
 ) => {
   try {
-    let mqMessage = <mqSchema>{
-      type: "channelCreatedForTeam",
-      userID: incomingMessage.author.id.toString(),
-      userEmail: registrant.email,
-      userName: registrant.name,
-      teamName: registrant.teamName,
-    };
     const db = await (await getDbClient()).db().collection("private-channels");
     const teamName = slugify(registrant.teamName!, {
       strict: true,
@@ -187,9 +178,7 @@ const findAndJoinTeams = async (
       );
     } else {
       await joinTeamChannel(incomingMessage, event, teamName, "team");
-      mqMessage.type = "memberAddedToTeam";
     }
-    await publishToMQ(process.env.RABBIT_MQ_QUEUESLUG!, mqMessage);
   } catch (err) {
     serverLogger("error", incomingMessage.content, err);
     throw "Team Channel Creation Failed!";
