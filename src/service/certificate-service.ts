@@ -34,7 +34,7 @@ export async function getUserCertificate(
         const ledgerChannel = incomingMessage.client.channels.cache.find(
           (c) => c.id === event.ledgerChannel
         ) as TextChannel;
-        await ledgerChannel.send(
+        ledgerChannel.send(
           createBasicEmbed(
             INFO.CERTIFICATE_COLLECTED(
               event,

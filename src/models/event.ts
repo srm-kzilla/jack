@@ -49,11 +49,3 @@ export interface checkInDBSchema{
   discordID:string;
   email:string;
 }
-
-export interface mqSchema {
-  type: "memberAddedToTeam" | "channelCreatedForTeam";
-  userID: string;
-  userEmail: string;
-  userName: string;
-  teamName: string;
-}

@@ -31,7 +31,6 @@ import { incomingMessageSchema } from "./src/models/incomingMessage";
 import { Delete } from "./src/models/customTypes";
 import { guildJoin } from "./src/controllers/sendMessageHandler";
 import { addReaction, removeReaction } from "./src/helper/reactionRole";
-// import { initRabbitMQ } from "./src/utils/rabbitMQ";
 /******************************************
           Initialize Server
 *******************************************/
@@ -42,7 +41,6 @@ async function createServer() {
   await initEventDbClient();
   await initCache();
   await refreshKeys();
-  // await initRabbitMQ();
 
   const client = await getDiscordBot();
 
