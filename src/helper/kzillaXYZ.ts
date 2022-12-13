@@ -8,8 +8,8 @@ import { incomingMessageSchema } from "../models/incomingMessage";
 /**
  * Shrinks looong URL using KZILLA.XYZ
  *
- * @param {shrink} longUrl
- * @param customCode for the url
+ * @param {string} longUrl
+ * @param {string} customCode
  */
 export async function shrinkURL(longUrl: string, customCode?: string) {
   const { data } = await axios.post(
