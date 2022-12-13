@@ -9,11 +9,12 @@ import { incomingMessageSchema } from "../models/incomingMessage";
  * Shrinks looong URL using KZILLA.XYZ
  *
  * @param {shrink} longUrl
+ * @param customCode for the url
  */
-export async function shrinkURL(longUrl: string) {
+export async function shrinkURL(longUrl: string, customCode?: string) {
   const { data } = await axios.post(
     CONSTANTS.KZILLA_XYZ_SHRINK_URL_ENDPOINT,
-    { longUrl: longUrl },
+    { longUrl: longUrl, customCode: customCode },
     { headers: { authorization: process.env.XYZ_WEBHOOK_TOKEN || "" } }
   );
   return data;
@@ -31,8 +32,9 @@ export async function handleShrinkURLMessage(
 ) {
   try {
     const longURL = incomingMessage.content.split(/\s+/)[2];
+    const customCode = incomingMessage.content.split(/\s+/)[3];
     if (longURL) {
-      const data = await shrinkURL(longURL);
+      const data = await shrinkURL(longURL, customCode);
       incomingMessage.channel.send(await shrinkedURLMessage(data));
       serverLogger(
         "success",
@@ -52,6 +54,12 @@ export async function handleShrinkURLMessage(
       incomingMessage.channel.send(
         `<@${messageType.incomingUser.id}>`,
         createBasicEmbed(ERRORS.INVALID_URL, "ERROR")
+      );
+    } else if (err.isAxiosError && err.response.status === 409) {
+      serverLogger("user-error", incomingMessage.content, "Custom code already exists");
+      incomingMessage.channel.send(
+        `<@${messageType.incomingUser.id}>`,
+        createBasicEmbed(ERRORS.CUSTOM_CODE_ALREADY_EXISTS, "ERROR")
       );
     } else {
       serverLogger("error", incomingMessage.content, err);
