@@ -45,7 +45,7 @@ export const getHelpMessage = (messageType: incomingMessageSchema) => {
       },
       {
         name: "Shrink URLs using KZILLA.XYZ",
-        value: "`#kzjack shrink <URL>`",
+        value: "`#kzjack shrink <URL> <?customCode>`",
       },
       {
         name: "Tell me a joke",

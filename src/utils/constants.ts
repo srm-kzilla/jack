@@ -72,6 +72,10 @@ export const ERRORS = {
     message:
       "Whoooop! It seems you entered an invalid or malformed URL\n\n**Help**\nType `#kzjack help` for a list of commands",
   },
+  CUSTOM_CODE_ALREADY_EXISTS: {
+    title: "Custom code already exists",
+    message: "Oops, the custom code you wanted is already being used. Try again with a different custom code.\n\n**Help**\nType `#kzjack help` for a list of commands"
+  },
   INVALID_CHANNEL: {
     title: "Invalid Channel Name",
     message:
