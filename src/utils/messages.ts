@@ -150,7 +150,7 @@ export const membersCountMessage = (membersCount: number, botCount: number) => {
         inline: true,
       },
       {
-        name: "Next Milstone",
+        name: "Next Milestone",
         value: `${
           (Math.ceil(membersCount / 100) * 100) % 10 == 0
             ? Math.ceil(membersCount / 100) * 100 + 100

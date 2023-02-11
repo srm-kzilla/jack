@@ -48,7 +48,7 @@ export async function handleShrinkURLMessage(
         createBasicEmbed(ERRORS.URL_MISSING, "ERROR")
       );
     }
-  } catch (err) {
+  } catch (err: any) {
     if (err.isAxiosError && err.response.status == 400) {
       serverLogger("user-error", incomingMessage.content, "Malformed URL");
       incomingMessage.channel.send(

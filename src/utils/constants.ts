@@ -445,7 +445,7 @@ export const CONSTANTS = {
   KZILLA_XYZ_SHRINK_URL_ENDPOINT: "https://kzilla.xyz/api/v1/webhook/link",
   JOKES_URL_ENDPOINT:
     "https://official-joke-api.appspot.com/jokes/programming/random",
-  MEMES_API: "https://meme-api.herokuapp.com/gimme/",
+  MEMES_API: "https://redditAPI.alvinbengeorge.repl.co/meme/", // change it to a new one if required, source code is available at https://github.com/alvinbengeorge/redditAPI
   SUB_REDDITS: [
     "ProgrammerHumor/",
     "codinghumor/",
