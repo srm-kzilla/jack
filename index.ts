@@ -1,4 +1,4 @@
-import { Message, VoiceChannel } from "discord.js";
+import { Client, Message, VoiceChannel } from "discord.js";
 import { config } from "dotenv";
 import {
   handleIncomingChannelCommand,
@@ -8,6 +8,7 @@ import { getDiscordBot, initDiscordBot } from "./src/utils/discord";
 import { COMMANDS } from "./src/utils/constants";
 import { initDbClient, initEventDbClient } from "./src/utils/database";
 import { initCache, refreshKeys } from "./src/utils/nodecache";
+import errorHandler from "./src/utils/handler"
 import {
   handleAvatarUpdate,
   handleChannelCreate,
@@ -42,7 +43,7 @@ async function createServer() {
   await initCache();
   await refreshKeys();
 
-  const client = await getDiscordBot();
+  const client = await getDiscordBot();  
 
   client!.on("ready", () => {
     if (client) console.log(`Logged in as ${client.user!.tag}!`);
@@ -174,7 +175,7 @@ async function createServer() {
 }
 
 createServer();
-
+errorHandler();
 /**
  * For better development experience
  */
