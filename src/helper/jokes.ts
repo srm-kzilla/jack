@@ -46,6 +46,12 @@ export async function handleJokes(
   }
 }
 
+async function extractMeme(url: string) {
+  const { data } = await axios.get(url);
+  const children = data.data.children;
+  return children[Math.floor(Math.random() * children.length)].data;
+}
+
 /**
  * Handle memes commands.
  * Send some memes on the server.
@@ -57,13 +63,12 @@ export async function handleMemes(
   messageType: incomingMessageSchema
 ) {
   try {
-    const { data } = await axios.get(randomMemesEndpoint());
-    console.log(data);
+    const { title, url } = await extractMeme(randomMemesEndpoint());
     incomingMessage.channel.send(
       new MessageEmbed()
-        .setDescription(`**${data.title}**`)
+        .setDescription(`**${title}**`)
         .setColor(COLORS.INFO)
-        .setImage(data.url)
+        .setImage(url)
         .setTimestamp()
         .setFooter(CONSTANTS.FOOTER, CONSTANTS.FOOTER_LOGO_URL)
     );
