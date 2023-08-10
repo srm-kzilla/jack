@@ -48,7 +48,7 @@ export async function handleJokes(
 
 async function extractMeme(url: string) {
   const { data } = await axios.get(url);
-  const children = data.data.children.filter((child: any) => child.data.url.endsWith(".jpg") || child.data.url.endsWith(".png"));
+  const children = data?.data?.children?.filter((child: any) => child.data.url.endsWith(".jpg") || child.data.url.endsWith(".png"));
   return children[Math.floor(Math.random() * children.length)].data;
 }
 
