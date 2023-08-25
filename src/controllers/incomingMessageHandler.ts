@@ -26,7 +26,7 @@ import { handleReactionRoles } from "../helper/reactionRole";
 export async function handleIncomingChannelCommand(
   incomingMessage: Message,
   messageType: incomingMessageSchema
-) {
+): Promise<boolean> {
   try {
     const messageCommand = incomingMessage.content.split(/\s+/)[1];
 
@@ -88,14 +88,17 @@ export async function handleIncomingChannelCommand(
           createBasicEmbed(ERRORS.INVALID_COMMAND, "ERROR")
         );
         serverLogger("user-error", incomingMessage.content, "Invalid Command");
+        return true;
         break;
     }
+    return false;
   } catch (err) {
     serverLogger("error", incomingMessage.content, err);
     incomingMessage.channel.send(
       `<@${messageType.incomingUser.id}>`,
       createBasicEmbed(ERRORS.INTERNAL_ERROR(messageType.channelType), "ERROR")
     );
+    return true;
   }
 }
 
@@ -108,7 +111,7 @@ export async function handleIncomingChannelCommand(
 export function handleIncomingDMCommand(
   incomingMessage: Message,
   messageType: incomingMessageSchema
-) {
+): void {
   try {
     const messageCommand = incomingMessage.content.split(/\s+/)[1];
     switch (messageCommand) {
