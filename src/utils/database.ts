@@ -3,11 +3,7 @@ let dbClient: MongoClient;
 let eventDbClient: MongoClient;
 export async function initDbClient() {
   try {
-    dbClient = await MongoClient.connect(process.env.DATABASE_URI || "", {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-      ignoreUndefined: true,
-    });
+    dbClient = await MongoClient.connect(process.env.DATABASE_URI || "");
     console.log("✔️   Connected to Database");
     return dbClient;
   } catch (error) {
@@ -25,12 +21,7 @@ export async function getDbClient() {
 export async function initEventDbClient() {
   try {
     eventDbClient = await MongoClient.connect(
-      process.env.EVENT_DATABASE_URI || "",
-      {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-        ignoreUndefined: true,
-      }
+      process.env.EVENT_DATABASE_URI || ""
     );
     console.log("✔️   Connected to Event Database");
     return eventDbClient;

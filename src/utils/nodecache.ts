@@ -17,15 +17,15 @@ export const initCache = async (): Promise<nodeCache> => {
 export const refreshKeys = async () => {
   try {
     const db = (await getDbClient()).db();
-    const events = await db.collection("events").find<eventSchema>();
+    const events = await db.collection("events").find<eventSchema>({});
     await events.forEach((event: eventSchema) => {
       cache.set(`event-${event.slug}-${event.type}`, JSON.stringify(event));
     });
-    const polls = await db.collection("polls").find<pollSchema>();
+    const polls = await db.collection("polls").find<pollSchema>({});
     await polls.forEach((poll: pollSchema) => {
       cache.set(`poll-${poll.pollID}`, JSON.stringify(poll));
     });
-    const roles = await db.collection("reaction-roles").find<roleSchema>();
+    const roles = await db.collection("reaction-roles").find<roleSchema>({});
     await roles.forEach((role: roleSchema) => {
       cache.set(role.messageID, JSON.stringify(role));
     });

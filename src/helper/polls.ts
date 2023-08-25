@@ -97,8 +97,8 @@ export const createPoll = async (
 
 const addPoll = async (incomingMessage: Message, poll: pollSchema) => {
   const db = await (await getDbClient()).db().collection("polls");
-  const { insertedCount } = await db.insertOne(poll);
-  if (insertedCount <= 0) throw "MongoDB Poll Insert Error";
+  const { acknowledged } = await db.insertOne(poll);
+  if (!acknowledged) throw "MongoDB Poll Insert Error";
   const result = await setPoll(poll);
   if (!result) throw "NodeCache SET pollKey Error";
   const client = await getDiscordBot();
@@ -114,7 +114,7 @@ const addPoll = async (incomingMessage: Message, poll: pollSchema) => {
     dispose: true,
   });
   pollCollector.on("collect", async (reaction: MessageReaction, user: User) => {
-    const { result } = await db.updateOne(
+    const { acknowledged } = await db.updateOne(
       { pollID: poll.pollID, "options.emoji": reaction.emoji.name },
       {
         $addToSet: {
@@ -122,10 +122,10 @@ const addPoll = async (incomingMessage: Message, poll: pollSchema) => {
         },
       }
     );
-    if (!(result.ok == 1)) throw "MongoDB Query Error: Failed to Add Reaction";
+    if (!acknowledged) throw "MongoDB Query Error: Failed to Add Reaction";
   });
   pollCollector.on("remove", async (reaction: MessageReaction, user: User) => {
-    const { result } = await db.updateOne(
+    const { acknowledged } = await db.updateOne(
       { pollID: poll.pollID, "options.emoji": reaction.emoji.name },
       {
         $pull: {
@@ -133,7 +133,7 @@ const addPoll = async (incomingMessage: Message, poll: pollSchema) => {
         },
       }
     );
-    if (!(result.ok == 1)) throw "MongoDB Query Error: Failed to Add Reaction";
+    if (!acknowledged) throw "MongoDB Query Error: Failed to Add Reaction";
   });
   incomingMessage.channel.send(
     createBasicEmbed(

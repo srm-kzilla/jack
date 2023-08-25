@@ -139,8 +139,8 @@ const createReactionRoleMessage = async (
 const addRoleData = async (roleData: roleSchema) => {
   try {
     const db = await (await getDbClient()).db().collection("reaction-roles");
-    const { insertedCount } = await db.insertOne(roleData);
-    if (insertedCount <= 0) throw { message: "MongoDB Poll Insert Error" };
+    const { acknowledged } = await db.insertOne(roleData);
+    if (!acknowledged) throw { message: "MongoDB Poll Insert Error" };
     const result = await setRole(roleData);
     if (!result) throw { message: "nodecache error" };
   } catch (error) {
