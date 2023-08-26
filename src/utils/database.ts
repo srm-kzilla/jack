@@ -7,6 +7,7 @@ export async function initDbClient() {
     console.log("✔️   Connected to Database");
     return dbClient;
   } catch (error) {
+    console.log("❌   Failed to connect to Database");
     throw error;
   }
 }
@@ -26,6 +27,7 @@ export async function initEventDbClient() {
     console.log("✔️   Connected to Event Database");
     return eventDbClient;
   } catch (error) {
+    console.log("❌   Failed to connect to Event Database");
     throw error;
   }
 }
