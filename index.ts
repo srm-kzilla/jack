@@ -79,7 +79,7 @@ async function createServer() {
                             DM channel
           *******************************************/
           case "dm": {
-            handleIncomingDMCommand(message, messageType);
+            isError = await handleIncomingDMCommand(message, messageType);
             break;
           }
           default: {
@@ -88,6 +88,7 @@ async function createServer() {
               "ChannelNotSupported",
               "Channel Not Supported"
             );
+            isError = true;
           }
         }
         message.react((isError) ? "❌" : process.env.CUSTOM_EMOJI_ID!).catch((err) => {

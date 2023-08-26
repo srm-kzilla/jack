@@ -91,7 +91,6 @@ export async function handleIncomingChannelCommand(
         return true;
         break;
     }
-    return false;
   } catch (err) {
     serverLogger("error", incomingMessage.content, err);
     incomingMessage.channel.send(
@@ -100,6 +99,7 @@ export async function handleIncomingChannelCommand(
     );
     return true;
   }
+  return false;
 }
 
 /**
@@ -108,10 +108,10 @@ export async function handleIncomingChannelCommand(
  * @param {Message} incomingMessage The incoming message
  * @param {incomingMessageSchema} messageType The incoming message type
  */
-export function handleIncomingDMCommand(
+export async function handleIncomingDMCommand(
   incomingMessage: Message,
   messageType: incomingMessageSchema
-): void {
+): Promise<boolean> {
   try {
     const messageCommand = incomingMessage.content.split(/\s+/)[1];
     switch (messageCommand) {
@@ -138,6 +138,7 @@ export function handleIncomingDMCommand(
           createBasicEmbed(ERRORS.INVALID_COMMAND, "ERROR")
         );
         serverLogger("user-error", incomingMessage.content, "Invalid Command");
+        return true;
         break;
     }
   } catch (err) {
@@ -146,7 +147,9 @@ export function handleIncomingDMCommand(
       `<@${messageType.incomingUser.id}>`,
       createBasicEmbed(ERRORS.INTERNAL_ERROR(messageType.channelType), "ERROR")
     );
+    return true;
   }
+  return false;
 }
 
 /**
