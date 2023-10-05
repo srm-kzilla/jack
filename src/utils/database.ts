@@ -3,12 +3,13 @@ let dbClient: MongoClient;
 let eventDbClient: MongoClient;
 export async function initDbClient() {
   try {
-    dbClient = await MongoClient.connect(process.env.DATABASE_URI || "");
+    if (!process.env.DATABASE_URI) throw new Error("No Database URI");
+    dbClient = await MongoClient.connect(process.env.DATABASE_URI);
     console.log("✔️   Connected to Database");
     return dbClient;
   } catch (error) {
     console.log("❌   Failed to connect to Database");
-    throw error;
+    process.exit(1);
   }
 }
 
@@ -21,14 +22,15 @@ export async function getDbClient() {
 
 export async function initEventDbClient() {
   try {
+    if (!process.env.EVENT_DATABASE_URI) throw new Error("No Event Database URI");
     eventDbClient = await MongoClient.connect(
-      process.env.EVENT_DATABASE_URI || ""
-    );
+      process.env.EVENT_DATABASE_URI
+    ) ;
     console.log("✔️   Connected to Event Database");
     return eventDbClient;
   } catch (error) {
     console.log("❌   Failed to connect to Event Database");
-    throw error;
+    process.exit(1);
   }
 }
 
