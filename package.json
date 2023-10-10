@@ -21,7 +21,7 @@
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "jimp": "^0.16.1",
-    "mongodb": "^3.6.3",
+    "mongodb": "^4.1.2",
     "nanoid": "^3.1.20",
     "node-cache": "^5.1.2",
     "slugify": "^1.4.7",

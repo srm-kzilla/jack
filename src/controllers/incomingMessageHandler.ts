@@ -26,7 +26,7 @@ import { handleReactionRoles } from "../helper/reactionRole";
 export async function handleIncomingChannelCommand(
   incomingMessage: Message,
   messageType: incomingMessageSchema
-) {
+): Promise<boolean> {
   try {
     const messageCommand = incomingMessage.content.split(/\s+/)[1];
 
@@ -88,6 +88,7 @@ export async function handleIncomingChannelCommand(
           createBasicEmbed(ERRORS.INVALID_COMMAND, "ERROR")
         );
         serverLogger("user-error", incomingMessage.content, "Invalid Command");
+        return true;
         break;
     }
   } catch (err) {
@@ -96,7 +97,9 @@ export async function handleIncomingChannelCommand(
       `<@${messageType.incomingUser.id}>`,
       createBasicEmbed(ERRORS.INTERNAL_ERROR(messageType.channelType), "ERROR")
     );
+    return true;
   }
+  return false;
 }
 
 /**
@@ -105,10 +108,10 @@ export async function handleIncomingChannelCommand(
  * @param {Message} incomingMessage The incoming message
  * @param {incomingMessageSchema} messageType The incoming message type
  */
-export function handleIncomingDMCommand(
+export async function handleIncomingDMCommand(
   incomingMessage: Message,
   messageType: incomingMessageSchema
-) {
+): Promise<boolean> {
   try {
     const messageCommand = incomingMessage.content.split(/\s+/)[1];
     switch (messageCommand) {
@@ -135,6 +138,7 @@ export function handleIncomingDMCommand(
           createBasicEmbed(ERRORS.INVALID_COMMAND, "ERROR")
         );
         serverLogger("user-error", incomingMessage.content, "Invalid Command");
+        return true;
         break;
     }
   } catch (err) {
@@ -143,7 +147,9 @@ export function handleIncomingDMCommand(
       `<@${messageType.incomingUser.id}>`,
       createBasicEmbed(ERRORS.INTERNAL_ERROR(messageType.channelType), "ERROR")
     );
+    return true;
   }
+  return false;
 }
 
 /**

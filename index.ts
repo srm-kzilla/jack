@@ -64,13 +64,14 @@ async function createServer() {
             ]),
           },
         };
+        let isError: boolean = false;
         switch (message.channel.type) {
           /******************************************
                         Text channel
           *******************************************/
           case "text": {
             //check for our command
-            handleIncomingChannelCommand(message, messageType);
+            isError = await handleIncomingChannelCommand(message, messageType);
 
             break;
           }
@@ -78,7 +79,7 @@ async function createServer() {
                             DM channel
           *******************************************/
           case "dm": {
-            handleIncomingDMCommand(message, messageType);
+            isError = await handleIncomingDMCommand(message, messageType);
             break;
           }
           default: {
@@ -87,9 +88,10 @@ async function createServer() {
               "ChannelNotSupported",
               "Channel Not Supported"
             );
+            isError = true;
           }
         }
-        message.react(process.env.CUSTOM_EMOJI_ID!).catch((err) => {
+        message.react((isError) ? "❌" : process.env.CUSTOM_EMOJI_ID!).catch((err) => {
           serverLogger("non-fatal-error", "Could not find custom emoji", err);
         });
       }
